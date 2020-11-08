@@ -1,14 +1,11 @@
+import * as _ from 'lodash';
+
 import {
     THEME_IS_ENABLED_KEY,
     MENU_ANIMATIONS_KEY,
     FW3X_BRANCHES,
     UI_EXTENSIONS_KEY,
 } from './lib/constants';
-
-import {
-    getProp,
-    NOOP,
-} from './lib/ndmUtils';
 
 import {
     hideElement,
@@ -69,11 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggleWrapper = document.getElementById('animationsToggle-wrapper');
 
-    if (getProp(bgPage, 'queryVersion')) {
+    if (_.get(bgPage, 'queryVersion')) {
         bgPage.queryVersion()
             .then(
                 (response) => {
-                    const version = getProp(response, 'response', '');
+                    const version = _.get(response, 'response', '');
                     const is3xVersion = FW3X_BRANCHES.some(branch => startsWith(version, branch));
 
                     if (!is3xVersion) {
@@ -116,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cssToggleLabel,
         THEME_IS_ENABLED_KEY,
         true,
-        (val) => (bgPage.setThemeState || NOOP)(val)
+        (val) => (bgPage.setThemeState || _.noop)(val)
     );
 
     processToggle(
@@ -124,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         animationToggleLabel,
         MENU_ANIMATIONS_KEY,
         false,
-        (val) => (bgPage.setAnimationsState || NOOP)(val)
+        (val) => (bgPage.setAnimationsState || _.noop)(val)
     );
 
     processToggle(
@@ -132,6 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         uiExtensionsToggleLabel,
         UI_EXTENSIONS_KEY,
         true,
-        (val) => (bgPage.setUiExtensionsState || NOOP)(val)
+        (val) => (bgPage.setUiExtensionsState || _.noop)(val)
     );
 });

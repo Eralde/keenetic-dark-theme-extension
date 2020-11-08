@@ -1,6 +1,7 @@
+import * as _ from "lodash";
+
 import {
     getAngularService,
-    getProp,
 } from '../lib/ndmUtils';
 
 import {
@@ -16,7 +17,7 @@ import {
  */
 
 const CONSTANT = getAngularService('CONSTANT');
-const EVENTS = getProp(CONSTANT, 'events', {});
+const EVENTS = _.get(CONSTANT, 'events', {});
 
 const router = getAngularService('router');
 

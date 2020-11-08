@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {
     FILTERS_ARE_VISIBLE_CLASS,
     FLAGS,
@@ -13,7 +15,6 @@ import {
     getAngularService,
     requestContainsPath,
     getPathIndexInRequest,
-    getProp,
 } from '../lib/ndmUtils';
 
 import {
@@ -50,13 +51,11 @@ const $q = getAngularService('$q');
 const router = getAngularService('router');
 const wirelessAcl = getAngularService('wirelessAcl');
 
-const _ = getAngularService('_');
-
 const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = getProp(CONSTANT, 'events.PAGE_LOADED');
+const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
-const origPost = getProp(router, 'post');
-const origPostToRciRoot = getProp(router, 'postToRciRoot');
+const origPost = _.get(router, 'post');
+const origPostToRciRoot = _.get(router, 'postToRciRoot');
 
 const macRegexp = /^[0-9a-f]{1}[02468ace]{1}(?:[\:\- ]?[0-9a-f]{2}){5}$/i;
 

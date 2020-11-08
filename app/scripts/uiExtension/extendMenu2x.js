@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {
     DIAGNOSTICS_LOG_STATE,
     LOG_LINK_CLASS,
@@ -10,7 +12,6 @@ import {
 import {
     getAngularService,
     getL10n,
-    getProp,
     onLanguageChange,
     addLinkToMenuSection,
 } from '../lib/ndmUtils';
@@ -30,13 +31,13 @@ const $state = getAngularService('$state');
 const $q = getAngularService('$q');
 
 const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = getProp(CONSTANT, 'events.PAGE_LOADED');
+const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
 const FIRST_MENU_GROUP = 'menu.dashboard';
 const SYSTEM_MENU_GROUP = 'menu.control';
 
 const forceScopeDigest = ($scope) => {
-    if (!['$apply', '$digest'].includes(getProp($scope, '$root.$$phase'))) {
+    if (!['$apply', '$digest'].includes(_.get($scope, '$root.$$phase'))) {
         $scope.$apply();
     }
 };

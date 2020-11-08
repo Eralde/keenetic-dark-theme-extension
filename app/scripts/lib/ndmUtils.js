@@ -7,26 +7,6 @@ import * as _ from 'lodash';
 
 export const NOOP = _.noop;
 
-export const getProp = (object, keys, defaultVal) => {
-    const path = Array.isArray(keys)
-        ? keys
-        : keys.split('.');
-
-    if (object === undefined || object === null) {
-        return defaultVal;
-    }
-
-    object = object[path[0]];
-
-    if (object && path.length > 1) {
-        return getProp(object, path.slice(1), defaultVal);
-    }
-
-    return object === undefined
-        ? defaultVal
-        : object;
-};
-
 export const getAngularService = (serviceName) => {
     if (!window.angular) {
         return null;

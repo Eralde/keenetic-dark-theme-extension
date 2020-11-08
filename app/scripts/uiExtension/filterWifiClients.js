@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {
     FILTERS_TOGGLE_CLASS,
     FLAGS,
@@ -9,7 +11,6 @@ import {
 
 import {
     getAngularService,
-    getProp,
 } from '../lib/ndmUtils';
 
 import {
@@ -34,15 +35,14 @@ import {
 const $rootScope = getAngularService('$rootScope');
 const $timeout = getAngularService('$timeout');
 const $q = getAngularService('$q');
-const _ = getAngularService('_');
 
 const wifiClients = getAngularService('wifiClients');
 const wirelessAcl = getAngularService('wirelessAcl');
 
-const origWifiClientsGetData = getProp(wifiClients, 'getData');
+const origWifiClientsGetData = _.get(wifiClients, 'getData');
 
 const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = getProp(CONSTANT, 'events.PAGE_LOADED');
+const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
 const NDM_TABLE_SHIFTED_CLASS = 'ndm-table--shifted';
 

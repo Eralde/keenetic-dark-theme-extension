@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
 import {FW2X_BRANCHES, POLICIES_STATE} from '../lib/constants';
-import {getAngularService, getProp} from '../lib/ndmUtils';
+import {getAngularService} from '../lib/ndmUtils';
 
 import {isPointInsideElement} from '../lib/domUtils';
 
@@ -15,8 +15,8 @@ const $rootScope = getAngularService('$rootScope');
 const $q = getAngularService('$q');
 const CONSTANT = getAngularService('CONSTANT');
 
-const SELECTBOX_TOGGLE_OPEN = getProp(CONSTANT, 'events.SELECTBOX_TOGGLE_OPEN');
-const SELECTBOX_TOGGLE_CLOSE = getProp(CONSTANT, 'events.SELECTBOX_TOGGLE_CLOSE');
+const SELECTBOX_TOGGLE_OPEN = _.get(CONSTANT, 'events.SELECTBOX_TOGGLE_OPEN');
+const SELECTBOX_TOGGLE_CLOSE = _.get(CONSTANT, 'events.SELECTBOX_TOGGLE_CLOSE');
 
 const Z_INDEX_FIX_CLASS = 'policy-consumers-list__consumer--z-null';
 const MOVE_CONSUMERS_SELECTBOX_UL_SELECTOR = '.move-consumers-form__policy-dropdown ul';

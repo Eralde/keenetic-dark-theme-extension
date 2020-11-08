@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {getAngularService, getProp} from "../lib/ndmUtils";
+import {getAngularService} from "../lib/ndmUtils";
 import {addCssClass} from "../lib/domUtils";
 
 /*
@@ -12,7 +12,7 @@ const $timeout = getAngularService('$timeout');
 const $q = getAngularService('$q');
 
 // original 'appsService.getAppsStates' function
-const _getAppsStates = getProp(appsService, 'getAppsStates');
+const _getAppsStates = _.get(appsService, 'getAppsStates');
 
 const VIRTUAL_IP = 'virtualIP';
 
@@ -88,7 +88,7 @@ export const modifyAppsService = () => {
         return appStates;
     };
 
-    const defer = getProp($q, 'defer');
+    const defer = _.get($q, 'defer');
     const _deferred = defer();
 
     const getPageController = () => {
