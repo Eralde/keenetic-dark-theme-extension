@@ -22,17 +22,15 @@ Then load the extension from the `./dist/{browser}` folder.
 It will reload itself automatically on
 any change to the files in the `./app` folder.
 
-## Production build
+## Utility `npm` scripts:
 
-`npm` scripts:
-
-Utility scripts:
-
-- rebuild CSS files (execute manually after changes to the `./theme` files):<br/>
+- rebuild CSS files (execute manually after changes to the `./theme` folder files):<br/>
   `npm run build-css`
 
 - rebuild the `app/scripts/lib/l10n.js` file:<br/>
   `npm run build-l10n`
+
+## Production build
 
 Build an archive suitable for one of the browsers:
 
