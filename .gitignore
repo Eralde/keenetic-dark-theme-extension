@@ -1,0 +1,7 @@
+node_modules/
+app/styles/*.css
+app/scripts/lib/l10n.js
+packages/
+dist/
+.web-extension-id
+.python-version
