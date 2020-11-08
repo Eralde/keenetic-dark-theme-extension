@@ -170,7 +170,7 @@ export const getPathIndexInRequest = (requestObj, path) => {
 };
 
 export const addLinkToMenuSection = ({menu, menuSectionId, linkTitle, linkSref}) => {
-    if (!getProp(menu, [menuSectionId, 'points'])) {
+    if (!_.get(menu, [menuSectionId, 'points'])) {
         return;
     }
 
