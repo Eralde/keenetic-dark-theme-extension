@@ -2,6 +2,8 @@
 
 Dark theme for the web UI of the Keenetic devices
 
+![Image](screenshot.png)
+
 ## To build your copy of the extension:
 
 - clone this repository
