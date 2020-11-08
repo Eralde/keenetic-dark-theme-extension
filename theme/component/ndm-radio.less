@@ -1,0 +1,13 @@
+@import (reference) "../__vars__";
+
+.radiobutton,
+.ndm-radio {
+    .radiobutton__label:before {
+        background: transparent !important;
+    }
+
+    .radiobutton__input:disabled + .radiobutton__label {
+        color: @dt__white-text;
+        opacity: 0.6;
+    }
+}

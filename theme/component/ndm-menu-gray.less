@@ -1,0 +1,90 @@
+@import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
+
+@ndm-menu-2_x-text-color: #403F4C;
+@ndm-menu-2_x-background-color: lighten(@dt__grey9, 10%);
+
+@ndm-menu-dark-bg-color: #12161d; // @dt__grey5;
+@ndm-menu-darker-bg-color: #0d1116; // @dt__grey5;
+@ndm-menu-light-bg-color: @ndm-menu-2_x-background-color;
+@ndm-menu-highlight-bg-color: #202830; // darken(@ndm-menu-2_x-background-color, 10%);
+
+@ndm-menu-light-text-color: #e0e0e0; // @dt__white-text;
+@ndm-menu-lighter-text-color: #fff; // @dt__white-text;
+@ndm-menu-dark-text-color: #727272; // @ndm-menu-2_x-text-color;
+
+@ndm-menu-title-color: #57727e;
+
+
+.search__reset {
+    background-color: transparent !important;
+}
+
+.ndm-menu {
+    filter: brightness(1.14);
+    background: @ndm-menu-darker-bg-color; // greyscale(@new-blue-deep);
+
+    .ss-scroll {
+        background-color: mix(@ndm-menu-dark-bg-color, @ndm-menu-light-bg-color, 70%);
+    }
+
+    @media screen and (min-width: 1280px) {
+        z-index: 9999;
+    }
+
+    &__title {
+        color: @ndm-menu-light-text-color !important;
+        font-weight: bolder;
+    }
+
+    &__item {
+        color: @white-text !important;
+        margin: 0;
+
+        .item-link {
+            height: 32px;
+            line-height: 32px;
+            color: @white-text !important;
+        }
+
+        &--active {
+            background: @ndm-menu-highlight-bg-color !important;
+
+            .item-link {
+                color: @ndm-menu-light-text-color !important;
+            }
+        }
+
+        &:hover {
+            background-color: @ndm-menu-highlight-bg-color !important;
+
+            .item-link {
+                color: @ndm-menu-light-text-color !important;
+            }
+        }
+    }
+
+    &__group__item {
+        background-color: @ndm-menu-darker-bg-color;
+    }
+
+    &__group__item__link {
+        filter: brightness(0.8);
+        color: @ndm-menu-light-text-color;
+    }
+
+    &__group__title {
+        filter: brightness(0.88);
+        color: @ndm-menu-title-color;
+    }
+
+    &__group__item--active,
+    &__group__item:hover {
+        border-color: transparent;
+        background: @ndm-menu-highlight-bg-color !important;
+    }
+
+    &--open {
+        border-right-color: @ndm-menu-darker-bg-color;
+    }
+}

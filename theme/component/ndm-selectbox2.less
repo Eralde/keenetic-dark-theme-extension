@@ -1,0 +1,26 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-selectbox2 {
+    &__toggle {
+        .__mixin__main-text-container;
+    }
+}
+
+.ndm-selectbox2-option {
+    background: @dt__grey6;
+
+    &__handle {
+        color: @dt__white-text;
+    }
+
+    &--focus {
+        background: @dt__grey9;
+    }
+
+    &--selected {
+        &:hover {
+            background: @dt__grey9;
+        }
+    }
+}

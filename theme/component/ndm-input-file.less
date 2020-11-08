@@ -1,0 +1,13 @@
+@import (reference) "../__mixins__";
+
+.ndm-input-file-wrap {
+    .ndm-input-file {
+        .__mixin__main-text-container();
+        background: @dt__grey9 !important;
+        color: @dt__dark-blue-text;
+
+        &:focus {
+            .__mixin__box-shadow-on-focus();
+        }
+    }
+}

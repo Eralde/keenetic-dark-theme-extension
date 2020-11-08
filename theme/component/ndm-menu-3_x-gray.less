@@ -1,0 +1,31 @@
+.ndm-menu {
+    &__title-text {
+        overflow-wrap: break-word;
+        max-width: 200px;
+    }
+
+    &__scrollable,
+    &__toggle {
+        filter: grayscale(0.8);
+    }
+
+    &__item {
+        filter: brightness(0.8);
+    }
+
+    &__logout {
+        &:hover {
+            background-color: inherit;
+        }
+
+        .reboot-link:hover {
+            filter: brightness(1);
+        }
+    }
+
+    &:not(.ndm-menu--opened) {
+        .ss-scroll-container {
+            opacity: 0;
+        }
+    }
+}

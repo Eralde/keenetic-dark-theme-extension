@@ -1,0 +1,79 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+
+.page-wifi-system {
+    .mws-device-table {
+        .__mixin__no-box-shadow-table();
+
+        td.table__col-0 .device-info__link {
+            color: @dt__cyan-blue-text;
+
+            &:focus {
+                .__mixin__box-shadow-on-focus();
+            }
+        }
+
+        &__device-group-header {
+            background-color: @dt__grey6;
+
+            &:hover {
+                background-color: @dt__grey6 !important;
+            }
+        }
+
+        thead tr {
+            border: none;
+        }
+
+        tbody tr {
+            &:hover {
+                background-color: @dt__grey7;
+            }
+        }
+
+        tbody:last-child tr:last-child {
+            border-color: @dt__grey7;
+        }
+    }
+
+    &__log-table {
+        table,
+        tbody.ndm-table__custom-row td {
+            background-color: @dt__grey6;
+        }
+
+        thead tr,
+        tbody.ndm-table__custom-row tr{
+            border: none;
+        }
+
+        tbody.ndm-table__body {
+            border-top: 1px solid @dt__grey9;
+        }
+
+        tr {
+            background-color: @dt__grey6;
+
+            &:hover {
+                background-color: @dt__grey9;
+            }
+        }
+    }
+
+    /* >= 3.1-specific */
+    &__controller {
+        color: @dt__dark-blue-text;
+
+        .control__title {
+            color: @dt__light-blue-text;
+        }
+
+        .controller__panel__params {
+            .ndm-mws-clients-tooltip__count-title,
+            .params__item__title {
+                color: @black;
+            }
+        }
+    }
+    /* END >= 3.1-specific */
+}

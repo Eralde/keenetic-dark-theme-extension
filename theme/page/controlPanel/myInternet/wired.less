@@ -1,0 +1,65 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__ndwVars__";
+@import (reference) "../../../__mixins__";
+
+.page-wired {
+    .socket__icon,
+    .socket__icon--sfp-sfp {
+        filter: brightness(70%);
+    }
+
+    .socket__label {
+        mix-blend-mode: difference;
+    }
+
+    .socket__value {
+        &--voip {
+            .socket__wrap {
+                background-color: darken(@purple-2, 65%);
+            }
+        }
+        &--inet {
+            .socket__wrap {
+                background-color: darken(@blue-dashboard, 65%);
+            }
+        }
+        &--iptv {
+            .socket__wrap {
+                background-color: darken(@green-port-bg, 65%);
+            }
+        }
+        &--multicast {
+            .socket__wrap {
+                background-color: darken(@light-blue-background, 65%);
+            }
+        }
+    }
+
+    .socket__port--excluded {
+        .socket__wrap {
+            background: transparent !important;
+        }
+    }
+
+    .socket__wrap {
+        &--yellow {
+            background-color: darken(@yellow-wrap, 65%);
+        }
+
+        &--blue {
+            background-color: darken(@light-blue-background, 65%);
+        }
+
+        &--gray {
+            background-color: darken(@gray-port, 65%);
+        }
+    }
+
+    &__vlans-list {
+        .ndm-input__title {
+            .icon-container {
+                .__mixin__convert-color-to-dt__white-text()
+            }
+        }
+    }
+}

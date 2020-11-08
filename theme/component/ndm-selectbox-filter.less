@@ -1,0 +1,26 @@
+@import (reference) "../__mixins__";
+
+.ndm-selectbox-filter {
+    &__dropdown-container {
+        .__mixin__main-text-container;
+    }
+
+    &__dropdown {
+        li.dropdown-item {
+            &:hover:not(.dropdown-item--group),
+            &--focus {
+                background: @dt__grey8 !important;
+            }
+        }
+    }
+
+    .dropdown-item {
+        &--group {
+            color: @dt__white-text;
+        }
+
+        &__handle {
+            color: @dt__whiter-text;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+@import (reference) "../__vars__";
+
+ndm-switchport {
+    .ndm-switchport__label {
+        color: @dt__blue-text;
+    }
+
+    ndm-svg-icon {
+        &[svg-id="blue-socket"] {
+            opacity: 0.75;
+
+            & + .ndm-switchport__label {
+                color: @dt__dark-blue-text;
+            }
+        }
+    }
+
+    .ndm-switchport__sfp-icon {
+        background-color: @dt__greyD;
+        color: @dt__dark-blue-text;
+    }
+}

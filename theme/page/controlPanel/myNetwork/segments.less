@@ -1,0 +1,41 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+@import (reference) "../../../__ndwVars__";
+
+.page-segments {
+    .port__wrapper {
+        border-color: @dt__dark-grey-border;
+
+        &.mode--trunk {
+            background-color: darken(@yellow-wrap, 60%);
+        }
+
+        &.mode--access {
+            background-color: darken(@green-port-bg, 60%);
+        }
+
+        &.mode--excluded {
+            background-color: transparent;
+        }
+    }
+
+    .port__icon--sfp-sfp,
+    .port__icon {
+        color: @dt__dark-blue-text !important;
+        filter: brightness(0.7);
+    }
+
+    .port__role {
+        .__mixin__convert-color-to-dt__white-text();
+    }
+
+    &__name {
+        color: @dt__white-text;
+    }
+}
+
+.segment-advanced-wifi-settings-popup {
+    .ndm-select-with-details__details-container {
+        background-color: transparent;
+    }
+}

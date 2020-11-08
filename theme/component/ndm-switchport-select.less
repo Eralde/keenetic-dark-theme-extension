@@ -1,0 +1,40 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-switchport-select {
+    color: @dt__white-text;
+    background-color: @dt__grey6;
+
+    &__options-container {
+        box-shadow: none !important;
+        color: @dt__white-text;
+        background-color: @dt__grey6;
+    }
+
+    &__toggle {
+        box-shadow: none !important;
+
+        &--active {
+            background-color: @dt__grey6;
+        }
+
+        .option__icon {
+            .__mixin__convert-color-to-dt__white-text();
+        }
+    }
+}
+
+.switchport-select-option {
+    &--selected:hover,
+    &--focus {
+        background-color: @dt__grey9;
+    }
+
+    &__handle {
+        color: @dt__white-text;
+    }
+
+    &__icon {
+        .__mixin__convert-color-to-dt__white-text();
+    }
+}

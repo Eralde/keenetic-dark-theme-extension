@@ -1,0 +1,33 @@
+{
+  "appName": {
+    "message": "keenetic-dark-theme-extension",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "keenetic-dark",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "appDescription": {
+    "message": "Темная тема для веб-интерфейса устройств Кинетик",
+    "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "Темная тема для Кинетика",
+    "description": "The title of the browser action button"
+  },
+  "toggleThemeDescription": {
+    "message": "Темная тема"
+  },
+  "showFilterCheckboxes": {
+    "message": "Показать фильтры"
+  },
+  "hideUnregisteredHosts": {
+    "message": "Скрывать незарегистрированные устройства"
+  },
+  "hideHostsBlockedByMac": {
+    "message": "Скрывать заблокированные по MAC устройства"
+  },
+  "hideOfflineHosts": {
+    "message": "Скрывать неподключенные устройства"
+  }
+}

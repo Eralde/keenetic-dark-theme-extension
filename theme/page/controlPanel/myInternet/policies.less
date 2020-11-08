@@ -1,0 +1,172 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+@import (reference) "../../../__ndwVars__";
+
+@policy-consumer-segment: darken(#A0CBE8, 10%);
+@policy-consumer-device: darken(#98DF8A, 10%);
+@policy-consumer-app: darken(#FFBB78, 10%);
+
+@selected-class: policy-consumers-list__consumer--selected;
+@dragged-class: policy-consumers-list__consumer--dragged;
+@dragged-stack-class: policy-consumers-list__consumer--dragged-with-shadow;
+
+.__mixin-consumer-color-gen(
+    @color,
+    @selected-class,
+    @dragged-class,
+    @dragged-stack-class,
+    @dragged-copy-bg-color,
+    @dragged-copy-border-color
+) {
+    background-color: fade(@color, 30%) !important;
+
+    &.@{selected-class} {
+        background-color: fade(@color, 50%) !important;
+    }
+
+    &.@{dragged-class} {
+        cursor: move;
+        position: relative;
+        opacity: 1;
+        z-index: @z-index__max + 100 !important;
+    }
+
+    &.@{dragged-stack-class} {
+        box-shadow: 2px 2px 0 @dragged-copy-bg-color,
+        3px 3px 0 @dragged-copy-border-color,
+        5px 5px 0 @dragged-copy-bg-color,
+        6px 6px 0 @dragged-copy-border-color;
+    }
+}
+
+.page-policies {
+    .icon--drag-n-drop-handle {
+        filter: invert(0.8);
+    }
+
+    .policies-editor-header,
+    .policies-list__policy {
+        color: @dt__white-text !important;
+        background: @dt__grey5 !important;
+
+        &--selected {
+            background-color: @dt__grey7 !important;
+        }
+
+        &--droppable {
+            background-color: @light-blue-background;
+
+            &[ng-drop].drag-enter{
+                background-color: @dt__grey9 !important;
+            }
+        }
+    }
+
+    .policy-name-editor {
+        padding-right: 5px;
+        left: 0;
+        background: @dt__grey5 !important;
+    }
+
+    .policy-editor-controls__btn-label {
+        color: @dt__white-text !important;
+    }
+
+    .policies-list__policy {
+        &:hover {
+            background-color: @dt__grey7 !important;
+        }
+    }
+
+    .policy-interfaces-priority__table .ndm-table {
+        margin-left: -11px !important;
+
+        thead,
+        th {
+            background-color: inherit !important;
+        }
+
+        thead tr {
+            border-color: transparent !important;
+        }
+
+        th.table__col-0 {
+            z-index: 10 !important;
+        }
+
+        th.table__col-1 {
+            z-index: 1 !important;
+        }
+    }
+
+    .policy-consumers-list__consumer-label {
+        color: @dt__black1;
+    }
+
+    .policy-consumers .policy-consumers-list__consumer--selected {
+        &.policy-consumers-list__consumer--z-null {
+            &::before {
+                z-index: 0;
+            }
+        }
+    }
+
+    .policy-consumers-list__consumer {
+        // segments
+        &--blue {
+            .__mixin-consumer-color-gen(
+                    @policy-consumer-segment,
+                    @selected-class,
+                    @dragged-class,
+                    @dragged-stack-class,
+                    @gray-cp-menu-hr,
+                    @gray-dark-text
+            );
+        }
+
+        // devices
+        &--green {
+            .__mixin-consumer-color-gen(
+                    @policy-consumer-device,
+                    @selected-class,
+                    @dragged-class,
+                    @dragged-stack-class,
+                    @gray-cp-menu-hr,
+                    @gray-dark-text
+            );
+        }
+
+        // apps
+        &--red {
+            .__mixin-consumer-color-gen(
+                    @policy-consumer-app,
+                    @selected-class,
+                    @dragged-class,
+                    @dragged-stack-class,
+                    @gray-cp-menu-hr,
+                    @gray-dark-text
+            );
+        }
+    }
+
+    .move-consumers-form {
+        background-color: @dt__grey5;
+
+        &__confirm {
+            button.btn:not(.btn--warning):not(.btn--primary):not(.btn--loading):not(.btn--default):not(.btn--cute):not(.btn--base) {
+                color: @black !important;
+                background-color: @dt__greyD !important;
+            }
+        }
+
+        &__cancel {
+            color: @dt__white-text !important;
+        }
+    }
+
+    .move-consumers-form&__policy-dropdown {
+        .sb-toggle:focus {
+            .__mixin__box-shadow-on-focus();
+        }
+    }
+}

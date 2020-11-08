@@ -1,0 +1,45 @@
+.ndm-menu {
+    transition: none;
+
+    &__logout,
+    &__bottom,
+    &__title,
+    &__toggle,
+    &__scrollable {
+        transition: none;
+    }
+
+    &:not(&--opened) &__bottom,
+    &:not(&--opened) &__logout {
+        transition: none;
+    }
+
+    &--opened&--accordion &__group &__title,
+    &--opened&--accordion &__group {
+        transition: none;
+    }
+
+    &--opened&--accordion &__group &__title:after {
+        transition: none;
+    }
+
+    &:not(&--opened) &__group--active, &__group--active:not(&__group--opened) {
+        transition: none;
+    }
+
+    &--opened:not(&--accordion) &__item:not(:hover),
+    &--opened:not(&--accordion) &__title {
+        transition: none;
+    }
+
+    &:not(&--opened) &__item,
+    &:not(&--opened) &__title {
+        transition: none;
+    }
+
+    &__group {
+        .ndm-menu__item {
+            transition: none;
+        }
+    }
+}

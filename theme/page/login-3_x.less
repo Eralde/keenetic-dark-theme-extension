@@ -1,0 +1,19 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.login-page {
+    .login-form {
+        &__icon-wrapper {
+            background-color: @dt__grey6;
+        }
+    }
+
+    .btn.btn--cute {
+        color: @dt__white-text !important;
+        background: @dt__grey6 !important;
+
+        &:hover {
+            color: @dt__dark-blue-text;
+        }
+    }
+}

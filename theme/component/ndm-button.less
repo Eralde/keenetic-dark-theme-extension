@@ -1,0 +1,50 @@
+@import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
+@import (reference) "../__mixins__";
+
+.ndm-button, // buttons
+.button,
+.btn.btn--primary:disabled:not(.btn--loading),
+button {
+    .__mixin__main-text-container;
+
+    &:hover {
+        border-color: @dt__cyan-blue-text;
+        color: @dt__cyan-blue-text;
+    }
+
+    &:focus {
+        //.__mixin__box-shadow-on-focus();
+    }
+}
+
+.btn--primary {
+    border: 1px solid @dt__blue-text !important;
+    background: @dt__grey9 !important;
+}
+
+.btn--disabled {
+    filter: brightness(80%);
+}
+
+.btn:not(.btn--disabled) {
+    background-color: @dt__grey9 !important;
+    color: @dt__dark-blue-text;
+
+    &:hover {
+        background-color: @dt__greyC !important;
+        border-color: @blue-main;
+        color: @blue-main;
+    }
+}
+
+.btn:not(.btn--warning):not(.btn--primary):not(.btn--loading):not(.btn--default):not(.btn--cute):not(.btn--base) {
+    background-color: transparent !important;
+    color: @dt__white-text !important;
+
+    &:hover {
+        background-color: @dt__greyB !important;
+        border-color: @blue-main !important;
+        color: @dt__dark-blue-text !important;
+    }
+}

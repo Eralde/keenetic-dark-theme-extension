@@ -1,0 +1,20 @@
+@import (reference) "../../../__vars__";
+
+.system__components-popup {
+    &__filter {
+        &-input {
+            cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAUCAYAAACAl21KAAAABmJLR0QA/wD/AP+gvaeTAAABf0lEQVQ4jdXRPUscURTG8f+5u2snaQIBezs718m82EwtCH6A9RNYaGGhQSEQ2EDakC5W9oJYKKzdzpuuNgriF1AjFiJ528SdkyKMIe6ss4s2nupy7zk/nsOVMEi2gCkeV1sSx/Fo2pFjoARsANrnsAAzQMeUdAyAKEjeh0GiQRDX+o0QhslsGCQaNuM6gAH4+ev7O5AzQT60Wq0XRUiz2RxGpQ58MWX+Qb7vf0V0CXjVbneWiyBjKiugI4ou2rZ9k+0JgKpKFO4FwDjCtOnoVR6SluQlyiZw4LiWJyIKUM4aRESjKJrT1OyjbKdG8pzsK1LEzGfI3WpZOY5zqLBWtJqgn113Yu+/dbvbbt8A1w84N6WKWb1/2QV5nneJ6NvecXTVsqyLQgig3f7xEeQo5+lkaKj8KW8mF/J9/xZhoTsNC9Vq9XffEIDrWruoNu4uVBuu+3qnV39P6G8COc89DwwNUM8NUj15EsidtOuK1FC+PS4R4HnWuoqxBU4f6vsDDF+DJ50GE9IAAAAASUVORK5CYII='), auto;
+            color: @dt__white-text;
+            background-color: @dt__grey9;
+            font-size: 20px;
+        }
+
+        &-reset {
+            background-color: transparent !important;
+
+            .icon {
+                filter: grayscale(1) brightness(2);
+            }
+        }
+    }
+}

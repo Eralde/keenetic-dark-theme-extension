@@ -1,0 +1,78 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+
+.page-wifi-system {
+    .mws-log-table__header-wrapper,
+    .mws-log-table__header-right-margin,
+    .mws-log-table__header {
+        background-color: inherit;
+    }
+
+    md-virtual-repeat-container {
+        background-color: transparent;
+    }
+
+    &__controller {
+        .controller__panel {
+            background-color: @dt__grey5;
+        }
+
+        .ndm-mws-clients-tooltip__count-title,
+        .controller__panel__params .params__item__title {
+            color: @dt__greyB;
+        }
+    }
+
+    &__log-table-row-count {
+        color: @dt__white-text;
+    }
+
+    .mws-device-table thead {
+        background-color: transparent;
+
+        th:first-child {
+            padding-left: 26px;
+        }
+    }
+
+    .mws-device-table {
+        tbody:last-child tr:last-child {
+            border-bottom-color: @dt__grey9 !important;
+        }
+
+        .table__col-0 {
+            .device-info__link {
+                color: @dt__cyan-blue-text;
+            }
+        }
+    }
+
+    .mws-device-table__device-group-header {
+        background-color: inherit;
+
+        &:hover {
+            background-color: inherit !important;
+        }
+    }
+
+    .mobile-and-tablet({
+        &__devices-table-wrapper {
+            table {
+                .__mixin__no-box-shadow-table();
+            }
+        }
+    });
+
+    .mws-device-table tbody tr,
+    .mws-device-table__row {
+        border-bottom-color: @dt__grey5;
+
+        &:hover {
+            background-color: @dt__grey7;
+
+            .ndm-button {
+                background-color: @dt__grey4;
+            }
+        }
+    }
+}

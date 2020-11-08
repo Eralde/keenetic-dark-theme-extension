@@ -1,0 +1,41 @@
+@import (reference) "__vars__";
+
+.__hidden {
+    display: none !important;
+}
+
+.__flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.__inline-flex-row {
+    display: inline-flex;
+    flex-direction: row;
+    margin-left: @new-unit;
+
+    .ndm-checkbox {
+        align-items: normal;
+
+        .form__cell {
+            height: auto;
+            padding-top: 0;
+        }
+
+        .checkbox {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.show-filter-checkboxes {
+    position: absolute;
+    right: @new-gap-sm;
+}
+
+.hidden-table-row {
+    min-height: 0 !important;
+    opacity: 0 !important;
+    height: 0 !important;
+}

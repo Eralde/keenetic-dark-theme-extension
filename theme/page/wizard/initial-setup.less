@@ -1,0 +1,30 @@
+@import (reference) "../../__vars__";
+@import (reference) "../../__mixins__";
+
+.page-initial-setup {
+    .initial-setup-main-card {
+        margin-top: 0;
+        top: 70px;
+        background-color: @dt__grey6;
+
+        .ndm-control-footer__controls {
+            background-color: @dt__grey6 !important;
+        }
+
+        .conn-subtypes-wrapper .conn-subtypes-btns .conn-subtype-btn__selected,
+        .conn-subtypes-wrapper .conn-subtypes-btns .conn-subtype-btn:not(.btn-list-element__checked):not(.btn-list-element__error):hover,
+        .mac-options .mac-option:not(.btn-list-element__checked):not(.btn-list-element__error):hover,
+        .services .services-options .services-options-btn:not(.btn-list-element__checked):not(.btn-list-element__error):hover,
+        .conn-kinds-wrapper .conn-kinds-btns .conn-kind-btn:not(.btn-list-element__checked):not(.btn-list-element__error):hover {
+            background-color: @dt__grey8 !important;
+        }
+
+        .conn-subtypes-wrapper .conn-subtypes-btns .conn-subtype-btn__selected {
+            color: @dt__light-blue-text;
+        }
+
+        .mac-options .mac-option {
+            background-color: @dt__grey6 !important;
+        }
+    }
+}

@@ -1,0 +1,47 @@
+@import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
+@import (reference) "../__mixins__";
+
+.ndm-button-new {
+    &--red {
+        background-color: darken(@text-red, 30%) !important;
+        color: @white !important;
+
+        &:hover,
+        &:focus {
+            background-color: darken(@red-hover, 30%) !important;
+        }
+
+        &:active {
+            background-color: darken(@red, 30%) !important;
+        }
+    }
+
+    &--grey {
+        background-color: @dt__grey6 !important;
+        color: @dt__light-blue-text !important;
+
+        &:hover,
+        &:focus {
+            background-color: @dt__grey7 !important;
+        }
+
+        &:active {
+            background-color: @dt__grey7 !important;
+        }
+    }
+
+    &--blue {
+        background-color: @blue !important;
+        color: @dt__white-text !important;
+
+        &:hover,
+        &:focus {
+            background-color: @blue-main !important;
+        }
+
+        &:active {
+            background-color: @blue-main !important;
+        }
+    }
+}

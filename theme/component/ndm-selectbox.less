@@ -1,0 +1,39 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-selectbox {
+    .sb-toggle {
+        .__mixin__main-text-container;
+    }
+
+    .dropdown-item__handle {
+        color: @dt__white-text !important;
+    }
+
+    .dropdown .sb-container .sb-dropdown .sb-item,
+    .dropdown .sb-container .sb-dropdown .sb-item a {
+        color: @dt__white-text;
+        background: @dt__grey6;
+    }
+
+    .dropdown .sb-container .sb-dropdown .sb-item a:hover {
+        background: @dt__grey9 !important;
+    }
+
+    .sb-toggle__item-icon,
+    .sb-item-handle .icon {
+        .__mixin__convert-color-to-dt__white-text();
+    }
+
+    .form__cell-note--right.action-link.help-text {
+        color: @dt__blue-text !important;
+    }
+}
+
+.ndm-selectbox.view-as-link {
+    .sb-toggle {
+        .sb-value {
+            color: @dt__cyan-blue-text;
+        }
+    }
+}

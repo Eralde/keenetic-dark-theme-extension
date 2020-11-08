@@ -1,0 +1,55 @@
+@import (reference) "../__ndwVars__";
+
+.page-wifiClients {
+    .ndm-page {
+        &__description {
+            display: none;
+        }
+    }
+
+    .filter-toggle-container {
+        background-color: @white;
+        padding-left: 24px;
+    }
+
+    .devices-list-toolbar { // theme-specific
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: 30px;
+
+        .mobile({
+            flex-direction: column;
+        });
+    }
+
+    .ndm-table {
+        &--shifted {
+            margin-top: 80px;
+
+            .mobile({
+                margin-top: 0;
+            });
+        }
+    }
+}
+
+.dark-theme__wifi-clients-filters {
+    display: flex;
+}
+
+.ndm-layout--dark-theme {
+    .page-wifiClients {
+        .filter-toggle-container {
+            background-color: @dt__grey4;
+        }
+    }
+}
+
+.ndm-layout:not(.ndm-layout--dark-theme) {
+    .page-wifiClients {
+        .devices-list-toolbar{
+            background-color: @white;
+        }
+    }
+}

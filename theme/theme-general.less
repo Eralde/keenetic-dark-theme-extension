@@ -1,0 +1,108 @@
+@import "__vars__";
+@import "__mixins__";
+
+// 'Keenetic' logo
+.logotype { // other pages
+    filter: brightness(80%);
+}
+
+.btn:focus {
+    .__mixin__box-shadow-on-focus();
+}
+
+.checkbox {
+    .checkbox__label {
+        background-color: transparent !important;
+
+        &:before {
+            background-color: @dt__grey9 !important;
+        }
+    }
+}
+
+.checkbox__input {
+    -webkit-appearance: none;
+
+    &:checked + .checkbox__label:after {
+        opacity: 0.6;
+    }
+
+    &:focus {
+        & + .checkbox__label {
+            .__mixin__box-shadow-on-focus();
+        }
+    }
+}
+
+.radiobutton__input {
+    &:focus {
+        & + .radiobutton__label {
+            .__mixin__box-shadow-on-focus();
+        }
+    }
+}
+
+.icon--close-thin {
+    filter: brightness(200%);
+}
+
+
+th {
+    .__mixin__main-text-container;
+}
+
+.form__cell--input-label {
+    color: @dt__white-text !important;
+}
+
+// Text
+.primary-title,
+.secondary-title {
+    color: @dt__blue-text !important;
+}
+
+.tretiary-title {
+    color: @dt__white-text !important;
+}
+
+.help-text:not(.help-text--success):not(.help-text--warning) {
+    color: @dt__white-text !important;
+}
+
+.help-text--warning {
+    color: @red-contrast;
+}
+
+.body-text {
+    color: @dt_gray-text !important;
+}
+
+.empty-list {
+    color: @dt__white-text !important;
+}
+
+.accordion-link,
+.external-link,
+.ref-link,
+.action-link,
+.text-link {
+    color: lighten(@dt__blue-text, 10%) !important;
+
+    &:focus {
+        .__mixin__box-shadow-on-focus();
+    }
+}
+
+.accordion-link:after {
+    background: linear-gradient(to right, @dt__blue-text 0, @dt__blue-text 60%, transparent 60%);
+    background-size: 10px 1px;
+    background-repeat: repeat-x;
+}
+
+.icon.icon--indicator-offline {
+    filter: brightness(0.7);
+}
+
+.form__cell-note {
+    color: @dt_gray-text;
+}

@@ -1,0 +1,34 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+
+.wifi-page {
+    .ndm-control-footer--popup {
+        bottom: 80px !important;
+    }
+}
+
+
+.ndm-control-footer {
+    &__controls {
+        background: @dt__grey4 !important;
+        color: @dt__white-text !important;
+
+        button {
+            .__mixin__main-text-container;
+        }
+
+        .text-link {
+            color: @dt__light-blue-text;
+        }
+
+        &__cancel {
+            color: @dt__light-blue-text;
+            background-color: @dt__grey4;
+
+            &:hover {
+                background-color: @dt__grey6;
+            }
+        }
+    }
+}

@@ -1,0 +1,84 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__ndwVars__";
+
+.page-traffic-monitor{
+    &__table__legend {
+        &__host-list__item__description {
+            color: @dt__white-text;
+        }
+
+        &__host-list__total:hover,
+        &__host-list__item:hover,
+        &__host-list__item--selected {
+            background-color: @dt__grey8;
+        }
+
+        &__host-list__total,
+        &__host-list__total__upload,
+        &__host-list__total__download__upload,
+        &__host-list__total__title,
+        &__host-list__total__title__subtitle {
+            color: @dt__whiter-text;
+        }
+
+        &__host-list__add-device a {
+            background-color: @dt__greyC;
+            color: @dt__dark-blue-text;
+            border-color: @dt__dark-blue-text;
+
+            &:hover {
+                color: @dt__cyan-blue-text !important;
+                border-color: @dt__cyan-blue-text !important;
+            }
+        }
+    }
+
+    &__chart-hint {
+        background-color: @dt__grey6;
+    }
+
+    .ndm-bar-chart {
+        &__bg {
+            fill: @dt__grey9;
+        }
+    }
+
+    .ndm-radio-buttons {
+        &__item:not(.ndm-radio-buttons__item--active) {
+            color: @dt__light-blue-text
+        }
+    }
+
+    .white-list {
+        &__item {
+            color: @dt__light-blue-text;
+
+            &:hover {
+                background-color: @dt__greyC;
+                color: @dt__dark-blue-text;
+            }
+
+            &--selected {
+                background-color: @dt__grey5;
+            }
+        }
+    }
+
+    &__tx-icon,
+    &__rx-icon,
+    &__tx-icon--small,
+    &__rx-icon--small,
+    &__chart-hint-rx-icon,
+    &__chart-hint-tx-icon {
+        filter: invert(1);
+    }
+
+    &__filter {
+        color: @dt__white-text;
+        background: @dt__grey6;
+
+        &::-webkit-input-placeholder {
+            color: @dt__greyC;
+        }
+    }
+}

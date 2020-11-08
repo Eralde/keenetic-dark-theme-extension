@@ -1,0 +1,87 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__ndwVars__";
+
+.diagnostics-log-popup {
+    &__list {
+        &-item-datetime {
+            color: @dt__cyan-blue-text;
+        }
+
+        &-item-message {
+            color: @dt__white-text;
+
+            &_error {
+                color: lighten(@_new-red, 5%);
+            }
+
+            &_warning {
+                color: lighten(@_new-green, 5%);
+            }
+        }
+    }
+
+    &__panel-toggle {
+        height: 55px !important;
+    }
+}
+
+.page-diagnostics {
+    .diagnostics-capture_list {
+        ._toppanel:hover {
+            background-color: @dt__grey7 !important;
+        }
+    }
+
+    &__connections {
+        &__table {
+
+            .host-row {
+                &--expanded {
+                    background-color: @dt__grey7;
+                }
+            }
+        }
+    }
+
+    &__usbdsl-dumpsoc {
+        &__controls {
+
+            button[disabled="disabled"] {
+                .ndm-button();
+                .btn--disabled();
+
+                color: @blue-button--disabled !important;
+                background-color: @dt__grey6 !important;
+            }
+
+            &__status {
+                &__error {
+                    color: @red;
+                }
+            }
+        }
+    }
+
+    ._debug_btn_container {
+        .btn.btn--loading.btn--primary,
+        .btn.btn--loading {
+            span {
+                display: none;
+            }
+
+            &::after {
+                margin-top: 0;
+            }
+        }
+    }
+
+    .diagnostics-capture_list {
+        .__cell2 {
+            .btn.btn--loading {
+                span {
+                    opacity: 0;
+                }
+            }
+        }
+    }
+}

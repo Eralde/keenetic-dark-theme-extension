@@ -1,0 +1,141 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.d-dashboard,
+.d-main {
+    background: @dt__grey9 !important;
+
+    &__card:after,
+    &__card:before {
+        background: @dt__grey4 !important;
+    }
+
+    &__card-title {
+        color: @dt__blue-text !important;
+        border-color: @dt__blue-text !important;
+
+        &:focus {
+            .__mixin__box-shadow-on-focus();
+        }
+    }
+}
+
+.d-main__card-header-ref-link {
+    color: @dt__blue-text !important;
+    border-color: @dt__blue-text !important;
+}
+
+.search__submit {
+    background-color: transparent !important;
+}
+
+.ndm-chart__image-anchor-item,
+.d-main__card-content-title {
+    color: @dt__whiter-text !important;
+
+    &--text {
+        color: @dt__whiter-text;
+    }
+
+    &--status {
+        background: transparent !important;
+    }
+}
+
+.d-main__card-header .secondary-title {
+    color: @dt__light-blue-text !important;
+}
+
+.d-main__card-header-info-item {
+    color: @dt__light-blue-text;
+}
+
+.d-main__card.card_segment {
+    .segment {
+        .segment__devices-type--picture {
+            filter: brightness(0.6);
+        }
+    }
+
+    .segment-access-point {
+        &__band {
+            color: @dt__white-text;
+        }
+
+        &__state {
+            .mobile-and-tablet({
+                margin-bottom: @new-unit;
+            });
+        }
+    }
+}
+
+.ssid-column {
+    color: @dt__white-text !important;
+}
+
+
+
+// card_apps app rows
+.d-content .ndm-table:hover {
+    background: @dt__grey7 !important;
+}
+
+#card_switchports {
+    .socket__wrap {
+        filter: brightness(0.7);
+    }
+
+    .socket__label {
+        color: @dt__dark-blue-text !important;
+    }
+
+    label[class*=" socket__background--yellow"],
+    label[class*=" socket__background--blue"],
+    label[class*=" socket__background--green"],
+    label[class*=" socket__background--gray"],
+    label[class*=" socket__background--purple"] {
+        .value {
+            color: @dt__dark-blue-text !important;
+        }
+    }
+}
+
+// Footer
+.d-footer {
+    background: @dt__grey4 !important;
+    color: @dt__white-text !important;
+}
+
+.d-footer-menu__item .menu-link {
+    color: @dt__menu-item-text !important;
+
+    &:focus {
+        background-color: @dt__grey9 !important;
+    }
+}
+
+.d-footer__fast-links-item {
+    color: @dt__menu-item-text !important;
+}
+
+.d-footer-menu__item:hover {
+    background: @dt__grey6 !important;
+}
+
+#card_system {
+    ndm-webhelp-release-notes {
+        a {
+            &:after,
+            &:before {
+                color: lighten(@dt__blue-text, 10%) !important;
+            }
+        }
+    }
+
+    .ref-link {
+        &:focus {
+            box-shadow: none;
+        }
+    }
+}

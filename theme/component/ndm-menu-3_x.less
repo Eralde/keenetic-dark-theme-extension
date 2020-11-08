@@ -1,0 +1,150 @@
+@import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
+
+@import (reference) "../theme-general";
+
+@import (reference) "ndm-menu__vars";
+
+.__mixin__white-icon {
+    filter: brightness(1.4);
+}
+
+.ndm-menu {
+    background-color: @ndm-menu-dark-bg-color;
+
+    .ss-scroll {
+        background-color: mix(@ndm-menu-dark-bg-color, @ndm-menu-light-bg-color, 70%);
+    }
+
+    &__scrollable {
+        background-color: @ndm-menu-dark-bg-color;
+    }
+
+    &--opened:not(.ndm-menu--accordion) {
+        .ndm-menu__group--opened {
+            .ndm-menu__title {
+                background-color: @ndm-menu-dark-bg-color;
+            }
+        }
+
+        .ndm-menu__group {
+            .ndm-menu__item {
+                color: @ndm-menu-light-text-color;
+
+                &:hover,
+                &--active {
+                    color: @dt__white-text;
+                }
+            }
+        }
+    }
+
+    &__group {
+        &:hover {
+            .ndm-menu__title {
+                color: @ndm-menu-light-text-color;
+                background-color: @ndm-menu-highlight-bg-color;
+            }
+        }
+
+        &--active {
+            .ndm-menu__title {
+                color: @ndm-menu-light-text-color;
+                background-color: @ndm-menu-highlight-bg-color;
+            }
+        }
+
+        .ndm-menu__item {
+            color: @ndm-menu-dark-text-color;
+
+            &:hover {
+                background: @ndm-menu-highlight-bg-color;
+            }
+
+            &--active {
+                background-color: @ndm-menu-highlight-bg-color;
+            }
+
+            &--new {
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &--opened {
+        .ndm-menu__group {
+            &--active&--opened {
+                .ndm-menu__title {
+                    background-color: @ndm-menu-dark-bg-color;
+                }
+            }
+        }
+    }
+
+    &--opened&--accordion {
+        .ndm-menu__group--opened {
+            background-color: @ndm-menu-darker-bg-color;
+
+            .ndm-menu__title {
+                background-color: @ndm-menu-darker-bg-color;
+            }
+
+            .ndm-menu__item {
+                color: @ndm-menu-lighter-text-color;
+            }
+        }
+    }
+
+    &__toggle,
+    &__logout {
+        background-color: @ndm-menu-dark-bg-color;
+
+        .ndm-menu__title {
+            color: @ndm-menu-light-text-color;
+        }
+    }
+
+    &__title {
+        filter: grayscale(1);
+        color: @ndm-menu-light-text-color;
+
+        &-icon_container {
+
+            .icon {
+                .__mixin__white-icon();
+            }
+        }
+
+        &::after {
+            .__mixin__white-icon();
+        }
+
+        &:hover {
+            background-color: @ndm-menu-dark-bg-color;
+        }
+    }
+
+    &__logout {
+        height: auto;
+
+        &:hover {
+            background-color: inherit;
+        }
+    }
+
+    &__bottom-support {
+        a {
+            color: @white-text;
+        }
+    }
+
+    .reboot-link {
+        color: @ndm-menu-light-text-color;
+
+        &:hover {
+            background-color: @ndm-menu-highlight-bg-color;
+        }
+    }
+}

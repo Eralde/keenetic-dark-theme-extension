@@ -1,0 +1,36 @@
+@import (reference) "../../../__mixins__";
+@import (reference) "../../../__vars__";
+
+.page-devices-list {
+    .ndm-title.tretiary-title {
+        position: relative;
+
+        .tablet-and-laptop({
+            height: 35px;
+
+            &.__filters-are-visible {
+                & > span:not([ng-transclude]) {
+                    .ellipsis();
+                }
+            }
+        });
+
+        .mobile({
+            &.__filters-are-visible {
+                height: 70px;
+            }
+        });
+    }
+
+    .table-devices-list {
+        .__mixin__no-box-shadow-table();
+
+        .via-mws-msg {
+            color: @dt__grey9;
+        }
+    }
+
+    .__hint-text {
+        color: @dt__grey9;
+    }
+}

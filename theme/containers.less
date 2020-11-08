@@ -1,0 +1,36 @@
+@import (reference) "__vars__";
+
+body {
+    filter: brightness(0.88);
+}
+
+body,
+
+// Dashboard + cards + footer
+.d-main__card,
+
+// Other pages content container
+.ndm-page-header .header,
+.ndm-page__content,
+.ndm-page__content--loading:before,
+
+// Space other then the side menu or the page content container
+.ndm-page-view,
+.ndm-page .ss-content,
+
+// Popup
+.ndm-popup-header,
+.ndm-popup__content,
+
+// 'Small popup' (SMS)
+.ndm-popup-small__container {
+    background: @dt__grey4 !important;
+    color: @dt__white-text !important;
+}
+
+.popup-close__icon {
+    &:before,
+    &:after {
+        background-color: @dt__white-text !important;
+    }
+}

@@ -1,0 +1,32 @@
+@import (reference) "../../__vars__";
+@import (reference) "../../__mixins__";
+
+.cli-page {
+    .cli-content {
+        background-color: @dt__grey4;
+
+        .cli-rest__json-wrapper--bordered,
+        .cli-parse__json-wrapper--bordered {
+            border-color: @dt__greyB;
+        }
+    }
+
+    color: @dt__white-text !important;
+
+    .self-test-selector__label {
+        line-height: 40px;
+    }
+
+    .internet-status {
+        span {
+            position: relative;
+            top: 1px;
+        }
+    }
+}
+
+.cli-ui-view {
+    .ss-content {
+        background-color: @dt__grey4;
+    }
+}

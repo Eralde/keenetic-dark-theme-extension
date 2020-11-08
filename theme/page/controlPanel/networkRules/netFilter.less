@@ -1,0 +1,59 @@
+@import (reference) "../../../__vars__";
+
+.page-netFilter {
+
+    .profiles-table {
+        tr:hover {
+            .sb-toggle:hover {
+                background-color: @dt__grey9 !important;
+            }
+        }
+
+        .sb-toggle.sb-toggle-active {
+            background-color: @dt__grey9 !important;
+        }
+    }
+
+    &__unavailable-warning {
+        &--loading {
+            color: @dt__white-text;
+        }
+    }
+
+    &__dns-table {
+        thead {
+            background-color: @dt__grey6;
+        }
+
+        tbody tr {
+            border-bottom-color: @dt__grey9;
+
+            &:hover {
+                background-color: @dt__grey7 !important;
+
+                input {
+                    border-color: @dt__dark-red !important;
+                }
+
+                .field--error-text {
+                    color: @dt__dark-red !important;
+                }
+            }
+        }
+    }
+
+    &__dns-over-tls-table,
+    &__dns-over-https-table {
+        thead {
+            background-color: transparent;
+        }
+
+        tbody tr {
+            border-bottom-color: @dt__grey9 !important;
+
+            &:hover {
+                background-color: @dt__grey7 !important;
+            }
+        }
+    }
+}

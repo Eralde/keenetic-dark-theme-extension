@@ -1,0 +1,25 @@
+@import (reference) "../__mixins__";
+
+.ndm-input {
+    .field {
+        .__mixin__main-text-container();
+
+        &:-webkit-autofill {
+            caret-color: @dt__white-text;
+            -webkit-box-shadow: inset 0 0 0 50px @dt__grey6;
+            -webkit-text-fill-color: @dt__white-text;
+        }
+    }
+
+    &__unit-text__container {
+        color: @dt__white-text;
+    }
+
+    .form__cell-action-link {
+        color: @dt__blue-text;
+    }
+
+    .field--error-text {
+        color: @red-contrast;
+    }
+}

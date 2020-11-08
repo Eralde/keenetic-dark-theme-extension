@@ -1,0 +1,42 @@
+@import (reference) "../__mixins__";
+
+.ndm-checkbox {
+    &--dark { // theme-specific
+
+        .form__cell--input-label {
+            max-width: none !important;
+            width: auto !important;
+            font-size: 13px;
+        }
+    }
+
+    .form__cell.form__cell--input-label {
+        padding-right: 14px;
+    }
+}
+
+.page-devices-list {
+
+    .ndm-title.tretiary-title {
+
+        .devices-list-toolbar { // theme-specific
+            display: inline-flex;
+            flex-direction: row;
+            position: relative;
+            left: 30px;
+            padding-top: 4px;
+
+            .tablet({
+                left: 8px;
+            });
+
+            .mobile({
+                position: absolute;
+                flex-direction: column;
+                top: 24px;
+                padding-top: 0;
+                left: 0;
+            });
+        }
+    }
+}

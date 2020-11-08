@@ -1,0 +1,147 @@
+@import (reference) "__vars__";
+
+/* MEDIA */
+@small-devices: ~"screen and (max-width: 1044px)";
+@small: ~"screen and (max-width: 768px)";
+@medium: ~"screen and (min-width: 769px) and (max-width: 1024px)";
+@medium-and-more: ~"screen and (min-width: 769px)";
+@large: ~"screen and (min-width: 1025px) and (max-width: 1366px)";
+@xlarge: ~"screen and (min-width: 1367px)";
+@xlarge__max: ~"screen and (max-width: 1367px)";
+@more-than-UHD: ~"screen and (min-width: 1921px)";
+
+/* NEW MEDIA */
+@sizes: {
+    mobile: 767px;
+    tablet-min: 768px;
+    tablet-max: 1280px;
+    laptop: 1281px;
+    wide-laptop: 1920px;
+}
+
+.mobile-less-then-400(@rules) {
+    @media screen and (max-width: 400px) {
+        @rules();
+    }
+}
+
+.mobile-less-then-600(@rules) {
+    @media screen and (max-width: 600px) {
+        @rules();
+    }
+}
+
+.mobile(@rules) {
+    @media screen and (max-width: @sizes[mobile]) {
+        @rules();
+    }
+}
+
+.mobile-landscape(@rules) {
+    @media screen and (max-width: @sizes[mobile]) and (orientation: landscape) {
+        @rules();
+    }
+}
+
+.mobile-portrait(@rules) {
+    @media screen and (max-width: @sizes[mobile]) and (orientation: portrait) {
+        @rules();
+    }
+}
+
+.mobile-and-tablet(@rules) {
+    @media screen and (max-width: @sizes[tablet-max]) {
+        @rules();
+    }
+}
+
+.tablet(@rules) {
+    @media screen and (min-width: @sizes[tablet-min]) and (max-width: @sizes[tablet-max]) {
+        @rules();
+    }
+}
+
+.tablet-landscape(@rules) {
+    @media screen and (min-width: @sizes[tablet-min]) and (max-width: @sizes[tablet-max]) and (orientation: landscape) {
+        @rules();
+    }
+}
+
+.tablet-and-laptop(@rules) {
+    @media screen and (min-width: @sizes[tablet-min]) {
+        @rules();
+    }
+}
+
+.laptop(@rules) {
+    @media screen and (min-width: @sizes[laptop]) {
+        @rules();
+    }
+}
+
+.wide-laptop(@rules) {
+    @media screen and (min-width: @sizes[wide-laptop]) {
+        @rules();
+    }
+}
+
+.__mixin__box-shadow-on-focus(
+    @start-color: @dt__greyB,
+    @end-color: @dt__grey6
+) {
+    box-shadow: 0 0 0.2em 0.2em @start-color, 0 0 0.3em 0.2em @end-color;
+};
+
+.__mixin__main-text-container-no-important() {
+    color: @dt__white-text;
+    background: @dt__grey6;
+}
+
+.__mixin__main-text-container() {
+    color: @dt__white-text !important;
+    background: @dt__grey6 !important;
+}
+
+.__mixin__box-shadow-table {
+    @shadow-size: 15px;
+    @col1: rgba(0, 0, 0, 0.3);
+    @col2: rgba(22, 22, 22, 1);
+
+    box-shadow: inset -@shadow-size 0px @shadow-size -@shadow-size @col1, inset @shadow-size 0px @shadow-size -@shadow-size @col1;
+
+    table {
+        position: relative;
+        padding: 0 @shadow-size * 2;
+        width: 100%;
+        box-shadow: inset -@shadow-size 0px @shadow-size 0px @col2, inset @shadow-size 0px @shadow-size 0px @col2;
+    }
+}
+
+.__mixin__no-box-shadow-table {
+    box-shadow: none;
+
+    table {
+        box-shadow: none;
+    }
+}
+
+.__mixin__convert-color-to-dt__white-text() {
+    // https://codepen.io/sosuke/pen/Pjoqqp
+    // first brightness(0) converts icon color to black
+    filter: brightness(0) invert(86%) sepia(6%) saturate(8%) hue-rotate(75deg) brightness(95%) contrast(104%);
+}
+
+.cssMax1line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Works in FF, 'display: block' is mandatory
+.ellipsis {
+    .cssMax1line;
+
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    display: block;
+}

@@ -1,0 +1,95 @@
+@import (reference) "../__vars__";
+
+@import (reference) "ndm-menu__vars";
+
+.search__reset {
+    background-color: transparent !important;
+}
+
+.ndm-menu {
+    background: @ndm-menu-dark-bg-color;
+
+    .ss-scroll {
+        background-color: mix(@ndm-menu-dark-bg-color, @ndm-menu-light-bg-color, 70%);
+    }
+
+    @media screen and (min-width: 1280px) {
+        z-index: 9999;
+    }
+
+    &__title {
+        filter: grayscale(1);
+        color: @ndm-menu-light-text-color !important;
+        font-weight: bolder;
+    }
+
+    &__group {
+        background: @ndm-menu-dark-bg-color;
+        margin-left: 0;
+        margin-right: 0;
+
+        &:last-child {
+            margin: -18px 0 0 0;
+            padding-top: 18px;
+            padding-bottom: 18px;
+            background: @ndm-menu-darker-bg-color;
+        }
+    }
+
+    &__item {
+        color: @white-text !important;
+        margin: 0;
+
+        .item-link {
+            height: 32px;
+            line-height: 32px;
+            color: @white-text !important; // lighten(@dt__blue-text, 10%) !important;
+        }
+
+        &--active {
+            background: @ndm-menu-highlight-bg-color !important;
+
+            .item-link {
+                color: @ndm-menu-light-text-color !important;
+            }
+        }
+
+        &:hover {
+            background-color: @ndm-menu-highlight-bg-color !important;
+
+            .item-link {
+                color: @ndm-menu-light-text-color !important;
+            }
+        }
+    }
+
+    &__group__item {
+        background-color: @ndm-menu-darker-bg-color;
+    }
+
+    &__group__item__link {
+        color: @ndm-menu-light-text-color;
+    }
+
+    &__group__title {
+        color: @dt__cyan-blue-text;
+    }
+
+    &__group__item__link {
+        padding: 8px 40px 8px 40px;
+    }
+
+    &__group__title {
+        padding: 4px 40px 12px 40px;
+    }
+
+    &__group__item--active,
+    &__group__item:hover {
+        border-color: transparent;
+        background: @ndm-menu-highlight-bg-color !important;
+    }
+
+    &--open {
+        border-right-color: @ndm-menu-darker-bg-color;
+    }
+}

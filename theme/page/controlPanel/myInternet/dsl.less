@@ -1,0 +1,57 @@
+@import (reference) "../../../__vars__";
+
+.page-usbdsl,
+.page-dsl {
+    .socket__icon {
+        filter: brightness(0.7);
+    }
+
+    .socket__label {
+        mix-blend-mode: difference;
+    }
+
+    .socket__value {
+        &--voip {
+            .socket__wrap {
+                background-color: darken(@purple-2, 65%);
+            }
+        }
+        &--inet {
+            .socket__wrap {
+                background-color: darken(@blue-dashboard, 65%);
+            }
+        }
+        &--iptv {
+            .socket__wrap {
+                background-color: darken(@green-port-bg, 65%);
+            }
+        }
+        &--multicast {
+            .socket__wrap {
+                background-color: darken(@light-blue-background, 65%);
+            }
+        }
+    }
+
+    .socket__wrap {
+        &--yellow {
+            background-color: darken(@yellow-wrap, 65%);
+        }
+
+        &--blue {
+            background-color: darken(@light-blue-background, 65%);
+        }
+
+        &--gray {
+            background-color: darken(@gray-port, 65%);
+        }
+    }
+
+    .icon.icon--inet,
+    .icon.icon--voip,
+    .icon.icon--iptv,
+    .icon.svg-voip,
+    .icon.svg-iptv {
+        filter: invert(0.9);
+    }
+}

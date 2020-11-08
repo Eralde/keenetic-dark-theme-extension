@@ -1,0 +1,34 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-table {
+    tr {
+        border-color: @dt__grey9 !important;
+    }
+
+    tbody tr:hover,
+    &--row:hover {
+        background-color: @dt__grey7 !important;
+    }
+
+    td {
+        color: @dt__white-text !important;
+    }
+
+    box-shadow: none !important;
+
+    .checkbox__label {
+        background-color: @dt__grey9 !important;
+    }
+
+    .as-sortable-dragging {
+        left: unset;
+
+        position: absolute;
+        background-color: @dt__grey7;
+    }
+}
+
+ndm-table {
+    .__mixin__no-box-shadow-table();
+}

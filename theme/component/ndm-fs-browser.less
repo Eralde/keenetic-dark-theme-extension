@@ -1,0 +1,52 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-fs-toolbar__button {
+    .baloon__arrow,
+    .baloon__body {
+        background-color: @dt__grey6;
+    }
+}
+
+.fs-browser {
+    &__header {
+        background-color: @dt__grey4;
+        border-bottom-color: @dt__grey6;
+
+        &_filesize::before {
+            color: @dt__grey6;
+        }
+    }
+    &__column {
+        background-color: @dt__grey4;
+        color: @dt__white-text;
+
+        &-right,
+        &:after {
+            background: @dt__grey4;
+        }
+    }
+
+    .ndm-fs-toolbar {
+        background-color: @dt__grey3;
+    }
+}
+
+.ndm-fs-tree__node {
+
+    &, &__item {
+        background-color: @dt__grey4 !important;
+    }
+
+    &__item {
+        @keyframes ndm-fs-tree-node-highlight {
+            from {background-color: @dt__grey6; }
+            to {background-color: inherit; }
+        }
+
+        &--highlight {
+            animation-name: ndm-fs-tree-node-highlight;
+            animation-duration: 4s;
+        }
+    }
+}

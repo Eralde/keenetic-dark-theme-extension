@@ -1,0 +1,33 @@
+@import (reference) "../../../__vars__";
+
+.page-otherConnections {
+    .ipsec-table {
+        tbody tr:hover,
+        .table__row:hover {
+            background-color: @dt__grey7 !important;
+            color: @dt__white-text;
+        }
+    }
+
+    .wireguard-table {
+        &__cell {
+            color: @dt__white-text !important;
+        }
+
+        &__connection:hover {
+            background-color: @dt__grey7 !important;
+            color: @dt__white-text;
+        }
+
+        &__connection-address,
+        &__peer-without-name {
+            color: @dt__white-text;
+        }
+    }
+}
+
+.wireguard-editor {
+    .wireguard-peer__header {
+        color: @dt__white-text;
+    }
+}

@@ -1,0 +1,42 @@
+@import (reference) "../__mixins__";
+@import (reference) "../__vars__";
+
+@ndm-table-deviceslist-row-hover: @dt__grey5;
+
+.ndm-table-deviceslist {
+    thead {
+        .__mixin__main-text-container;
+    }
+
+    tbody {
+        .table__col--1,
+        .table__col--3 {
+            &:hover {
+                span {
+                    height: initial !important;
+                    background-color: @ndm-table-deviceslist-row-hover !important;
+                }
+            }
+        }
+
+        .table__col--1 {
+
+        }
+
+        .table__col--long-name {
+            &:hover {
+                background-color: @ndm-table-deviceslist-row-hover !important;
+            }
+        }
+
+        tr {
+            &:hover {
+                background-color: @ndm-table-deviceslist-row-hover !important;
+
+                .icon--pencil {
+                    filter: brightness(2);
+                }
+            }
+        }
+    }
+}

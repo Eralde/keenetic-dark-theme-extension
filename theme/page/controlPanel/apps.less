@@ -1,0 +1,124 @@
+@import (reference) "../../__mixins__";
+@import (reference) "../../__vars__";
+
+
+.app__card {
+    .__mixin__main-text-container;
+}
+
+.__mixin__app-card-header() {
+    color: @dt__blue-text !important;
+
+    & div {
+        color: @dt__blue-text !important;
+    }
+
+    &:hover {
+        &::after {
+            background-color: @dt__blue-text !important;
+        }
+    }
+}
+
+.app__card-header-toggle__not-configured {
+    .toggle__label:after {
+        background: @dt__grey2 !important;
+    }
+}
+
+.app__card-multiple-toggle-section {
+    &-header-title,
+    &-header-subtitle {
+        .__mixin__app-card-header();
+    }
+}
+
+.app__card-header-title {
+    .__mixin__app-card-header();
+}
+
+.page-apps {
+    .usb-device-list__table {
+        .icon--usbDrive,
+        .icon--printer {
+            filter: invert(0.8);
+        }
+
+        &-free-space-label {
+            color: @dt__white-text;
+        }
+
+        .btn.btn--loading {
+            color: transparent !important;
+        }
+    }
+
+    .users-table {
+        .checkbox__label:before,
+        .field {
+            .__mixin__main-text-container;
+        }
+    }
+
+    &__private-cloud__folder-not-selected {
+        color: @dt__white-text;
+    }
+}
+
+[class^="page-apps"] {
+    tr {
+        input[type="text"] {
+            &:focus,
+            &:hover {
+                background-color: @dt__grey9 !important;
+            }
+        }
+    }
+
+    tr:hover {
+        input {
+            background-color: @dt__grey9 !important;
+        }
+    }
+
+    tr {
+        .user-ip-address {
+            input {
+                border-color: transparent !important;
+
+                &:hover {
+                    border-color: @blue-field !important;
+                    background-color: @dt__grey6 !important;
+                }
+
+                &:focus {
+                    border-color: @blue-field !important;
+                    background-color: @dt__grey6 !important;
+                }
+
+                &.field--error {
+                    border-color: @red !important;
+                }
+            }
+        }
+
+        &:hover {
+            .user-ip-address {
+                input {
+                    background-color: @dt__grey6 !important;
+                    border-color: @dt__dark-red !important;
+                }
+
+                .field--error-text {
+                    color: @dt__dark-red !important;
+                }
+            }
+        }
+    }
+
+    td {
+        .icon.icon--device {
+            filter: invert(0.9);
+        }
+    }
+}

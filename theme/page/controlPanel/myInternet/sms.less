@@ -1,0 +1,79 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__ndwVars__";
+@import (reference) "../../../__mixins__";
+
+.sms-pool {
+    background-color: inherit;
+
+    &__message-title {
+        color: @dt__cyan-blue-text;
+    }
+
+    &__prev-button {
+        padding: 6px;
+    }
+
+    &__prev-button,
+    &__remove-all,
+    &__new-message-button {
+        transition: 0.3s ease;
+
+        &:hover {
+            background-color: @dt__grey7 !important;
+        }
+    }
+}
+
+.sms-preview {
+    &__title {
+        color: @dt__cyan-blue-text;
+    }
+
+    &__message {
+        color: @dt__white-text;
+    }
+
+    &:hover {
+        background-color: @dt__grey6;
+    }
+}
+
+.sms-message-editor {
+    .sms-textarea {
+        &__label {
+            color: @dt__white-text;
+        }
+
+        &__textarea {
+            .__mixin__main-text-container-no-important();
+        }
+    }
+}
+
+.sms-dialog {
+    &__message {
+        .__mixin__main-text-container-no-important();
+
+        &--separator {
+            color: @dt__white-text;
+            background-color: transparent;
+        }
+    }
+
+    &__textarea-wrap {
+        border-color: @dt__grey8;
+
+        textarea {
+            color: @dt__white-text;
+            background-color: @dt__grey4;
+        }
+    }
+
+    &__send {
+        transition: 0.3s ease;
+
+        &:hover {
+            background-color: @dt__grey7 !important;
+        }
+    }
+}

@@ -1,0 +1,89 @@
+@import (reference) "__ndwVars__";
+
+.popup-content {
+    font-family: Helvetica, monospace;
+    font-size: 14px;
+    min-width: 160px;
+}
+
+.form__cell {
+    &:not(:first-child) {
+        margin-top: 16px;
+    }
+}
+
+.ndm-toggle {
+    position: relative;
+
+    .toggle__label--ff {
+        padding-top: 2px;
+    }
+
+    .toggle {
+        display: inline-block;
+        line-height: 25px;
+    }
+
+    .toggle__input {
+        height: 17px;
+        margin: 0 3px 0 0;
+        vertical-align: top;
+        width: 17px;
+
+        &:not(checked) {
+            opacity: 0;
+            position: absolute;
+        }
+
+        &:checked + .toggle__label {
+            &:before {
+                background: @blue-main;
+            }
+
+            &:after {
+                left: 22px;
+            }
+        }
+    }
+
+    .toggle__input--disabled + .toggle__label {
+        cursor: default;
+
+        &:before {
+            cursor: default;
+            opacity: 0.4;
+        }
+    }
+
+    .toggle__label {
+        cursor: pointer;
+        padding-left: 56px;
+        position: relative;
+
+        &:before {
+            background: @grey-input;
+            border-radius: 13px;
+            box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.1);
+            content: '';
+            height: 25px;
+            left: 0;
+            position: absolute;
+            top: -4px;
+            transition: background 0.05s linear 0.15s;
+            width: 46px;
+        }
+
+        &:after {
+            background: @white;
+            border-radius: 11px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            content: '';
+            height: 23px;
+            left: 1px;
+            position: absolute;
+            top: -3px;
+            transition: left 0.1s;
+            width: 23px;
+        }
+    }
+}

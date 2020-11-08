@@ -1,0 +1,41 @@
+@import (reference) "../__ndwVars__";
+
+.ndm-layout:not(.ndm-layout--dark-theme) {
+    .ndm-menu {
+        &__logout:hover {
+            background-color: transparent;
+        }
+    }
+}
+
+.reboot-link {
+    padding-left: 60px;
+    cursor: pointer;
+    padding-right: @new-gap-sm;
+    padding-top: @new-unit;
+    color: @white-text;
+    text-decoration: none;
+    box-sizing: border-box;
+    display: block;
+    height: @new-gap-lg;
+    overflow: hidden;
+    opacity: 1;
+    width: 100%;
+    order: 2;
+}
+
+.ndm-menu:not(.ndm-menu--opened) {
+    .reboot-link {
+        height: 0;
+    }
+}
+
+.ndm-menu.ndm-menu--opened {
+    .reboot-link {
+        &--active,
+        &:hover {
+            background-color: #124169;
+            filter: brightness(0.8) !important;
+        }
+    }
+}

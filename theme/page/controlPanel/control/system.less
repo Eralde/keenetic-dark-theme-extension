@@ -1,0 +1,104 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+
+.system__components-popup {
+    &__version-change-warning {
+        color: @dt__cyan-blue-text;
+    }
+
+    .components-group__header {
+        background-color: @dt__grey7 !important;
+    }
+
+    .component{
+        &:hover {
+            background: @dt__grey6 !important;
+        }
+
+        &__state {
+            .checkbox__label {
+                &:before {
+                    background-color: @dt__grey7 !important;
+                }
+            }
+        }
+    }
+}
+
+.page-system {
+    .system__components-section {
+        .ndm-select-with-details {
+            &__details-container {
+                background-color: @dt__grey6;
+                width: auto;
+
+                .option-details {
+                    &__title,
+                    &__description {
+                        color: @dt__white-text;
+                    }
+                }
+            }
+        }
+
+        .firmware-update-check,
+        .firmware-update-info,
+        .no-firmware-updates {
+            color: @dt__white-text;
+        }
+    }
+
+    .system__components-popup {
+
+        .components-group__header {
+            background-color: @dt__grey7 !important;
+        }
+        .component{
+            &:hover {
+                background: @dt__grey6 !important;
+            }
+
+            &__state {
+                .checkbox__label {
+                    &:before {
+                        background-color: @dt__grey7 !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .system__system-files-section {
+        .system-file {
+            &:hover {
+                background-color: @dt__grey7 !important;
+            }
+
+            &__icon {
+                filter: invert(0.8);
+            }
+        }
+    }
+
+    .system__switchports-section {
+        .device-switchports__item {
+            .icon--big-port,
+            .icon--switchport {
+                color: @dt__dark-blue-text !important;
+                filter: brightness(0.85);
+            }
+
+            .sb-toggle,
+            .sb-toggle * {
+                color: @dt__black2 !important;
+                background: @dt__greyC !important;
+            }
+        }
+    }
+}
+
+.sysmode-list {
+    .sysmode-icon {
+        filter: brightness(1.2);
+    }
+}

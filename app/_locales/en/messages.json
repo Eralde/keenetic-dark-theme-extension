@@ -1,0 +1,33 @@
+{
+  "appName": {
+    "message": "keenetic-dark-theme-extension",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "keenetic-dark",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "appDescription": {
+    "message": "Dark mode for the web interface of the Keenetic devices",
+    "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "Keenetic Dark Theme",
+    "description": "The title of the browser action button"
+  },
+  "toggleThemeDescription": {
+    "message": "Toggle Dark Theme"
+  },
+  "showFilterCheckboxes": {
+    "message": "Show filters"
+  },
+  "hideUnregisteredHosts": {
+    "message": "Hide unregistered devices"
+  },
+  "hideHostsBlockedByMac": {
+    "message": "Hide devices blocked by MAC address"
+  },
+  "hideOfflineHosts": {
+    "message": "Hide offline devices"
+  }
+}

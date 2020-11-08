@@ -1,0 +1,15 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-edit-in-place {
+    &__subtext {
+        color: @dt__light-blue-text !important;
+    }
+
+    &__data {
+        &:focus {
+            .__mixin__box-shadow-on-focus();
+
+        }
+    }
+}

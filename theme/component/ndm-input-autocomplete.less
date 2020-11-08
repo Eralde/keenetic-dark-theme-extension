@@ -1,0 +1,28 @@
+@import (reference) "../__vars__";
+@import (reference) "../__mixins__";
+
+.ndm-input-autocomplete {
+    &__wrapper,
+    &__input,
+    &__dropdown-container {
+        background-color: @dt__grey6;
+    }
+
+    .dropdown-item--no-match,
+    &__input {
+        color: @dt__whiter-text;
+    }
+
+    .dropdown-item {
+        &__handle {
+            color: @dt__whiter-text;
+        }
+
+        &--focus,
+        &:hover {
+            .dropdown-item__handle {
+                color: @black;
+            }
+        }
+    }
+}

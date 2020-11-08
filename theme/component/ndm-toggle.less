@@ -1,0 +1,31 @@
+@import (reference) "../__vars__";
+
+.ndm-toggle {
+    .toggle__label:after {
+        background: @dt__grey2 !important;
+    }
+
+    .toggle-text {
+        .toggle-description {
+            &:not(.help-text--warning):not(.help-text--success) {
+                color: @dt__cyan-blue-text !important;
+            }
+
+            &.help-text--warning {
+                font-weight: 500;
+                color: lighten(@_new-red, 10%) !important;
+            }
+
+            &.help-text--success {
+                font-weight: 500;
+                color: @dt__green-light !important;
+            }
+        }
+    }
+
+    .toggle__input {
+        &:focus + .toggle__label:before {
+            .__mixin__box-shadow-on-focus();
+        }
+    }
+}
