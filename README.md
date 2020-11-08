@@ -54,7 +54,7 @@ Dark theme for the web UI of the Keenetic devices
 │  
 │  
 ├── build-css.js                    - utility npm script that rebuilds theme CSS files
-├── build-l10n.js                   - utility npm script that l10n.js
+├── build-l10n.js                   - utility npm script that rebuilds l10n.js
 │  
 └── webextension-toolbox-config.js  - webextension-toolbox configuration
 ```
