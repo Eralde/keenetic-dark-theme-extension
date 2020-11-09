@@ -15,6 +15,8 @@ Dark theme for the web UI of the Keenetic devices
 
 ```
 ├── app/ - actual webextension code
+│   │  
+│   │  
 │   ├── _locales/                   - l10n data
 │   ├── images/                     - extension icons
 │   │    
@@ -42,6 +44,8 @@ Dark theme for the web UI of the Keenetic devices
 │   └── mainfest.json               - webextension manifest       
 │  
 ├── theme/ - LESS files
+│   │  
+│   │  
 │   ├── component/                  - component styles (e.g. dropdown menu styles)    
 │   ├── page/                       - page-specific styles (e.g. special styles for the dashboard)  
 │   ├── uiExtensions/               - styles for UI extensions added by keenetic-dark-theme-extensions  
@@ -61,7 +65,7 @@ Dark theme for the web UI of the Keenetic devices
 
 ## Development build
 
-Run on of the following commands:
+Run one of the following commands:
 
     npm run dev chrome
     npm run dev firefox
@@ -69,28 +73,28 @@ Run on of the following commands:
     npm run dev edge
 
 Then load the extension from the `./dist/{browser}` folder.
-It will reload itself automatically on
-any change to the files in the `./app` folder.
+It will reload itself automatically on changes to the `./app` folder contents.
 
 ## Utility `npm` scripts:
 
-- rebuild CSS files (execute manually after changes to the `./theme` folder files):<br/>
+- compile LESS files from `./theme` to CSS files (`./app/styles`)<br/>
+  (execute manually after changes to the `./theme` folder files):<br/>
   `npm run build-css`
 
-- rebuild the `app/scripts/lib/l10n.js` file:<br/>
+- rebuild `./app/scripts/lib/l10n.js` file:<br/>
   `npm run build-l10n`
 
 ## Production build
 
-Build an archive suitable for one of the browsers:
+Build minified version of the extension & pack it into a ZIP archive:
 
     npm run build chrome
     npm run build firefox
     npm run build opera
     npm run build edge
 
-Archive for the Mozilla Firefox
-can be signed as `.xpi` file
+Archive contents for the Mozilla Firefox browser
+can be signed as an `.xpi` file
 via the [`web-ext`](https://github.com/mozilla/web-ext) command line tool.
 
 The `./packages` folder will contain an archive for the browser you've selected.
