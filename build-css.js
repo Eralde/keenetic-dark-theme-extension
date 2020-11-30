@@ -36,6 +36,7 @@ const build = () => {
         .then(generateLegacyCss)
         .then(async () => {
             await exec(`npx lessc ${THEME_DIR}/extensionPopup.less ${CSS_OUTPUT_DIR}/popup.css`);
+            await exec(`npx lessc ${THEME_DIR}/extensionOptions.less ${CSS_OUTPUT_DIR}/options.css`);
         });
 };
 
