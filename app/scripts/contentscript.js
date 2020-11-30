@@ -12,6 +12,10 @@ import {
     TOGGLE_UI_EXTENSIONS_EVENT,
     TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT,
     BACKGROUND_PAGE_INITIALIZED_EVENT,
+    ORIGINAL_SWITCHPORTS_TEMPLATE,
+    RELOAD_DASHBOARD,
+    INJECTED_JS_INITIALIZED,
+    INITIAL_STORAGE_DATA,
 } from './lib/constants';
 
 import {
@@ -39,6 +43,9 @@ let sendMsg = _.noop;
 let onMessageCallbacks = [];
 let messagesQueue = [];
 let isScriptReady = false;
+let injectedJsInitialized = false;
+let backgroundMessageListenerRegistered = false;
+let ndmVersion;
 
 const injectStyle = (fileName, stylesMapKey, node = 'body') => {
     const filePath = browser.extension.getURL(fileName);
@@ -151,6 +158,14 @@ const deregisterCallback = (uid) => {
     onMessageCallbacks = onMessageCallbacks.filter(item => item.uid !== uid);
 };
 
+const onMessage = (request) => {
+    onMessageCallbacks.forEach(item => {
+        item.callback(request);
+    });
+
+    onMessageCallbacks = onMessageCallbacks.filter(item => !item.runOnce);
+};
+
 const reconnectToExtension = () => {
     bgConnect = null;
     sendMsg = _.noop;
@@ -169,38 +184,34 @@ const connectToExtension = () => {
             return false;
         }
     }
-};
 
-connectToExtension();
+    if (!backgroundMessageListenerRegistered) {
+        backgroundMessageListenerRegistered = true;
 
-const onMessage = (request) => {
-    onMessageCallbacks.forEach(item => {
-        item.callback(request);
-    });
+        bgConnect.onMessage.addListener((request) => {
+            if (!isScriptReady) {
+                if (request) {
+                    messagesQueue.push(request);
+                }
 
-    onMessageCallbacks = onMessageCallbacks.filter(item => !item.runOnce);
-};
+                return;
+            }
 
-bgConnect.onMessage.addListener((request) => {
-    if (!isScriptReady) {
-        if (request) {
-            messagesQueue.push(request);
-        }
+            // Clear queue
+            let msg = messagesQueue.pop();
 
-        return;
+            while (msg) {
+                onMessage(msg);
+                msg = messagesQueue.pop();
+            }
+
+            // Process new message
+            setTimeout(() => {
+                onMessage(request);
+            });
+        });
     }
-
-    let msg = messagesQueue.pop();
-
-    while (msg) {
-        onMessage(msg);
-        msg = messagesQueue.pop();
-    }
-
-    setTimeout(() => {
-        onMessage(request);
-    });
-});
+};
 
 const sendUiExtensionsState = (state, awaitResponse = false) => {
     let responseReceived = false;
@@ -255,100 +266,167 @@ const onThemeToggle = (state) => {
     return toggleThemeCss(state);
 };
 
-let ndmVersion;
-
 browser.runtime.onMessage.addListener(request => {
     if (request.ndmVersion) {
         return Promise.resolve({response: ndmVersion});
     }
 });
 
-injectScript('scripts/main.js');
+const processNdmVerMessage = (event) => {
+    const version = event.data.payload;
+    const firstSymbol = version ? version[0] : '';
+
+    const isLegacyVersion = firstSymbol === '0';
+    const is2xVersion = firstSymbol === '1'; // 2.15, 2.14
+    const is3xVersion = FW3X_BRANCHES.some(branch => startsWith(version, branch));
+
+    ndmVersion = version;
+
+    if (isLegacyVersion) {
+        stylesToInject = stylesObjectToArray(LEGACY_STYLES);
+    } else if (is3xVersion) {
+        stylesToInject = stylesObjectToArray(STYLES_3X);
+    } else if (is2xVersion) {
+        stylesToInject = stylesObjectToArray(STYLES_2X);
+    } else {
+        console.warn(`Unsupported ndw version: ${version}`);
+
+        return;
+    }
+
+    registerCallback(
+        () => {
+            stylesToInject.forEach(args => {
+                injectStyle(...args);
+            });
+
+            stylesInjected = true;
+        },
+        true,
+    );
+
+    const initCallbackId = registerCallback((request) => {
+        const keys = Object.keys(request);
+
+        if (!keys.includes(BACKGROUND_PAGE_INITIALIZED_EVENT)) {
+            return;
+        }
+
+        deregisterCallback(initCallbackId);
+
+        setTimeout(() => {
+            browser.storage.local.get().then(data => {
+                const state = _.get(data, UI_EXTENSIONS_KEY, true);
+
+                sendUiExtensionsState(state, true);
+            });
+        }, 100);
+    });
+
+    createStateController({
+        portObj: bgConnect,
+        sendMsgFn: sendMsg,
+        queryMsg: THEME_IS_ENABLED_KEY,
+        keyInResponse: THEME_IS_ENABLED_KEY,
+        onStateChange: onThemeToggle,
+    });
+
+    createStateController({
+        portObj: bgConnect,
+        sendMsgFn: sendMsg,
+        queryMsg: MENU_ANIMATIONS_KEY,
+        keyInResponse: MENU_ANIMATIONS_KEY,
+        onStateChange: toggleAnimationsCss,
+    });
+
+    createStateController({
+        portObj: bgConnect,
+        sendMsgFn: sendMsg,
+        queryMsg: UI_EXTENSIONS_KEY,
+        keyInResponse: UI_EXTENSIONS_KEY,
+        onStateChange: hideUiExtensions,
+    });
+
+    injectScript('scripts/injectUiExtensions.js');
+
+    isScriptReady = true;
+};
+const processSwitchportsTemplateMessage = (event) => {
+    const payload = _.get(event, 'data.payload');
+
+    browser.storage.local.set({
+        switchportTemplateOriginal: payload,
+    });
+};
+
+const sendStorageUntilJsInitialized = () => {
+    const send = () => {
+        setTimeout(() => {
+            browser.storage.local.get().then((data) => {
+                window.postMessage(
+                    {
+                        action: INITIAL_STORAGE_DATA,
+                        payload: data,
+                    },
+                    {
+                        origin: '*',
+                    },
+                );
+
+
+                if (!injectedJsInitialized) {
+                    setTimeout(send, 100);
+                }
+            });
+        });
+    }
+
+    send();
+}
 
 window.addEventListener(
     'message',
     (event) => {
-        if (event.data.action !== 'NDM_VER') {
-            return;
+        const action = _.get(event, 'data.action');
+
+
+        switch (action) {
+            case 'NDM_VER': // intentionally not a constant
+                processNdmVerMessage(event);
+                break;
+
+            case ORIGINAL_SWITCHPORTS_TEMPLATE:
+                processSwitchportsTemplateMessage(event);
+                break;
+
+            case INJECTED_JS_INITIALIZED:
+                injectedJsInitialized = true;
+                break;
         }
-
-        const version = event.data.payload;
-        const firstSymbol = version ? version[0] : '';
-
-        const isLegacyVersion = firstSymbol === '0';
-        const is2xVersion = firstSymbol === '1'; // 2.15, 2.14
-        const is3xVersion = FW3X_BRANCHES.some(branch => startsWith(version, branch));
-
-        ndmVersion = version;
-
-        if (isLegacyVersion) {
-            stylesToInject = stylesObjectToArray(LEGACY_STYLES);
-        } else if (is3xVersion) {
-            stylesToInject = stylesObjectToArray(STYLES_3X);
-        } else if (is2xVersion) {
-            stylesToInject = stylesObjectToArray(STYLES_2X);
-        } else {
-            console.warn(`Unsupported ndw version: ${version}`);
-
-            return;
-        }
-
-        registerCallback(
-            () => {
-                stylesToInject.forEach(args => {
-                    injectStyle(...args);
-                });
-
-                stylesInjected = true;
-            },
-            true,
-        );
-
-        const initCallbackId = registerCallback((request) => {
-            const keys = Object.keys(request);
-
-            if (!keys.includes(BACKGROUND_PAGE_INITIALIZED_EVENT)) {
-                return;
-            }
-
-            deregisterCallback(initCallbackId);
-
-            setTimeout(() => {
-                browser.storage.local.get().then(data => {
-                    const state = _.get(data, UI_EXTENSIONS_KEY, true);
-
-                    sendUiExtensionsState(state, true);
-                });
-            }, 100);
-        });
-
-        createStateController({
-            portObj: bgConnect,
-            sendMsgFn: sendMsg,
-            queryMsg: THEME_IS_ENABLED_KEY,
-            keyInResponse: THEME_IS_ENABLED_KEY,
-            onStateChange: onThemeToggle,
-        });
-
-        createStateController({
-            portObj: bgConnect,
-            sendMsgFn: sendMsg,
-            queryMsg: MENU_ANIMATIONS_KEY,
-            keyInResponse: MENU_ANIMATIONS_KEY,
-            onStateChange: toggleAnimationsCss,
-        });
-
-        createStateController({
-            portObj: bgConnect,
-            sendMsgFn: sendMsg,
-            queryMsg: UI_EXTENSIONS_KEY,
-            keyInResponse: UI_EXTENSIONS_KEY,
-            onStateChange: hideUiExtensions,
-        });
-
-        injectScript('scripts/injectUiExtensions.js');
-
-        isScriptReady = true;
     },
     false,
 );
+
+browser.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local') {
+        return;
+    }
+
+    if (!_.has(changes, 'switchportTemplate')) {
+        return;
+    }
+
+    window.postMessage(
+        {
+            action: RELOAD_DASHBOARD,
+            payload: true,
+        },
+        {
+            origin: '*',
+        },
+    );
+});
+
+injectScript('scripts/main.js');
+connectToExtension();
+sendStorageUntilJsInitialized();

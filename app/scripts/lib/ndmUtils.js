@@ -1,6 +1,7 @@
 import {
     NO_TAG,
     LOGIN_STATE,
+    DASHBOARD_SWITCHPORTS_TEMPLATE_PATH,
 } from './constants.js';
 
 import * as _ from 'lodash';
@@ -205,3 +206,43 @@ export const addUiExtension = (state, extendStateFn, removeExtensionFn = _.noop)
         extendStateFn();
     }
 };
+
+export const getTemplate = (path) => {
+    const $templateCache = getAngularService('$templateCache');
+
+    return _.cloneDeep($templateCache.get(path));
+}
+
+const NDM_SWITCHPORT_CONTANIER_TAG = 'ndm-switchport-container';
+
+export const getDashboardSwitchportsTemplate = () => {
+    const wholeTemplate = getTemplate(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+
+    if (!_.isString(wholeTemplate)) {
+        return false;
+    }
+
+    const chunks = wholeTemplate.split(NDM_SWITCHPORT_CONTANIER_TAG);
+
+    if (chunks.length !== 3) {
+        return false;
+    }
+
+    const middleChunk = chunks[1];
+
+    const template = middleChunk.substr(1, middleChunk.length - 3);
+    const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTANIER_TAG}>`;
+    const suffix =  `</${NDM_SWITCHPORT_CONTANIER_TAG}${chunks[2]}`;
+
+    return {
+        template,
+        prefix,
+        suffix,
+    };
+}
+
+export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
+    const $templateCache = getAngularService('$templateCache');
+
+    $templateCache.put(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, prefix + template + suffix);
+}

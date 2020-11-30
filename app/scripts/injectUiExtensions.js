@@ -11,6 +11,10 @@ import {
     TOGGLE_UI_EXTENSIONS_EVENT,
     TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT,
     POLICIES_STATE,
+    ORIGINAL_SWITCHPORTS_TEMPLATE,
+    RELOAD_DASHBOARD,
+    INJECTED_JS_INITIALIZED,
+    INITIAL_STORAGE_DATA,
 } from './lib/constants';
 
 import {
@@ -19,6 +23,8 @@ import {
     getAngularService,
     waitUntilAuthenticated,
     addUiExtension,
+    getDashboardSwitchportsTemplate,
+    setDashboardSwitchportsTemplate,
     NOOP,
 } from './lib/ndmUtils';
 
@@ -53,8 +59,10 @@ import {
 import {flags, sharedData} from './lib/state';
 
 export const injectUiExtensions = () => {
+    let $state;
+
     try {
-        getAngularService('$state');
+        $state = getAngularService('$state');
     } catch (e) {
         console.warn(`Keenetic Dark Theme Extension: failed to access AngularJs service: ${e}`);
         return;
@@ -63,11 +71,66 @@ export const injectUiExtensions = () => {
     const $rootScope = getAngularService('$rootScope');
     const $transitions = getAngularService('$transitions');
 
+    // Should be done BEFORE authentication
+    const tpl = getDashboardSwitchportsTemplate();
+
+    if (!tpl) {
+        console.warn('Unsupported switchports template');
+    } else {
+        window.postMessage(
+            {
+                action: ORIGINAL_SWITCHPORTS_TEMPLATE,
+                payload: tpl,
+            },
+            '*',
+        );
+    }
+
     const ndmVersion = _.get(window, 'NDM.version', '');
     const ndwBranch = ndmVersion.substr(0, 3);
 
     let __TAG = '';
+
     let unbinder = null;
+
+    window.addEventListener(
+        'message',
+        (event) => {
+            const action = _.get(event, 'data.action', '');
+
+            switch (action) {
+                case TOGGLE_UI_EXTENSIONS_EVENT:
+                    window.postMessage({action: TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT}, '*');
+
+                    const menuController = sharedData.get('menuController');
+
+                    if (!menuController) {
+                        return;
+                    }
+
+                    menuController.onItemClick = event.data.payload
+                        ? _.noop
+                        : sharedData.get('originalMenuOnItemClick');
+
+                    break;
+
+                case RELOAD_DASHBOARD:
+                    if ($state.current.name === DASHBOARD_STATE) {
+                        window.location.reload();
+                    }
+                    break;
+
+                case INITIAL_STORAGE_DATA:
+                    const payload = _.get(event, 'data.payload');
+                    const switchportTemplate = _.get(payload, 'switchportTemplate');
+
+                    if (switchportTemplate) {
+                        setDashboardSwitchportsTemplate(switchportTemplate);
+                    }
+                    break;
+            }
+        },
+    );
 
     const initFlags = () => {
         if (__TAG !== NO_TAG) {
@@ -91,34 +154,10 @@ export const injectUiExtensions = () => {
         __TAG = tag;
         initFlags();
 
-        window.addEventListener(
-            'message',
-            (event) => {
-                const action = _.get(event, 'data.action', '');
-
-                switch (action) {
-                    case TOGGLE_UI_EXTENSIONS_EVENT:
-                        window.postMessage({action: TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT}, '*');
-
-                        const menuController = sharedData.get('menuController');
-
-                        if (!menuController) {
-                            return;
-                        }
-
-                        menuController.onItemClick = event.data.payload
-                            ? _.noop
-                            : sharedData.get('originalMenuOnItemClick');
-
-                        break;
-                }
-            },
-        );
-
-
         if (!$rootScope) {
             return;
         }
+
 
         let extendMenuFunction = NOOP;
 
@@ -159,6 +198,8 @@ export const injectUiExtensions = () => {
             POLICIES_STATE,
             fixPolicies,
         );
+
+        window.postMessage({action: INJECTED_JS_INITIALIZED, payload: true}, '*');
     });
 };
 

@@ -1,4 +1,8 @@
+import * as _ from 'lodash';
+import * as beautify from 'js-beautify';
+
 const inputSelector = '#shortcut';
+const switchportTemplateSelector = '#template';
 const commandName = 'toggle-theme';
 
 async function updateUI() {
@@ -9,6 +13,19 @@ async function updateUI() {
             document.querySelector(inputSelector).value = command.shortcut;
         }
     }
+
+    const data = await browser.storage.local.get();
+
+    const switchportTemplateOriginal = _.get(data, 'switchportTemplateOriginal', {});
+    const switchportTemplate = _.get(data, 'switchportTemplate', {});
+
+    document.querySelector(switchportTemplateSelector).value = beautify.html(
+        switchportTemplate.template || switchportTemplateOriginal.template,
+        {
+            indent_size: 2,
+            wrap_attributes: 'force-expand-multiline',
+        },
+    );
 }
 
 async function updateShortcut() {
@@ -23,6 +40,34 @@ async function resetShortcut() {
     updateUI();
 }
 
-document.addEventListener('DOMContentLoaded', updateUI);
-document.querySelector('#update').addEventListener('click', updateShortcut)
-document.querySelector('#reset').addEventListener('click', resetShortcut)
+async function updateTemplate($event) {
+    $event.preventDefault();
+
+    const template = document.querySelector(switchportTemplateSelector).value;
+
+    const data = await browser.storage.local.get();
+    const switchportTemplateOriginal = _.get(data, 'switchportTemplateOriginal', {});
+
+    const {prefix, suffix} = switchportTemplateOriginal;
+    await browser.storage.local.set({switchportTemplate: {prefix, suffix, template}});
+}
+
+async function resetTemplate($event) {
+    $event.preventDefault();
+
+    const data = await browser.storage.local.get();
+    const switchportTemplateOriginal = _.get(data, 'switchportTemplateOriginal', {});
+
+    await browser.storage.local.set({switchportTemplate: switchportTemplateOriginal});
+    await updateUI();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateUI();
+
+    document.querySelector('#updateShortcut').addEventListener('click', updateShortcut)
+    document.querySelector('#resetShortcut').addEventListener('click', resetShortcut)
+
+    document.querySelector('#saveTemplate').addEventListener('click', updateTemplate);
+    document.querySelector('#resetTemplate').addEventListener('click', resetTemplate);
+});
