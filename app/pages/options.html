@@ -3,19 +3,44 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <title>Keenetic Dark Theme Options</title>
+    <link rel="stylesheet" href="../styles/options.css"/>
 </head>
 
 <body>
-<form>
-    <label>Keyboard shortcut</label>
-    <input
-        type="text"
-        id="shortcut"
-    />
-    <button id="update">Update keyboard shortcut</button>
-    <button id="reset">Reset keyboard shortcut</button>
-</form>
 <script src="../scripts/options.js"></script>
+<div class="options-page">
+    <form
+        name="shortcuts"
+        class="shortcuts-form"
+    >
+        <label>Toggle theme shortcut</label>
+        <input
+            type="text"
+            id="shortcut"
+        />
+        <button id="updateShortcut" type="button">Update keyboard shortcut</button>
+        <button id="resetShortcut" type="button">Reset keyboard shortcut</button>
+    </form>
+
+    <form
+        name="switchportTemplate"
+        class="switchport-template-form"
+    >
+        <label>Switchport template</label>
+        <textarea
+            rows="30"
+            name="switchportTemplate"
+            id="template"
+        >
+        </textarea>
+
+        <div class="buttons-row">
+            <button id="saveTemplate" type="button">Save template</button>
+            <button id="resetTemplate" type="button">Reset template</button>
+        </div>
+    </form>
+</div>
 </body>
 
 </html>

@@ -55,6 +55,7 @@
     "tabs",
     "<all_urls>"
   ],
+  "options_page": "pages/options.html",
   "__firefox__options_ui": {
     "page": "pages/options.html"
   },
