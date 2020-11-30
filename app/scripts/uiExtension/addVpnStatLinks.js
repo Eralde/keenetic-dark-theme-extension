@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {getAngularService} from "../lib/ndmUtils";
+import {getAngularService, getDashboardController} from "../lib/ndmUtils";
 import {addCssClass} from "../lib/domUtils";
 
 /*
@@ -9,7 +9,6 @@ import {addCssClass} from "../lib/domUtils";
 
 const appsService = getAngularService('appsService');
 const $timeout = getAngularService('$timeout');
-const $q = getAngularService('$q');
 
 // original 'appsService.getAppsStates' function
 const _getAppsStates = _.get(appsService, 'getAppsStates');
@@ -88,25 +87,7 @@ export const modifyAppsService = () => {
         return appStates;
     };
 
-    const defer = _.get($q, 'defer');
-    const _deferred = defer();
-
-    const getPageController = () => {
-        const element = angular.element(document.querySelector('.d-dashboard'));
-        const controller = element.controller();
-
-        if (!controller) {
-            setTimeout(getPageController, 300);
-
-            return _deferred.promise;
-        }
-
-        _deferred.resolve(controller);
-
-        return _deferred.promise;
-    };
-
-    getPageController().then(() => {
+    getDashboardController().then(() => {
         updateVpnStatLinksStyles();
     });
 };

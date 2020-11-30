@@ -246,3 +246,20 @@ export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
 
     $templateCache.put(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, prefix + template + suffix);
 }
+
+export const getDashboardController = () => {
+    const $q = getAngularService('$q');
+    const deferred = $q.defer();
+    const element = angular.element(document.querySelector('.d-dashboard'));
+    const controller = element.controller();
+
+    if (!controller) {
+        setTimeout(getDashboardController, 300);
+
+        return deferred.promise;
+    }
+
+    deferred.resolve(controller);
+
+    return deferred.promise;
+};

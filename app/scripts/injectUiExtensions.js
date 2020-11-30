@@ -56,6 +56,11 @@ import {
     cleanupPoliciesFix,
 } from './uiExtension/policies';
 
+import {
+    gatherStatForPorts,
+    revertGatherStatForPortsChanges,
+} from './uiExtension/gatherStatForPorts';
+
 import {flags, sharedData} from './lib/state';
 
 export const injectUiExtensions = () => {
@@ -197,6 +202,12 @@ export const injectUiExtensions = () => {
         addUiExtension(
             POLICIES_STATE,
             fixPolicies,
+        );
+
+        addUiExtension(
+            DASHBOARD_STATE,
+            gatherStatForPorts,
+            revertGatherStatForPortsChanges,
         );
 
         window.postMessage({action: INJECTED_JS_INITIALIZED, payload: true}, '*');
