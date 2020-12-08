@@ -1,6 +1,6 @@
 {
   "name": "keenetic-dark-theme-extension",
-  "version": "0.5.74",
+  "version": "0.5.75",
   "description": "Dark mode for the web interface of the Keenetic devices",
   "scripts": {
     "dev": "npm-run-all build-css build-l10n \"toolbox-dev -- {1}\" --",
