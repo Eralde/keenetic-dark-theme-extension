@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import {
     FW2X_BRANCHES,
     FW3X_BRANCHES,
+    SWITCHPORT_OVERLOAD_BRANCHES,
     DIAGNOSTICS_LOG_STATE,
     DEVICES_LIST_STATE,
     WIFI_CLIENTS_STATE,
@@ -126,7 +127,7 @@ export const injectUiExtensions = () => {
                     break;
 
                 case INITIAL_STORAGE_DATA:
-                    if (!_.includes(FW3X_BRANCHES, ndwBranch)) {
+                    if (!_.includes(SWITCHPORT_OVERLOAD_BRANCHES, ndwBranch)) {
                         console.warn('Only 3.x firmware web UI switchports template can be overloaded');
 
                         break;
@@ -210,7 +211,7 @@ export const injectUiExtensions = () => {
             fixPolicies,
         );
 
-        if (_.includes(FW3X_BRANCHES, ndwBranch)) {
+        if (_.includes(SWITCHPORT_OVERLOAD_BRANCHES, ndwBranch)) {
             addUiExtension(
                 DASHBOARD_STATE,
                 gatherStatForPorts,

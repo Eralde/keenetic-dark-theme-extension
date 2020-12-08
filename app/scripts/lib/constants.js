@@ -86,6 +86,12 @@ export const FW3X_BRANCHES = [
     '3.6',
 ];
 
+export const SWITCHPORT_OVERLOAD_BRANCHES = [
+    '3.4',
+    '3.5',
+    '3.6',
+];
+
 export const NO_TAG = 'NO_TAG';
 export const DASHBOARD_TITLE = 'menu.dashboard';
 export const LOG_LINK_TITLE = 'diagnostics.log.header-title';
