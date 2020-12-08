@@ -126,6 +126,12 @@ export const injectUiExtensions = () => {
                     break;
 
                 case INITIAL_STORAGE_DATA:
+                    if (!_.includes(FW3X_BRANCHES, ndwBranch)) {
+                        console.warn('Only 3.x firmware web UI switchports template can be overloaded');
+
+                        break;
+                    }
+
                     const payload = _.get(event, 'data.payload');
                     const switchportTemplate = _.get(payload, 'switchportTemplate');
 
@@ -204,11 +210,13 @@ export const injectUiExtensions = () => {
             fixPolicies,
         );
 
-        addUiExtension(
-            DASHBOARD_STATE,
-            gatherStatForPorts,
-            revertGatherStatForPortsChanges,
-        );
+        if (_.includes(FW3X_BRANCHES, ndwBranch)) {
+            addUiExtension(
+                DASHBOARD_STATE,
+                gatherStatForPorts,
+                revertGatherStatForPortsChanges,
+            );
+        }
 
         window.postMessage({action: INJECTED_JS_INITIALIZED, payload: true}, '*');
     });
