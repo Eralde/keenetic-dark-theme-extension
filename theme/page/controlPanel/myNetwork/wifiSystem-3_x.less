@@ -45,6 +45,28 @@
                 color: @dt__cyan-blue-text;
             }
         }
+
+        .table__buttons-overlay {
+            &-content {
+                background-color: @dt__grey6;
+                padding: @new-unit;
+            }
+
+            .mws-node-action {
+                .icon {
+                    transform: scale(0.8);
+
+                    &:hover {
+                        filter: brightness(1.5);
+                    }
+                }
+            }
+
+            .mws-node-action + .mws-candidate-actions,
+            .mws-node-action + .mws-member-actions {
+                margin-left: @new-unit;
+            }
+        }
     }
 
     .mws-device-table__device-group-header {
