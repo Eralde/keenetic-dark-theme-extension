@@ -97,6 +97,13 @@ export const extendMenu3x = () => {
         sharedData.set('menuObjectSaved', true);
     }
 
+    const menuSeparator = document.querySelector('.ndm-menu__separator:not([ng-click])');
+
+    if (menuSeparator) {
+        menuSeparator.style.cursor = 'pointer';
+        menuSeparator.addEventListener('click', () => $scope.vm.toggle());
+    }
+
     // TODO: refactor code below
     let dupNode;
 
