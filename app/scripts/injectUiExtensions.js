@@ -1,9 +1,6 @@
 import * as _ from 'lodash';
 
 import {
-    FW2X_BRANCHES,
-    FW3X_BRANCHES,
-    SWITCHPORT_OVERLOAD_BRANCHES,
     DIAGNOSTICS_LOG_STATE,
     DEVICES_LIST_STATE,
     WIFI_CLIENTS_STATE,
@@ -26,6 +23,9 @@ import {
     addUiExtension,
     getDashboardSwitchportsTemplate,
     setDashboardSwitchportsTemplate,
+    is2xVersion,
+    is3xVersion,
+    isSwitchportOverloadSupported,
     NOOP,
 } from './lib/ndmUtils';
 
@@ -127,8 +127,8 @@ export const injectUiExtensions = () => {
                     break;
 
                 case INITIAL_STORAGE_DATA:
-                    if (!_.includes(SWITCHPORT_OVERLOAD_BRANCHES, ndwBranch)) {
-                        console.warn('Only 3.x firmware web UI switchports template can be overloaded');
+                    if (!isSwitchportOverloadSupported(ndwBranch)) {
+                        console.warn('Switchports template can be overloaded in web UI versions >= 3.4');
 
                         break;
                     }
@@ -173,11 +173,11 @@ export const injectUiExtensions = () => {
 
         let extendMenuFunction = NOOP;
 
-        if (_.includes(FW2X_BRANCHES, ndwBranch)) {
+        if (is2xVersion(ndwBranch)) {
             extendMenuFunction = extendMenu2x;
             interceptMouseover('ndm-help');
 
-        } else if (_.includes(FW3X_BRANCHES, ndwBranch)) {
+        } else if (is3xVersion(ndwBranch)) {
             extendMenuFunction = extendMenu3x;
         }
 
@@ -211,7 +211,7 @@ export const injectUiExtensions = () => {
             fixPolicies,
         );
 
-        if (_.includes(SWITCHPORT_OVERLOAD_BRANCHES, ndwBranch)) {
+        if (isSwitchportOverloadSupported(ndwBranch)) {
             addUiExtension(
                 DASHBOARD_STATE,
                 gatherStatForPorts,

@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import {
     THEME_IS_ENABLED_KEY,
     MENU_ANIMATIONS_KEY,
-    FW3X_BRANCHES,
     UI_EXTENSIONS_KEY,
 } from './lib/constants';
 
@@ -15,8 +14,8 @@ import {
 } from './lib/domUtils';
 
 import {
-    startsWith,
-} from './lib/utils';
+    is3xVersion,
+} from './lib/ndmUtils';
 
 const processToggle = (
     toggleSelector,
@@ -71,9 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(
                 (response) => {
                     const version = _.get(response, 'response', '');
-                    const is3xVersion = FW3X_BRANCHES.some(branch => startsWith(version, branch));
 
-                    if (!is3xVersion) {
+                    if (!is3xVersion(version)) {
                         console.log('old version', response);
                         hideElement(toggleWrapper);
                     }

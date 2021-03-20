@@ -7,7 +7,6 @@ import {
     LEGACY_STYLES,
     STYLES_2X,
     STYLES_3X,
-    FW3X_BRANCHES,
     NDM_LAYOUT_THEME_CLASS,
     TOGGLE_UI_EXTENSIONS_EVENT,
     TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT,
@@ -19,8 +18,9 @@ import {
 } from './lib/constants';
 
 import {
-    startsWith,
-} from './lib/utils';
+    is2xVersion,
+    is3xVersion,
+} from './lib/ndmUtils';
 
 const stylesObjectToArray = (stylesObject) => {
     return Object.entries(stylesObject)
@@ -274,19 +274,14 @@ browser.runtime.onMessage.addListener(request => {
 
 const processNdmVerMessage = (event) => {
     const version = event.data.payload;
-    const firstSymbol = version ? version[0] : '';
-
-    const isLegacyVersion = firstSymbol === '0';
-    const is2xVersion = firstSymbol === '1'; // 2.15, 2.14
-    const is3xVersion = FW3X_BRANCHES.some(branch => startsWith(version, branch));
 
     ndmVersion = version;
 
-    if (isLegacyVersion) {
+    if (version.startsWith('0')) {
         stylesToInject = stylesObjectToArray(LEGACY_STYLES);
-    } else if (is3xVersion) {
+    } else if (is3xVersion(version)) {
         stylesToInject = stylesObjectToArray(STYLES_3X);
-    } else if (is2xVersion) {
+    } else if (is2xVersion(version)) {
         stylesToInject = stylesObjectToArray(STYLES_2X);
     } else {
         console.warn(`Unsupported ndw version: ${version}`);

@@ -2,6 +2,9 @@ import {
     NO_TAG,
     LOGIN_STATE,
     DASHBOARD_SWITCHPORTS_TEMPLATE_PATH,
+    FW2X_BRANCHES,
+    OLD_FW3X_BRANCHES,
+    FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
 } from './constants.js';
 
 import * as _ from 'lodash';
@@ -18,7 +21,6 @@ export const getAngularService = (serviceName) => {
     return injector.get(serviceName);
 };
 
-
 let $q = getAngularService('$q'),
     $transitions = getAngularService('$transitions'),
     $http = getAngularService('$http'),
@@ -30,14 +32,14 @@ export const waitUntilAuthenticated = () => {
 
     let unbinder = _.noop;
     let authOk = false;
-    let delayCoeff = 1;
+    let delay = 1;
 
     const recheckAuth = () => isAuthenticated().then(result => {
         if (!result) {
-            const delay = Math.floor(delayCoeff * 1000);
+            const delayInMs = Math.floor(delay * 1000);
 
-            setTimeout(recheckAuth, delay);
-            delayCoeff = delayCoeff * 1.2;
+            setTimeout(recheckAuth, delayInMs);
+            delay = delay * 1.2;
 
             return;
         }
@@ -263,3 +265,13 @@ export const getDashboardController = () => {
 
     return deferred.promise;
 };
+
+export const is2xVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));
+export const is3xVersion = (ndwVersion) => {
+    return OLD_FW3X_BRANCHES.some(branch => ndwVersion.startsWith(branch))
+        || ndwVersion.startsWith('3.');
+}
+
+export const isSwitchportOverloadSupported = (ndwVersion) => {
+    return is3xVersion(ndwVersion) && !FW3X_WITHOUT_SWITCHPORT_OVERLOAD.some(branch => ndwVersion.startsWith(branch));
+}

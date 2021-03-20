@@ -75,22 +75,17 @@ export const FW2X_BRANCHES = [
     '1.6',
 ];
 
-export const FW3X_BRANCHES = [
+export const OLD_FW3X_BRANCHES = [
     '1.7',
     '1.8',
+]
+
+export const FW3X_WITHOUT_SWITCHPORT_OVERLOAD = [
+    ...OLD_FW3X_BRANCHES,
     '3.1',
     '3.2',
     '3.3',
-    '3.4',
-    '3.5',
-    '3.6',
-];
-
-export const SWITCHPORT_OVERLOAD_BRANCHES = [
-    '3.4',
-    '3.5',
-    '3.6',
-];
+]
 
 export const NO_TAG = 'NO_TAG';
 export const DASHBOARD_TITLE = 'menu.dashboard';
