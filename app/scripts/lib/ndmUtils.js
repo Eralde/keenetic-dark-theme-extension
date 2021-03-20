@@ -249,14 +249,15 @@ export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
     $templateCache.put(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, prefix + template + suffix);
 }
 
-export const getDashboardController = () => {
+const getElementController = (selector) => {
     const $q = getAngularService('$q');
     const deferred = $q.defer();
-    const element = angular.element(document.querySelector('.d-dashboard'));
+
+    const element = angular.element(document.querySelector(selector));
     const controller = element.controller();
 
     if (!controller) {
-        setTimeout(getDashboardController, 300);
+        setTimeout(() => getElementController(selector), 300);
 
         return deferred.promise;
     }
@@ -264,6 +265,14 @@ export const getDashboardController = () => {
     deferred.resolve(controller);
 
     return deferred.promise;
+}
+
+export const getDashboardController = () => {
+    return getElementController('.d-dashboard');
+};
+
+export const getSwitchportsCardController = () => {
+    return getElementController('#card_switchports');
 };
 
 export const is2xVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));
