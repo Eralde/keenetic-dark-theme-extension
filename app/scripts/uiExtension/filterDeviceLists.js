@@ -36,10 +36,6 @@ import {
     flags,
 } from '../lib/state';
 
-import {
-    partition,
-} from '../lib/utils';
-
 /*
  * This UI extension adds filters to device lists on the 'Device lists' page
  */
@@ -273,7 +269,7 @@ export const addDeviceListsFilters = () => {
                     .map(cell => [cell, cell.innerText.split('\n')])
                     .filter(([cell, lines]) => lines.some(line => macRegexp.test(line)));
 
-                const [toHide, toShow] = partition(hostRows, ([cell, lines]) => lines.some(line => _MACS_TO_HIDE.includes(line)));
+                const [toHide, toShow] = _.partition(hostRows, ([cell, lines]) => lines.some(line => _MACS_TO_HIDE.includes(line)));
 
                 const rowsToHide = toHide.map(el => el[0].closest('tr'));
                 toggleCssClass(rowsToHide, HIDDEN_TABLE_ROW_CLASS, true);
