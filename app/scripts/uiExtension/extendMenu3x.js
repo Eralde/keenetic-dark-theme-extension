@@ -101,7 +101,7 @@ export const extendMenu3x = () => {
 
     if (menuSeparator) {
         menuSeparator.style.cursor = 'pointer';
-        menuSeparator.addEventListener('click', () => $scope.vm.toggle());
+        menuSeparator.addEventListener('click', () => _.invoke($scope, 'vm.toggle'));
     }
 
     // TODO: refactor code below
