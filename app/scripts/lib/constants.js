@@ -1,3 +1,4 @@
+// popup events/flags
 export const THEME_IS_ENABLED_KEY = 'DARK_THEME_IS_ENABLED';
 export const MENU_ANIMATIONS_KEY = 'MENU_ANIMATIONS_ENABLED';
 export const UI_EXTENSIONS_KEY = 'UI_EXTENSIONS_ENABLED';
@@ -6,6 +7,7 @@ export const THEME_IS_ENABLED_WINDOW_PROP = 'themeIsEnabled';
 export const MENU_ANIMATIONS_WINDOW_PROP = 'menuAnimationsEnabled';
 export const UI_EXTENSIONS_WINDOW_PROP = 'uiExtensionsEnabled';
 
+// theme & UI extensions CSS files
 export const LEGACY_STYLES = {
     'theme-2.x': 'styles/theme-2.x.css',
     'uiExtensions-2.x': 'styles/uiExtensions-2.x.css',
@@ -25,6 +27,7 @@ export const STYLES_2X = {
     'hideUiExtensions-2.x': 'styles/hideUiExtensions-2.x.css',
 };
 
+// extension icons
 export const ICON_SIZES = [16, 24, 32, 48];
 export const ENABLED_ICON_PREFIX = './images/K-black_';
 export const DISABLED_ICON_PREFIX = './images/K-grey_';
@@ -39,6 +42,7 @@ export const DISABLED_ICONS = ICON_SIZES.reduce(
     {},
 );
 
+// UI extension: device filters
 export const HIDE_CLASS = '__hidden';
 export const FILTERS_ARE_VISIBLE_CLASS = '__filters-are-visible';
 export const FLEX_ROW_CLASS = '__flex-row';
@@ -69,6 +73,8 @@ export const REG_DEVICES_FLAGS = [
     FLAGS.HIDE_OFFLINE_HOSTS,
 ];
 
+// END UI extension: device filters
+
 export const FW2X_BRANCHES = [
     '1.4',
     '1.5',
@@ -88,18 +94,27 @@ export const FW3X_WITHOUT_SWITCHPORT_OVERLOAD = [
 ]
 
 export const NO_TAG = 'NO_TAG';
+
+export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
+
+export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
+
+// l10n IDs
 export const DASHBOARD_TITLE = 'menu.dashboard';
 export const LOG_LINK_TITLE = 'diagnostics.log.header-title';
 export const REBOOT_LINK_TITLE = 'system.reboot.button';
 
-export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
-
+// CSS classes
 export const FILTERS_TOGGLE_CLASS = 'show-filter-checkboxes';
-
 export const LOG_LINK_CLASS = 'log-link';
 export const REBOOT_LINK_CLASS = 'reboot-link';
 export const SAVE_LOG_BTN_CLASS = 'save-log-btn';
 
+// CSS selectors
+export const NDM_PAGE_SELECTOR = '.ndm-page';
+export const NDM_MENU_SELECTOR = '.ndm-menu';
+
+// ui-router states
 export const DASHBOARD_STATE = 'dashboard';
 export const WIFI_CLIENTS_STATE = 'controlPanel.wifiClients';
 export const DEVICES_LIST_STATE = 'controlPanel.devicesList';
@@ -109,18 +124,12 @@ export const DIAGNOSTICS_LOG_STATE = 'controlPanel.diagnostics.log';
 export const WEBCLI_STATE = 'cli';
 export const LOGIN_STATE = 'login';
 
-export const NDM_PAGE_SELECTOR = '.ndm-page';
-export const NDM_MENU_SELECTOR = '.ndm-menu';
-
+// extension events
 export const BACKGROUND_PAGE_INITIALIZED_EVENT = 'BACKGROUND_PAGE_INITIALIZED_EVENT';
 export const TOGGLE_UI_EXTENSIONS_EVENT = 'TOGGLE_UI_EXTENSION';
 export const TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT = 'TOGGLE_UI_EXTENSION_RECEIVED';
-
-export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
-
 export const RELOAD_DASHBOARD = 'RELOAD_DASHBOARD';
 export const INJECTED_JS_INITIALIZED = 'INJECTED_JS_INITIALIZED';
-
 export const ORIGINAL_SWITCHPORTS_TEMPLATE = 'ORIGINAL_SWITCHPORTS_TEMPLATE';
 export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
 
