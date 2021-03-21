@@ -13,6 +13,7 @@ import {
     RELOAD_DASHBOARD,
     INJECTED_JS_INITIALIZED,
     INITIAL_STORAGE_DATA,
+    CONTROL_SYSTEM_STATE,
 } from './lib/constants';
 
 import {
@@ -62,6 +63,11 @@ import {
 } from './uiExtension/gatherStatForPorts';
 
 import {flags, sharedData} from './lib/state';
+import {
+    overriderSandboxOptions,
+    overrideSandboxesList,
+    cancelComponentsSectionsWatchers,
+} from "./uiExtension/componentsListDelta";
 
 export const injectUiExtensions = () => {
     let $state;
@@ -209,6 +215,14 @@ export const injectUiExtensions = () => {
             POLICIES_STATE,
             fixPolicies,
         );
+
+        overrideSandboxesList();
+
+        addUiExtension(
+            CONTROL_SYSTEM_STATE,
+            overriderSandboxOptions,
+            cancelComponentsSectionsWatchers,
+        )
 
         if (isSwitchportOverloadSupported(ndwBranch)) {
             addUiExtension(

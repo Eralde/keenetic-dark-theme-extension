@@ -249,20 +249,42 @@ export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
     $templateCache.put(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, prefix + template + suffix);
 }
 
-const getElementController = (selector) => {
-    const $q = getAngularService('$q');
-    const deferred = $q.defer();
-
+const _getElementController = (selector, deferred) => {
     const element = angular.element(document.querySelector(selector));
     const controller = element.controller();
 
-    if (!controller) {
-        setTimeout(() => getElementController(selector), 300);
-
-        return deferred.promise;
+    if (controller) {
+        deferred.resolve(controller);
+    } else {
+        setTimeout(() => _getElementController(selector, deferred), 300);
     }
+}
 
-    deferred.resolve(controller);
+const _getElementScope = (selector, deferred) => {
+    const element = angular.element(document.querySelector(selector));
+    const scope = element.scope();
+
+    if (scope) {
+        deferred.resolve(scope);
+    } else {
+        setTimeout(() => _getElementScope(selector, deferred), 300);
+    }
+}
+
+export const getElementController = (selector, _deferred = null) => {
+    const $q = getAngularService('$q');
+    const deferred = $q.defer();
+
+    _getElementController(selector, deferred);
+
+    return deferred.promise;
+}
+
+export const getElementScope = (selector, _deferred = null) => {
+    const $q = getAngularService('$q');
+    const deferred = $q.defer();
+
+    _getElementScope(selector, deferred);
 
     return deferred.promise;
 }

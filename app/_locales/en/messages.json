@@ -29,5 +29,17 @@
   },
   "hideOfflineHosts": {
     "message": "Hide offline devices"
+  },
+  "deltaChannelOption": {
+    "message": "Delta"
+  },
+  "deltaChannelName": {
+    "message": "Delta channel"
+  },
+  "deltaChannelShortText": {
+    "message": "Select this if you know what you're doing"
+  },
+  "deltaChannelText": {
+    "message": "Select this if you know what you're doing"
   }
 }
