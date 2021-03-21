@@ -54,7 +54,6 @@ import {
 
 import {
     fixPolicies,
-    cleanupPoliciesFix,
 } from './uiExtension/policies';
 
 import {

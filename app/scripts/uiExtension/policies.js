@@ -32,7 +32,7 @@ const PRE_3_6_BRANCHES = [
     '3.5',
 ];
 
-const getMoveConsumersFormParentScole = async ($pageRootScope) => {
+const getMoveConsumersFormParentScope = async ($pageRootScope) => {
     const version = _.get(window, 'NDM.version', '');
 
     if (!version) {
@@ -62,7 +62,7 @@ const getMoveConsumersFormParentScole = async ($pageRootScope) => {
 
 export const fixPolicies = async () => {
     const pageElement = angular.element(document.querySelector('ndm-page'));
-    const $relevantScope = await getMoveConsumersFormParentScole(pageElement.scope());
+    const $relevantScope = await getMoveConsumersFormParentScope(pageElement.scope());
 
     let moveConsumersSelectboxUid = '';
 
