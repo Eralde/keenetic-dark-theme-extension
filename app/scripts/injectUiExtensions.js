@@ -81,7 +81,7 @@ export const injectUiExtensions = () => {
     const tpl = getDashboardSwitchportsTemplate();
 
     if (!tpl) {
-        console.warn('Unsupported switchports template');
+        console.log('Keenetic Dark Theme Extension: unsupported switchports template');
     } else {
         window.postMessage(
             {
