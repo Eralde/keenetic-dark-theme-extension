@@ -4,6 +4,16 @@ import {getL10n} from "../lib/l10nUtils";
 
 const watchers = [];
 const DELTA_CHANNEL = 'delta';
+const DELTA_DEVICES = [
+    'ku_rd',    // Ultra II
+    'kng_re',   // Giga III
+    'ki_rb',    // Extra II
+    'ki_ra',    // Air
+];
+
+const isSuitableDevice = () => {
+    return DELTA_DEVICES.includes(_.get(window, 'NDM.hw_id', ''));
+}
 
 const modifyDeltaOption = (optionsList) => {
     const deltaOptionIndex = _.findIndex(optionsList, item => item.id === DELTA_CHANNEL);
@@ -24,6 +34,10 @@ const modifyDeltaOption = (optionsList) => {
 }
 
 export const overriderSandboxOptions = async () => {
+    if (!isSuitableDevice()) {
+        return;
+    }
+
     const $rootScope = getAngularService('$rootScope');
     const vm = await getElementController('.system__components-section');
     const scope = await getElementScope('.system__components-section');
@@ -57,6 +71,10 @@ export const cancelComponentsSectionsWatchers = () => {
 }
 
 export const overrideSandboxesList = () => {
+    if (!isSuitableDevice()) {
+        return;
+    }
+
     const componentsService = getAngularService('componentsService');
 
     if (!_.has(componentsService.constant, 'FW_CHANNEL')) {
