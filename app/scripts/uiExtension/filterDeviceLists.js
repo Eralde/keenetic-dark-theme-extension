@@ -18,7 +18,7 @@ import {
 } from '../lib/ndmUtils';
 
 import {
-    isHostInAcl,
+    processAclConfigurations,
     hostFilterConstructor,
 } from '../lib/filters';
 
@@ -102,7 +102,7 @@ const modifyShowIpHotspotData = (globalFlags, __VARS, routerService) => {
                 hostsPath,
                 {
                     host: getHosts(hosts),
-                }
+                },
             );
 
             deferred.resolve(data);
@@ -156,33 +156,10 @@ export const addDeviceListsFilters = () => {
             .spread((hotspot, aclCfg) => {
                 const hosts = hotspot.host || [];
                 const regHosts = _.uniqBy(hosts.filter(x => x.registered), 'mac');
-                const acls = _.filter(aclCfg.segments, x => x.acl.type !== 'none');
 
-                __VARS.blockedInSegment = {};
-                __VARS.showBlockedInSegment = {};
-                __VARS.blockedInSomeSegment = [];
-
-                _.forEach(acls, segmentAcl => {
-                    const acl = segmentAcl.acl;
-
-                    __VARS.blockedInSegment[segmentAcl.id] = {
-                        hosts: regHosts
-                            .filter(h => isHostInAcl(h, acl))
-                            .map(h => h.mac),
-
-                        description: segmentAcl.description
-                    };
-
-                    __VARS.showBlockedInSegment[segmentAcl.id] = true;
-                });
+                __VARS = processAclConfigurations(__VARS, regHosts, aclCfg);
 
                 modifyShowIpHotspotData(flags, __VARS, router);
-
-                _.forEach(__VARS.blockedInSegment, data => {
-                    __VARS.blockedInSomeSegment = __VARS.blockedInSomeSegment.concat(data.hosts);
-                });
-
-                __VARS.blockedInSomeSegment = _.uniqBy(__VARS.blockedInSomeSegment, angular.identity);
 
                 const regFlexContainer = createDiv('devices-list-toolbar dark-theme__reg-devices-filters');
                 regTableHeader.append(regFlexContainer);

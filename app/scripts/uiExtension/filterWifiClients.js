@@ -14,8 +14,8 @@ import {
 } from '../lib/ndmUtils';
 
 import {
-    isHostInAcl,
     hostFilterConstructor,
+    processAclConfigurations,
 } from '../lib/filters';
 
 import {
@@ -85,33 +85,10 @@ export const addWifiClientsFilters = () => {
             ])
             .spread((clientsData, aclCfg) => {
                 const regHosts = clientsData.clients || [];
-                const acls = _.filter(aclCfg.segments, x => x.acl.type !== 'none');
 
-                __VARS.blockedInSegment = {};
-                __VARS.showBlockedInSegment = {};
-                __VARS.blockedInSomeSegment = [];
-
-                _.forEach(acls, segmentAcl => {
-                    const acl = segmentAcl.acl;
-
-                    __VARS.blockedInSegment[segmentAcl.id] = {
-                        hosts: regHosts
-                            .filter(h => isHostInAcl(h, acl))
-                            .map(h => h.mac),
-
-                        description: segmentAcl.description
-                    };
-
-                    __VARS.showBlockedInSegment[segmentAcl.id] = true;
-                });
+                __VARS = processAclConfigurations(__VARS, regHosts, aclCfg);
 
                 modifyWifiClientsService(flags, __VARS);
-
-                _.forEach(__VARS.blockedInSegment, data => {
-                    __VARS.blockedInSomeSegment = __VARS.blockedInSomeSegment.concat(data.hosts);
-                });
-
-                __VARS.blockedInSomeSegment = _.uniqBy(__VARS.blockedInSomeSegment, angular.identity);
 
                 const flexContainer = createDiv('devices-list-toolbar dark-theme__wifi-clients-filters');
                 pageHeaderEl.appendChild(flexContainer);

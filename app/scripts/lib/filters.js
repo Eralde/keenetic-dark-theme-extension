@@ -1,15 +1,22 @@
+import * as _ from "lodash";
 import {
     FLAGS,
 } from './constants.js';
+
+const ACL_TYPE = {
+    PERMIT: 'permit',
+    DENY: 'deny',
+    NONE: 'none',
+};
 
 /**
  * @param {object} host
  * @param {object} acl
  * @returns {boolean}
  */
-export const isHostInAcl = (host, acl) => {
-    return acl.type === 'permit' && !acl.address.includes(host.mac)
-        || (acl.type === 'deny' && acl.address.includes(host.mac));
+export const isHostBlockedByAcl = (host, acl) => {
+    return acl.type === ACL_TYPE.PERMIT && !acl.address.includes(host.mac)
+        || (acl.type === ACL_TYPE.DENY && acl.address.includes(host.mac));
 };
 
 export const hostFilterConstructor = (flags, isOfflinePredicate, isBlockedInSomeSegmentPredicate) => {
@@ -31,3 +38,34 @@ export const hostFilterConstructor = (flags, isOfflinePredicate, isBlockedInSome
         return true;
     };
 };
+
+export const processAclConfigurations = (aclVars, registeredHosts, aclConfiguration) => {
+    const acls = _.filter(aclConfiguration.segments, x => x.acl.type !== ACL_TYPE.NONE);
+
+    const blockedInSegment = _.reduce(
+        acls,
+        (acc, segmentAcl) => {
+            const {description, acl, id} = segmentAcl;
+            const hosts = registeredHosts
+                .filter(h => isHostBlockedByAcl(h, acl))
+                .map(h => h.mac);
+
+            return {
+                ...acc,
+                [id]: {hosts, description},
+            };
+        },
+        {},
+    );
+
+    const blockedInSomeSegment = _
+        .chain(blockedInSegment)
+        .flatMap(item => item.hosts)
+        .uniq()
+        .value();
+
+    return {
+        blockedInSegment,
+        blockedInSomeSegment,
+    };
+}
