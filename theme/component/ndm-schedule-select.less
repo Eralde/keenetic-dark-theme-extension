@@ -24,10 +24,24 @@
         &--svg-container {
             background-color: unset;
             margin-top: -4px;
+            filter: brightness(80%);
 
             &--background {
                 fill: @dt__grey8;
                 transform: translate(0, -4px);
+            }
+
+            &--grid {
+                &-line-3-hours,
+                &-line-1-hour,
+                &-borders,
+                &-odd-day {
+                    stroke: @dt__white-text;
+                }
+
+                &-label {
+                    fill: @dt__white-text;
+                }
             }
         }
     }
