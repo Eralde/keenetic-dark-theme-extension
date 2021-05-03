@@ -1,0 +1,27 @@
+@import (reference) "../../../__mixins__";
+@import (reference) "../../../__vars__";
+
+.page-application-traffic-analyzer {
+    .groupset-data {
+        color: @dt__grey9;
+    }
+
+    .ndm-rx-tx-meter {
+        &__meter {
+            .rx-level {
+                background-color: @dt__dark-blue-text;
+            }
+
+            .tx-level {
+                background-color: @dt__blue-text;
+            }
+        }
+
+        &__text {
+            .icon.icon--txbytes-arrow,
+            .icon.icon--rxbytes-arrow {
+                filter: invert(1);
+            }
+        }
+    }
+}
