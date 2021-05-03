@@ -3,6 +3,8 @@
 
 .page-traffic-monitor{
     &__table__legend {
+
+        /* Before ntce integration */
         &__host-list__item__description {
             color: @dt__white-text;
         }
@@ -22,6 +24,36 @@
         }
 
         &__host-list__add-device a {
+            background-color: @dt__greyC;
+            color: @dt__dark-blue-text;
+            border-color: @dt__dark-blue-text;
+
+            &:hover {
+                color: @dt__cyan-blue-text !important;
+                border-color: @dt__cyan-blue-text !important;
+            }
+        }
+
+        /* After ntce integration */
+        &__item-list__item__description {
+            color: @dt__white-text;
+        }
+
+        &__item-list__total:hover,
+        &__item-list__item:hover,
+        &__item-list__item--selected {
+            background-color: @dt__grey8;
+        }
+
+        &__item-list__total,
+        &__item-list__total__upload,
+        &__item-list__total__download__upload,
+        &__item-list__total__title,
+        &__item-list__total__title__subtitle {
+            color: @dt__whiter-text;
+        }
+
+        &__item-list__add-device a {
             background-color: @dt__greyC;
             color: @dt__dark-blue-text;
             border-color: @dt__dark-blue-text;
