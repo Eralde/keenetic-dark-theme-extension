@@ -14,6 +14,8 @@ import {
     INJECTED_JS_INITIALIZED,
     INITIAL_STORAGE_DATA,
     CONTROL_SYSTEM_STATE,
+    SWITCHPORT_TEMPLATE_STORAGE_KEY,
+    REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
 } from './lib/constants';
 
 import {
@@ -27,6 +29,7 @@ import {
     is2xVersion,
     is3xVersion,
     isSwitchportOverloadSupported,
+    toggleNdmTextareaClass,
     NOOP,
 } from './lib/ndmUtils';
 
@@ -67,7 +70,7 @@ import {
     overriderSandboxOptions,
     overrideSandboxesList,
     cancelComponentsSectionsWatchers,
-} from "./uiExtension/componentsListDelta";
+} from './uiExtension/componentsListDelta';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -132,14 +135,21 @@ export const injectUiExtensions = () => {
                     break;
 
                 case INITIAL_STORAGE_DATA:
+                    const payload = _.get(event, 'data.payload');
+
+                    toggleNdmTextareaClass({
+                        className: 'ndm-textarea__textarea--default-cursor',
+                        insertAfterClass: 'ndm-textarea__textarea',
+                        state: payload[REPLACE_TEXTAREA_CURSOR_STORAGE_KEY],
+                    })
+
                     if (!isSwitchportOverloadSupported(ndwBranch)) {
                         console.warn('Switchports template can be overloaded in web UI versions >= 3.4');
 
                         break;
                     }
 
-                    const payload = _.get(event, 'data.payload');
-                    const switchportTemplate = _.get(payload, 'switchportTemplate');
+                    const switchportTemplate = _.get(payload, SWITCHPORT_TEMPLATE_STORAGE_KEY);
 
                     if (switchportTemplate) {
                         setDashboardSwitchportsTemplate(switchportTemplate);

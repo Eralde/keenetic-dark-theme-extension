@@ -5,6 +5,7 @@ import {
     FW2X_BRANCHES,
     OLD_FW3X_BRANCHES,
     FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
+    NDM_TEXTAREA_TEMPLATE_PATH,
 } from './constants.js';
 
 import * as _ from 'lodash';
@@ -247,6 +248,17 @@ export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
     const $templateCache = getAngularService('$templateCache');
 
     $templateCache.put(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, prefix + template + suffix);
+}
+
+export const toggleNdmTextareaClass = ({className, state, insertAfterClass}) => {
+    const $templateCache = getAngularService('$templateCache');
+    const template = getTemplate(NDM_TEXTAREA_TEMPLATE_PATH);
+
+    const updatedTemplate = state
+        ? template.replace(className, '')
+        : template.replace(`class="${insertAfterClass}"`, `class="${insertAfterClass} ${className}"`);
+
+    $templateCache.put(NDM_TEXTAREA_TEMPLATE_PATH, updatedTemplate);
 }
 
 const _getElementController = (selector, deferred) => {

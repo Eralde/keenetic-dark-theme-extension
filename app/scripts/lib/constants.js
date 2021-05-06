@@ -98,6 +98,7 @@ export const NO_TAG = 'NO_TAG';
 export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
+export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
 // l10n IDs
 export const DASHBOARD_TITLE = 'menu.dashboard';
@@ -133,3 +134,8 @@ export const INJECTED_JS_INITIALIZED = 'INJECTED_JS_INITIALIZED';
 export const ORIGINAL_SWITCHPORTS_TEMPLATE = 'ORIGINAL_SWITCHPORTS_TEMPLATE';
 export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
 
+// storage keys
+export const SWITCHPORT_TEMPLATE_STORAGE_KEY = 'switchportTemplate';
+export const SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY = 'switchportTemplateOriginal';
+
+export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';

@@ -15,12 +15,42 @@
         class="shortcuts-form"
     >
         <label>Toggle theme shortcut</label>
+
         <input
             type="text"
             id="shortcut"
         />
-        <button id="updateShortcut" type="button">Update keyboard shortcut</button>
-        <button id="resetShortcut" type="button">Reset keyboard shortcut</button>
+
+        <button
+            id="updateShortcut"
+            type="button"
+        >
+            Update keyboard shortcut
+        </button>
+
+        <button
+            id="resetShortcut"
+            type="button"
+        >
+            Reset keyboard shortcut
+        </button>
+    </form>
+
+    <form
+        name="replaceTextareaCursor"
+        class="replace-textarea-cursor-form"
+    >
+        <input
+            id="replaceTextareaCursor"
+            name="replaceTextareaCursor"
+            type="checkbox"
+        />
+
+        <label
+            for="replaceTextareaCursor"
+        >
+            Replace textarea cursor
+        </label>
     </form>
 
     <form
@@ -36,8 +66,19 @@
         </textarea>
 
         <div class="buttons-row">
-            <button id="saveTemplate" type="button">Save template</button>
-            <button id="resetTemplate" type="button">Reset template</button>
+            <button
+                id="saveTemplate"
+                type="button"
+            >
+                Save template
+            </button>
+
+            <button
+                id="resetTemplate"
+                type="button"
+            >
+                Reset template
+            </button>
         </div>
     </form>
 </div>
