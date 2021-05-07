@@ -19,6 +19,7 @@ import {
 import {
     getMenuElementItem,
     clickOnTheRebootButton,
+    getSpecialMenuItemClickListener,
 } from '../lib/domUtils';
 
 /*
@@ -26,12 +27,7 @@ import {
  * It should be used only for the 2.x firmware versions
  */
 
-const $rootScope = getAngularService('$rootScope');
 const $state = getAngularService('$state');
-const $q = getAngularService('$q');
-
-const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
 const FIRST_MENU_GROUP = 'menu.dashboard';
 const SYSTEM_MENU_GROUP = 'menu.control';
@@ -136,26 +132,10 @@ export const extendMenu2x = () => {
         link.innerText = getL10n(REBOOT_LINK_TITLE);
     });
 
-    link.addEventListener('click', () => {
-        if ($rootScope) {
-            $rootScope.menuIsOpen = false;
-        }
-
-        let promise = $q.when(true);
-
-        if ($state.current.name !== CONTROL_SYSTEM_STATE) {
-            const deferred = $q.defer();
-            promise = deferred.promise;
-
-            const unbinder = $rootScope.$on(PAGE_LOADED, () => {
-                unbinder();
-                deferred.resolve();
-            });
-        }
-
-        promise.then(clickOnTheRebootButton);
-    });
-
+    link.addEventListener(
+        'click',
+        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE),
+    );
 
     logoutSection.prepend(rebootNode);
 };

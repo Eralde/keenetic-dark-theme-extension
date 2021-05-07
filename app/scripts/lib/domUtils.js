@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 
 import {
+    callOnPageLoad,
     getAngularService,
     onLanguageChange,
 } from './ndmUtils';
@@ -347,9 +348,6 @@ export const getSpecialMenuItemClickListener = (callback, stateName) => {
     const $state = getAngularService('$state');
     const $q = getAngularService('$q');
 
-    const CONSTANT = getAngularService('CONSTANT');
-    const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
-
     return ($event) => {
         if (!$rootScope.menuIsOpen) {
             return;
@@ -369,19 +367,15 @@ export const getSpecialMenuItemClickListener = (callback, stateName) => {
                     $rootScope.menuIsOpenOverlayed = false;
                 }
 
-                let promise = $q.when(true);
-
-                if (currentState !== stateName) {
-                    const deferred = $q.defer();
-                    promise = deferred.promise;
-
-                    const unbinder = $rootScope.$on(PAGE_LOADED, () => {
-                        unbinder();
-                        deferred.resolve();
-                    });
+                if (currentState === stateName) {
+                    return $q.when(true).then(callback);
                 }
 
-                promise.then(callback);
+                const deferred = $q.defer();
+
+                callOnPageLoad(() => deferred.resolve());
+
+                return deferred.promise.then(callback);
             });
     };
 }
