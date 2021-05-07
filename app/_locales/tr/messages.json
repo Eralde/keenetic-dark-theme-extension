@@ -1,0 +1,45 @@
+{
+  "appName": {
+    "message": "keenetic-dark-theme-extension",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "keenetic-dark",
+    "description": "The short_name (maximum of 12 characters recommended) is a short version of the app's name."
+  },
+  "appDescription": {
+    "message": "Keenetic cihazların web arayüzü için karanlık mod",
+    "description": "The description of the application"
+  },
+  "browserActionTitle": {
+    "message": "Keenetic Dark Tema",
+    "description": "The title of the browser action button"
+  },
+  "toggleThemeDescription": {
+    "message": "Karanlık Mod"
+  },
+  "showFilterCheckboxes": {
+    "message": "Filtreleri göster"
+  },
+  "hideUnregisteredHosts": {
+    "message": "Kayıtlı olmayan cihazları gizle"
+  },
+  "hideHostsBlockedByMac": {
+    "message": "Erişim kontrol listesinde engelli cihazları gizle"
+  },
+  "hideOfflineHosts": {
+    "message": "Erişimi olmayan cihazları gizle"
+  },
+  "deltaChannelOption": {
+    "message": "Delta"
+  },
+  "deltaChannelName": {
+    "message": "Delta channel"
+  },
+  "deltaChannelShortText": {
+    "message": "Select this if you know what you're doing"
+  },
+  "deltaChannelText": {
+    "message": "Select this if you know what you're doing"
+  }
+}
