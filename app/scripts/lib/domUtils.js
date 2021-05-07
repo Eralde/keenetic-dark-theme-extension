@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 
 import {
-    NOOP,
     getAngularService,
     onLanguageChange,
 } from './ndmUtils';
@@ -182,7 +181,7 @@ export const interceptMouseover = (selector) => {
 };
 
 const _GET_MENU_ELEMENTS_ITEM_DEFAULT_OPTIONS = {
-    onClick: NOOP,
+    onClick: _.noop,
     href: '',
     itemSelector: '.ndm-menu__group__item',
     activeItemClass: 'ndm-menu__group__item--active',
@@ -244,7 +243,7 @@ export const getMenuElementItem = (
 };
 
 const DEFAULT_ADD_FLAG_CHECKBOX_OPTIONS = {
-    cbk: NOOP,
+    cbk: _.noop,
     className: '',
 };
 
@@ -311,7 +310,7 @@ export const addFiltersToggleCheckbox = (
     elToAttachTo,
     elementsToToggle = [],
     elementContainers = [],
-    onToggleCallback = NOOP,
+    onToggleCallback = _.noop,
 ) => {
     if (!elToAttachTo) {
         return;

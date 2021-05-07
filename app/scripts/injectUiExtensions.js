@@ -32,7 +32,6 @@ import {
     is3xVersion,
     isSwitchportOverloadSupported,
     toggleNdmTextareaClass,
-    NOOP,
 } from './lib/ndmUtils';
 
 import {
@@ -199,7 +198,7 @@ export const injectUiExtensions = () => {
         }
 
 
-        let extendMenuFunction = NOOP;
+        let extendMenuFunction = _.noop;
 
         if (is2xVersion(ndwBranch)) {
             extendMenuFunction = extendMenu2x;

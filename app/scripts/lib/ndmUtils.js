@@ -1,16 +1,15 @@
-import {
-    NO_TAG,
-    LOGIN_STATE,
-    DASHBOARD_SWITCHPORTS_TEMPLATE_PATH,
-    FW2X_BRANCHES,
-    OLD_FW3X_BRANCHES,
-    FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
-    NDM_TEXTAREA_TEMPLATE_PATH,
-} from './constants.js';
-
 import * as _ from 'lodash';
 
-export const NOOP = _.noop;
+import {
+    DASHBOARD_SWITCHPORTS_TEMPLATE_PATH,
+    FW2X_BRANCHES,
+    FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
+    LOGIN_STATE,
+    NDM_SWITCHPORT_CONTANIER_TAG,
+    NDM_TEXTAREA_TEMPLATE_PATH,
+    NO_TAG,
+    OLD_FW3X_BRANCHES,
+} from './constants.js';
 
 export const getAngularService = (serviceName) => {
     if (!window.angular) {
@@ -215,8 +214,6 @@ export const getTemplate = (path) => {
 
     return _.cloneDeep($templateCache.get(path));
 }
-
-const NDM_SWITCHPORT_CONTANIER_TAG = 'ndm-switchport-container';
 
 export const getDashboardSwitchportsTemplate = () => {
     const wholeTemplate = getTemplate(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);

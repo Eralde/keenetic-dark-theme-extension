@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {
     THEME_IS_ENABLED_KEY,
     THEME_IS_ENABLED_WINDOW_PROP,
@@ -9,10 +11,6 @@ import {
     DISABLED_ICONS,
     BACKGROUND_PAGE_INITIALIZED_EVENT,
 } from './lib/constants';
-
-import {
-    NOOP,
-} from './lib/ndmUtils';
 
 const updateIcons = (themeIsEnabled) => {
     const icons = themeIsEnabled
@@ -26,7 +24,7 @@ window[THEME_IS_ENABLED_WINDOW_PROP] = undefined;
 window[MENU_ANIMATIONS_WINDOW_PROP] = undefined;
 window[UI_EXTENSIONS_WINDOW_PROP] = undefined;
 
-const initFlag = (port, key, defaultValue, windowProp, onInit = NOOP) => {
+const initFlag = (port, key, defaultValue, windowProp, onInit = _.noop) => {
     return browser.storage.local.get(key).then((res) => {
         const storageKeys = Object.keys(res);
 
