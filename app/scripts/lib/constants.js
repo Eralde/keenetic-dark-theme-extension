@@ -1,11 +1,17 @@
 // popup events/flags
 export const THEME_IS_ENABLED_KEY = 'DARK_THEME_IS_ENABLED';
-export const MENU_ANIMATIONS_KEY = 'MENU_ANIMATIONS_ENABLED';
 export const UI_EXTENSIONS_KEY = 'UI_EXTENSIONS_ENABLED';
+export const MENU_ANIMATIONS_KEY = 'MENU_ANIMATIONS_ENABLED';
+
+export const TOGGLE_DEFAULT_VALUES = {
+    [THEME_IS_ENABLED_KEY]: true,
+    [UI_EXTENSIONS_KEY]: true,
+    [MENU_ANIMATIONS_KEY]: false,
+}
 
 export const THEME_IS_ENABLED_WINDOW_PROP = 'themeIsEnabled';
-export const MENU_ANIMATIONS_WINDOW_PROP = 'menuAnimationsEnabled';
 export const UI_EXTENSIONS_WINDOW_PROP = 'uiExtensionsEnabled';
+export const MENU_ANIMATIONS_WINDOW_PROP = 'menuAnimationsEnabled';
 
 // theme & UI extensions CSS files
 export const LEGACY_STYLES = {

@@ -4,6 +4,7 @@ import {
     THEME_IS_ENABLED_KEY,
     MENU_ANIMATIONS_KEY,
     UI_EXTENSIONS_KEY,
+    TOGGLE_DEFAULT_VALUES,
     LEGACY_STYLES,
     STYLES_2X,
     STYLES_3X,
@@ -313,7 +314,7 @@ const processNdmVerMessage = (event) => {
 
         setTimeout(() => {
             browser.storage.local.get().then(data => {
-                const state = _.get(data, UI_EXTENSIONS_KEY, true);
+                const state = _.get(data, UI_EXTENSIONS_KEY, TOGGLE_DEFAULT_VALUES[UI_EXTENSIONS_KEY]);
 
                 sendUiExtensionsState(state, true);
             });

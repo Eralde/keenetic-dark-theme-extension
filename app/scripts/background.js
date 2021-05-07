@@ -10,6 +10,7 @@ import {
     ENABLED_ICONS,
     DISABLED_ICONS,
     BACKGROUND_PAGE_INITIALIZED_EVENT,
+    TOGGLE_DEFAULT_VALUES,
 } from './lib/constants';
 
 const updateIcons = (themeIsEnabled) => {
@@ -24,7 +25,7 @@ window[THEME_IS_ENABLED_WINDOW_PROP] = undefined;
 window[MENU_ANIMATIONS_WINDOW_PROP] = undefined;
 window[UI_EXTENSIONS_WINDOW_PROP] = undefined;
 
-const initFlag = (port, key, defaultValue, windowProp, onInit = _.noop) => {
+const initFlag = ({port, key, defaultValue, windowProp, onInit = _.noop}) => {
     return browser.storage.local.get(key).then((res) => {
         const storageKeys = Object.keys(res);
 
@@ -127,10 +128,31 @@ browser.runtime.onConnect.addListener((port) => {
         }, 0);
     };
 
+    const themeFlagArgs = {
+        port,
+        key: THEME_IS_ENABLED_KEY,
+        defaultValue: TOGGLE_DEFAULT_VALUES[THEME_IS_ENABLED_KEY],
+        windowProp: THEME_IS_ENABLED_WINDOW_PROP,
+        onInit: updateIcons,
+    };
 
-    initFlag(port, THEME_IS_ENABLED_KEY, true, THEME_IS_ENABLED_WINDOW_PROP, updateIcons)
-        .then(() => initFlag(port, MENU_ANIMATIONS_KEY, false, MENU_ANIMATIONS_WINDOW_PROP))
-        .then(() => initFlag(port, UI_EXTENSIONS_KEY, true, UI_EXTENSIONS_WINDOW_PROP))
+    const menuAnimationsFlagArgs = {
+        port,
+        key: MENU_ANIMATIONS_KEY,
+        defaultValue: TOGGLE_DEFAULT_VALUES[MENU_ANIMATIONS_KEY],
+        windowProp: MENU_ANIMATIONS_WINDOW_PROP,
+    };
+
+    const uiExtensionsFlagArgs = {
+        port,
+        key: UI_EXTENSIONS_KEY,
+        defaultValue: TOGGLE_DEFAULT_VALUES[UI_EXTENSIONS_KEY],
+        windowProp: UI_EXTENSIONS_WINDOW_PROP,
+    };
+
+    initFlag(themeFlagArgs)
+        .then(() => initFlag(menuAnimationsFlagArgs))
+        .then(() => initFlag(uiExtensionsFlagArgs))
         .then(() => {
             onInit();
         });
