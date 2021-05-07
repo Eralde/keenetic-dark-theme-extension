@@ -10,6 +10,7 @@ import {
     DASHBOARD_TITLE,
     NDM_MENU_SELECTOR,
     WEBCLI_STATE,
+    DIAGNOSTICS_STATE,
 } from '../lib/constants';
 
 import {
@@ -21,7 +22,9 @@ import {
 
 import {
     getMenuElementItem,
+    getSpecialMenuItemClickListener,
     clickOnTheRebootButton,
+    goToDslTab,
 } from '../lib/domUtils';
 
 import {
@@ -33,12 +36,8 @@ import {
  * It should be used only for the 3.x firmware versions
  */
 
-const $rootScope = getAngularService('$rootScope');
-const $state = getAngularService('$state');
-const $q = getAngularService('$q');
+const utils = getAngularService('utils');
 
-const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 const FIRST_MENU_GROUP = 'menu.dashboard';
 const SYSTEM_MENU_GROUP = 'menu.control';
 
@@ -61,6 +60,10 @@ const forceScopeDigest = ($scope) => {
         $scope.$apply();
     }
 };
+
+const getDslDiagnosticsLinkTitle = () => {
+    return `${utils.getTranslation('menu.diagnostics')} -> ${utils.getTranslation('diagnostics.tabs.dsl')}`;
+}
 
 export const extendMenu3x = () => {
     clearExtendMenuTimeout();
@@ -88,6 +91,20 @@ export const extendMenu3x = () => {
             linkSref: WEBCLI_STATE,
         });
 
+        const NDM = _.get(window, 'NDM', {});
+        const isDslDevice = _.has(NDM, 'profile.components.dsl') || _.get(NDM, 'DSL_ALWAYS_PRESENT', false);
+
+        if (isDslDevice) {
+            const title = getDslDiagnosticsLinkTitle();
+
+            addLinkToMenuSection({
+                menu: newVal,
+                menuSectionId: FIRST_MENU_GROUP,
+                linkTitle: title,
+                linkSref: DIAGNOSTICS_STATE,
+            });
+        }
+
         forceScopeDigest($scope);
     });
 
@@ -106,6 +123,7 @@ export const extendMenu3x = () => {
 
     // TODO: refactor code below
     let dupNode;
+    let dslDiagnosticsElement;
 
     try {
         const menuGroups = [...document.querySelectorAll('.ndm-menu__group')];
@@ -119,6 +137,9 @@ export const extendMenu3x = () => {
                 activeItemClass: 'foo', // ndm-menu__item--active',
             }
         );
+
+        const dslDiagnosticsSelector = `[data-ui-sref="${DIAGNOSTICS_STATE}(point.srefParams)"]`;
+        dslDiagnosticsElement = firstGroup.querySelector(dslDiagnosticsSelector);
 
         dupNode = linkEl;
     } catch (e) {
@@ -151,42 +172,19 @@ export const extendMenu3x = () => {
         link.innerText = getL10n(REBOOT_LINK_TITLE);
     });
 
-    link.addEventListener('click', ($event) => {
-        if (!$rootScope.menuIsOpen) {
-            return;
-        }
-
-        $event.preventDefault();
-        $event.stopPropagation();
-
-        const currentState = $state.current.name;
-        const promise = currentState === CONTROL_SYSTEM_STATE
-            ? $q.when(true)
-            : $state.go(CONTROL_SYSTEM_STATE);
-
-        return promise
-            .then(() => {
-                if ($rootScope) {
-                    $rootScope.menuIsOpenOverlayed = false;
-                }
-
-                let promise = $q.when(true);
-
-                if (currentState !== CONTROL_SYSTEM_STATE) {
-                    const deferred = $q.defer();
-                    promise = deferred.promise;
-
-                    const unbinder = $rootScope.$on(PAGE_LOADED, () => {
-                        unbinder();
-                        deferred.resolve();
-                    });
-                }
-
-                promise.then(clickOnTheRebootButton);
-            });
-    });
+    link.addEventListener(
+        'click',
+        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE),
+    );
 
     logoutSection.prepend(link);
+
+    if (dslDiagnosticsElement) {
+        dslDiagnosticsElement.addEventListener(
+            'click',
+            getSpecialMenuItemClickListener(goToDslTab, DIAGNOSTICS_STATE),
+        );
+    }
 
     setExtendMenuTimeout();
 };

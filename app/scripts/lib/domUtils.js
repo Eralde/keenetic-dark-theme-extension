@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {
     NOOP,
     getAngularService,
@@ -136,6 +138,26 @@ export const clickOnTheRebootButton = () => {
         const buttons = [...document.querySelectorAll('.system__reboot-section button')];
 
         buttons[0].click();
+    });
+};
+
+export const goToDslTab = () => {
+    const $timeout = getAngularService('$timeout');
+    const utils = getAngularService('utils');
+
+    $timeout(() => {
+        const tabs = [...document.querySelectorAll('.tabs-list__item')];
+
+        const dslTab = _.find(tabs, item => item.innerText === utils.getTranslation('diagnostics.tabs.dsl'))
+            || _.last(tabs);
+
+        if (!dslTab) {
+            return;
+        }
+
+        const linkElement = dslTab.querySelector('a');
+
+        _.invoke(linkElement, 'click');
     });
 };
 
@@ -319,4 +341,48 @@ export const isPointInsideElement = (point, el) => {
     const rect = el.getBoundingClientRect();
 
     return (rect.left <= x && rect.right >= x) && (rect.top <= y && rect.bottom >= y);
+}
+
+export const getSpecialMenuItemClickListener = (callback, stateName) => {
+    const $rootScope = getAngularService('$rootScope');
+    const $state = getAngularService('$state');
+    const $q = getAngularService('$q');
+
+    const CONSTANT = getAngularService('CONSTANT');
+    const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
+
+    return ($event) => {
+        if (!$rootScope.menuIsOpen) {
+            return;
+        }
+
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        const currentState = $state.current.name;
+        const promise = currentState === stateName
+            ? $q.when(true)
+            : $state.go(stateName);
+
+        return promise
+            .then(() => {
+                if ($rootScope) {
+                    $rootScope.menuIsOpenOverlayed = false;
+                }
+
+                let promise = $q.when(true);
+
+                if (currentState !== stateName) {
+                    const deferred = $q.defer();
+                    promise = deferred.promise;
+
+                    const unbinder = $rootScope.$on(PAGE_LOADED, () => {
+                        unbinder();
+                        deferred.resolve();
+                    });
+                }
+
+                promise.then(callback);
+            });
+    };
 }
