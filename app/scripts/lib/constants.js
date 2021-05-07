@@ -100,6 +100,8 @@ export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
+export const DSL_STATS_FILENAME = 'proc:/driver/ensoc_dsl/dsl_stats';
+
 // l10n IDs
 export const DASHBOARD_TITLE = 'menu.dashboard';
 export const LOG_LINK_TITLE = 'diagnostics.log.header-title';
@@ -121,6 +123,7 @@ export const WIFI_CLIENTS_STATE = 'controlPanel.wifiClients';
 export const DEVICES_LIST_STATE = 'controlPanel.devicesList';
 export const POLICIES_STATE = 'controlPanel.policies';
 export const CONTROL_SYSTEM_STATE = 'controlPanel.system';
+export const DIAGNOSTICS_STATE = 'controlPanel.diagnostics';
 export const DIAGNOSTICS_LOG_STATE = 'controlPanel.diagnostics.log';
 export const WEBCLI_STATE = 'cli';
 export const LOGIN_STATE = 'login';

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import {
     DIAGNOSTICS_LOG_STATE,
+    DIAGNOSTICS_STATE,
     DEVICES_LIST_STATE,
     WIFI_CLIENTS_STATE,
     DASHBOARD_STATE,
@@ -71,6 +72,11 @@ import {
     overrideSandboxesList,
     cancelComponentsSectionsWatchers,
 } from './uiExtension/componentsListDelta';
+
+import {
+    extendDslStats,
+    revertDslStatsChanges,
+} from './uiExtension/extendDslStat';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -224,6 +230,12 @@ export const injectUiExtensions = () => {
         addUiExtension(
             POLICIES_STATE,
             fixPolicies,
+        );
+
+        addUiExtension(
+            DIAGNOSTICS_STATE,
+            extendDslStats,
+            revertDslStatsChanges,
         );
 
         overrideSandboxesList();
