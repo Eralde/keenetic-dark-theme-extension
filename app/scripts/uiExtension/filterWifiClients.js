@@ -100,7 +100,6 @@ export const addWifiClientsFilters = () => {
                             parentEl: flexContainer,
                             flagName: flag,
                             flagLabelL10nId: flag,
-                            ctrlName: __VARS.ctrlName,
                         },
                     );
                 });
@@ -112,7 +111,6 @@ export const addWifiClientsFilters = () => {
                             parentEl: flexContainer,
                             flagName: flag,
                             flagLabelL10nId: flag,
-                            ctrlName: __VARS.ctrlName,
                         },
                     );
                 });

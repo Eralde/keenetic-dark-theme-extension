@@ -172,7 +172,6 @@ export const addDeviceListsFilters = () => {
                             parentEl: regFlexContainer,
                             flagName: flag,
                             flagLabelL10nId: flag,
-                            ctrlName: __VARS.ctrlName,
                         },
                     );
                 });
@@ -188,7 +187,6 @@ export const addDeviceListsFilters = () => {
                             parentEl: unregFlexContainer,
                             flagName: flag,
                             flagLabelL10nId: flag,
-                            ctrlName: __VARS.ctrlName,
                         },
                     )
                 });

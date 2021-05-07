@@ -233,7 +233,6 @@ export const addFlagCheckbox = (flags, options) => {
         parentEl,
         flagName,
         flagLabelL10nId,
-        // ctrlName,
         cbk,
         className,
     } = _opts;
@@ -303,7 +302,6 @@ export const addFiltersToggleCheckbox = (
             parentEl: elToAttachTo,
             flagName: flagName,
             flagLabelL10nId: flagName,
-            ctrlName: __VARS.ctrlName,
             cbk: (v) => {
                 flags.set(flagName, v);
                 toggleCssClass(elementsToToggle, HIDE_CLASS, !v);
