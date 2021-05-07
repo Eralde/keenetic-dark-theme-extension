@@ -316,5 +316,16 @@ export const is3xVersion = (ndwVersion) => {
 }
 
 export const isSwitchportOverloadSupported = (ndwVersion) => {
-    return is3xVersion(ndwVersion) && !FW3X_WITHOUT_SWITCHPORT_OVERLOAD.some(branch => ndwVersion.startsWith(branch));
+    if (!is3xVersion(ndwVersion)) {
+        return false;
+    }
+
+    const is3xBranchWithoutOverload = FW3X_WITHOUT_SWITCHPORT_OVERLOAD.some(branch => {
+        const branchChunks = branch.split('.');
+        const versionChunks = ndwVersion.split('.');
+
+        return branchChunks.every((chunk, index) => chunk === versionChunks[index]);
+    });
+
+    return !is3xBranchWithoutOverload;
 }
