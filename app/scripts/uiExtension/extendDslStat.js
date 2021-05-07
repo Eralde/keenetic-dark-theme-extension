@@ -37,8 +37,44 @@ const formatAsDslStatValues = (rxText, txText) => {
             ${generateTrafficIconHtml('rx')}&nbsp;${txText}`;
 };
 
+const getAdditionalDslStatProps = (dslStatsFileLines) => {
+    const additionalLines = dslStatsFileLines.filter(line => {
+        return ['Uptime', 'CRC', 'FEC', 'HEC'].some(item => line.startsWith(item));
+    });
+
+    return additionalLines.reduce(
+        (acc, line) => {
+            const [labelData, valueData] = line.split(/:\s+/);
+            const lineLabel= labelData.replace(':', '');
+            const label = L10N_MAP[lineLabel]
+                ? utils.getTranslation(L10N_MAP[lineLabel])
+                : lineLabel;
+
+            const values = valueData.trim().split(/\s+/g);
+            const info = values.length > 1
+                ? formatAsDslStatValues(...values)
+                : values[0];
+
+            const propName = spacesToCamelCase(label);
+
+            return {
+                ...acc,
+                [propName]: {
+                    label,
+                    info,
+                },
+            };
+        },
+        {},
+    );
+}
+
 const CONSTANT = getAngularService('CONSTANT');
 const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
+
+const L10N_MAP = {
+    'Uptime': 'uptime',
+};
 
 export const extendDslStats = () => {
     const unbinder = $rootScope.$on(PAGE_LOADED, () => {
@@ -47,31 +83,7 @@ export const extendDslStats = () => {
         diagnosticsDsl.getData = () => {
             return originalGetData().then(response => {
                 return getDslStatsFileLines().then(statLines => {
-                    const additionalLines = statLines.filter(line => {
-                        return ['Uptime', 'CRC', 'FEC', 'HEC'].some(item => line.startsWith(item));
-                    });
-
-                    const additionalIprops = additionalLines.reduce(
-                        (acc, line) => {
-                            const [labelData, valueData] = line.split(/:\s+/);
-                            const label = labelData.replace(':', '');
-                            const values = valueData.trim().split(/\s+/g);
-                            const info = values.length > 1
-                                ? formatAsDslStatValues(...values)
-                                : values[0];
-
-                            const propName = spacesToCamelCase(label);
-
-                            return {
-                                ...acc,
-                                [propName]: {
-                                    label,
-                                    info,
-                                },
-                            };
-                        },
-                        {},
-                    );
+                    const additionalIprops = getAdditionalDslStatProps(statLines);
 
                     response.iprops = {
                         ...response.iprops,
