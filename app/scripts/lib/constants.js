@@ -111,6 +111,7 @@ export const REBOOT_LINK_TITLE = 'system.reboot.button';
 export const FILTERS_TOGGLE_CLASS = 'show-filter-checkboxes';
 export const LOG_LINK_CLASS = 'log-link';
 export const REBOOT_LINK_CLASS = 'reboot-link';
+export const DSL_DIAGNOSTICS_LINK_CLASS = 'dsl-diagnostics-link';
 export const SAVE_LOG_BTN_CLASS = 'save-log-btn';
 
 // CSS selectors

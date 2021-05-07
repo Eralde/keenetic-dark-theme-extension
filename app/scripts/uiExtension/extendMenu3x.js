@@ -11,6 +11,7 @@ import {
     NDM_MENU_SELECTOR,
     WEBCLI_STATE,
     DIAGNOSTICS_STATE,
+    DSL_DIAGNOSTICS_LINK_CLASS,
 } from '../lib/constants';
 
 import {
@@ -29,7 +30,7 @@ import {
 
 import {
     sharedData
-} from "../lib/state";
+} from '../lib/state';
 
 /*
  * This UI extension adds some items to the web UI side menu.
@@ -180,6 +181,7 @@ export const extendMenu3x = () => {
     logoutSection.prepend(link);
 
     if (dslDiagnosticsElement) {
+        dslDiagnosticsElement.classList.add(DSL_DIAGNOSTICS_LINK_CLASS);
         dslDiagnosticsElement.addEventListener(
             'click',
             getSpecialMenuItemClickListener(goToDslTab, DIAGNOSTICS_STATE),
