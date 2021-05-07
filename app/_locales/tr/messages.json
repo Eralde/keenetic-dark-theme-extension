@@ -25,7 +25,7 @@
     "message": "Kayıtlı olmayan cihazları gizle"
   },
   "hideHostsBlockedByMac": {
-    "message": "Erişim kontrol listesinde engelli cihazları gizle"
+    "message": "Erişim kontrol listesinde erişimi engellenmiş cihazları gizle"
   },
   "hideOfflineHosts": {
     "message": "Erişimi olmayan cihazları gizle"
