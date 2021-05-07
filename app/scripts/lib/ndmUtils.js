@@ -82,6 +82,10 @@ export const waitUntilAuthenticated = () => {
 }
 
 export const callOnPageLoad = (callback) => {
+    const $rootScope = getAngularService('$rootScope');
+    const CONSTANT = getAngularService('CONSTANT');
+    const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
+
     const unbinder = $rootScope.$on(PAGE_LOADED, () => {
         unbinder();
 

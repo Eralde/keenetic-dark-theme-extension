@@ -6,14 +6,10 @@ import {sharedData} from "../lib/state";
 /*
  * This UI extension adds data on CRC & FEC errors to the DSL statistics
  */
-const $rootScope = getAngularService('$rootScope');
 const $q = getAngularService('$q');
 const diagnosticsDsl = getAngularService('diagnosticsDsl');
 const router = getAngularService('router');
 const utils = getAngularService('utils');
-
-const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
 // l10n keys for new props
 const L10N_MAP = {
