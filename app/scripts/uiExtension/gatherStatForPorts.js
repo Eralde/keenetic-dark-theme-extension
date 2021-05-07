@@ -4,6 +4,8 @@ import {
     getDashboardController,
     getSwitchportsCardController,
 } from '../lib/ndmUtils';
+import {sharedData} from '../lib/state';
+import {UI_EXTENSIONS_KEY} from '../lib/constants';
 
 const dashboardDataService = getAngularService('dashboardDataService');
 const utils = getAngularService('utils');
@@ -57,6 +59,10 @@ export const gatherStatForPorts = async () => {
                     ...existingStatData,
                 }
             });
+        }
+
+        if (sharedData.get(UI_EXTENSIONS_KEY) === false) {
+            return;
         }
 
         setTimeout(() => {
