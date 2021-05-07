@@ -1,11 +1,13 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../lib/ndmUtils';
-import {DSL_STATS_FILENAME} from '../lib/constants';
+import {DSL_STATS_FILENAME, UI_EXTENSIONS_KEY} from '../lib/constants';
+import {sharedData} from "../lib/state";
 
 /*
  * This UI extension adds data on CRC & FEC errors to the DSL statistics
  */
 const $rootScope = getAngularService('$rootScope');
+const $q = getAngularService('$q');
 const diagnosticsDsl = getAngularService('diagnosticsDsl');
 const router = getAngularService('router');
 const utils = getAngularService('utils');
@@ -13,6 +15,10 @@ const utils = getAngularService('utils');
 const originalGetData = _.get(diagnosticsDsl, 'getData');
 
 const getDslStatsFileLines = () => {
+    if (sharedData.get(UI_EXTENSIONS_KEY) === false) {
+        return $q.when([]);
+    }
+
     const query = {more: {filename: DSL_STATS_FILENAME}};
 
     return router.postToRciRoot(query).then(response => {

@@ -17,6 +17,7 @@ import {
     CONTROL_SYSTEM_STATE,
     SWITCHPORT_TEMPLATE_STORAGE_KEY,
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
+    UI_EXTENSIONS_KEY,
 } from './lib/constants';
 
 import {
@@ -128,9 +129,13 @@ export const injectUiExtensions = () => {
                         return;
                     }
 
-                    menuController.onItemClick = event.data.payload
+                    const uiExtensionsEnabled = Boolean(event.data.payload);
+
+                    menuController.onItemClick = uiExtensionsEnabled
                         ? _.noop
                         : sharedData.get('originalMenuOnItemClick');
+
+                    sharedData.set(UI_EXTENSIONS_KEY, uiExtensionsEnabled);
 
                     break;
 
@@ -142,6 +147,8 @@ export const injectUiExtensions = () => {
 
                 case INITIAL_STORAGE_DATA:
                     const payload = _.get(event, 'data.payload');
+
+                    sharedData.set(UI_EXTENSIONS_KEY, _.get(payload, UI_EXTENSIONS_KEY));
 
                     toggleNdmTextareaClass({
                         className: 'ndm-textarea__textarea--default-cursor',
