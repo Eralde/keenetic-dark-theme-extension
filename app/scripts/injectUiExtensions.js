@@ -238,11 +238,13 @@ export const injectUiExtensions = () => {
             fixPolicies,
         );
 
-        addUiExtension(
-            DIAGNOSTICS_STATE,
-            extendDslStats,
-            revertDslStatsChanges,
-        );
+        if (is3xVersion(ndwBranch)) {
+            addUiExtension(
+                DIAGNOSTICS_STATE,
+                extendDslStats,
+                revertDslStatsChanges,
+            );
+        }
 
         overrideSandboxesList();
 
