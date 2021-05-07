@@ -5,7 +5,7 @@ import {
     FW2X_BRANCHES,
     FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
     LOGIN_STATE,
-    NDM_SWITCHPORT_CONTANIER_TAG,
+    NDM_SWITCHPORT_CONTAINER_TAG,
     NDM_TEXTAREA_TEMPLATE_PATH,
     NO_TAG,
     OLD_FW3X_BRANCHES,
@@ -234,7 +234,7 @@ export const getDashboardSwitchportsTemplate = () => {
         return false;
     }
 
-    const chunks = wholeTemplate.split(NDM_SWITCHPORT_CONTANIER_TAG);
+    const chunks = wholeTemplate.split(NDM_SWITCHPORT_CONTAINER_TAG);
 
     if (chunks.length !== 3) {
         return false;
@@ -243,8 +243,8 @@ export const getDashboardSwitchportsTemplate = () => {
     const middleChunk = chunks[1];
 
     const template = middleChunk.substr(1, middleChunk.length - 3);
-    const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTANIER_TAG}>`;
-    const suffix =  `</${NDM_SWITCHPORT_CONTANIER_TAG}${chunks[2]}`;
+    const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTAINER_TAG}>`;
+    const suffix =  `</${NDM_SWITCHPORT_CONTAINER_TAG}${chunks[2]}`;
 
     return {
         template,

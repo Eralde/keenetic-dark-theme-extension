@@ -149,4 +149,4 @@ export const SWITCHPORT_TEMPLATE_STORAGE_KEY = 'switchportTemplate';
 export const SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY = 'switchportTemplateOriginal';
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';
-export const NDM_SWITCHPORT_CONTANIER_TAG = 'ndm-switchport-container';
+export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
