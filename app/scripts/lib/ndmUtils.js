@@ -21,11 +21,11 @@ export const getAngularService = (serviceName) => {
     return injector.get(serviceName);
 };
 
-let $q = getAngularService('$q'),
-    $transitions = getAngularService('$transitions'),
-    $http = getAngularService('$http'),
-    $state = getAngularService('$state'),
-    router = getAngularService('router');
+const $q = getAngularService('$q');
+const $transitions = getAngularService('$transitions');
+const $http = getAngularService('$http');
+const $state = getAngularService('$state');
+const router = getAngularService('router');
 
 export const waitUntilAuthenticated = () => {
     const deferred = $q.defer();
@@ -80,6 +80,14 @@ export const waitUntilAuthenticated = () => {
 
     return deferred.promise;
 }
+
+export const callOnPageLoad = (callback) => {
+    const unbinder = $rootScope.$on(PAGE_LOADED, () => {
+        unbinder();
+
+        callback();
+    });
+};
 
 export const isAuthenticated = () => {
     const deferred = $q.defer();
