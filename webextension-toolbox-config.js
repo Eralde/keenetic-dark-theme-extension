@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const path = require('path');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
@@ -16,6 +17,15 @@ module.exports = {
                     loader: 'less-loader', // compiles Less to CSS
                 },
             ],
+        });
+
+        config.module.rules.push({
+            test: /\.html$/,
+            include: [
+                path.resolve(__dirname, 'app', 'pages', 'ui')
+            ],
+            exclude: /node_modules/,
+            use: {loader: 'html-loader'}
         });
 
         config.module.rules.push({
