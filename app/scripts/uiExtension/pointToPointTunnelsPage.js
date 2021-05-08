@@ -80,7 +80,7 @@ const pointToPointService = (function(utils, router, interfaces) {
                     description: showInterfaceItem.description || id,
                     source: _.get(showInterfaceItem, 'tunnel-local-source', ''),
                     destination: _.get(showInterfaceItem, 'tunnel-remote-destination', ''),
-                    uptime,
+                    uptime: uptime || 0,
                     data: {
                         status: showInterfaceItem,
                         configuration: interfaceConfiguration,
