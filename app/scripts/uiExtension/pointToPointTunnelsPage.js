@@ -6,17 +6,49 @@ import {OTHER_CONNECTIONS_STATE} from "../lib/constants";
 const $stateRegistry = getAngularService('$stateRegistry');
 
 const MY_INTERNET_GROUP = 'menu.myInternet';
-const SHOW_INTERFACE_PATH = 'show.interface';
-const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
-
-const TUNNEL_TYPES = ['IPIP', 'Gre', 'EoIP']
-
 const pointToPointService = (function(utils, router, interfaces) {
+    const SHOW_INTERFACE_PATH = 'show.interface';
+    const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
+    const SHOW_INTERFACE_STAT = 'show.interface.stat';
+
+    const TUNNEL_TYPES = ['IPIP', 'Gre', 'EoIP']
+    const EMPTY_VAL_HTML = '&mdash;';
+
+    const formatBytesColumn = val => {
+        return isNaN(Number(val))
+            ? EMPTY_VAL_HTML
+            : utils.format.size(Number(val));
+    };
+
+    const formatUptime = (uptime, tunnelRow) => {
+        return tunnelRow.isEnabled ? utils.getSplittedTime(uptime) : EMPTY_VAL_HTML;
+    };
+
+    const getInterfaceStatByIdData = (idList = []) => {
+        const statQuery = idList.length > 0
+            ? _.set({}, SHOW_INTERFACE_STAT, idList.map(id => ({name: id})))
+            : {};
+
+        return router.postToRciRoot(statQuery).then(response => {
+            const showInterfaceStat = _.get(response, SHOW_INTERFACE_STAT, []);
+
+            return idList.reduce(
+                (acc, id, index) => {
+                    return {
+                        ...acc,
+                        [id]: _.get(showInterfaceStat, [index], {}),
+                    };
+                },
+                {},
+            );
+        })
+    }
+
     const getTableDateQueries = () => {
         return utils.toRciQueryList([
             SHOW_INTERFACE_PATH,
-            SHOW_RC_INTERFACE_PATH],
-        );
+            SHOW_RC_INTERFACE_PATH,
+        ]);
     };
 
     const destructureTableDataResponses = (responses) => {
@@ -38,7 +70,7 @@ const pointToPointService = (function(utils, router, interfaces) {
         return _.map(
             matchingShowInterfaceObjects,
             (showInterfaceItem) => {
-                const {id, type} = showInterfaceItem;
+                const {id, uptime, type} = showInterfaceItem;
                 const interfaceConfiguration = showRcInterface[id];
 
                 return {
@@ -48,6 +80,7 @@ const pointToPointService = (function(utils, router, interfaces) {
                     description: showInterfaceItem.description || id,
                     source: _.get(showInterfaceItem, 'tunnel-local-source', ''),
                     destination: _.get(showInterfaceItem, 'tunnel-remote-destination', ''),
+                    uptime,
                     data: {
                         status: showInterfaceItem,
                         configuration: interfaceConfiguration,
@@ -65,6 +98,10 @@ const pointToPointService = (function(utils, router, interfaces) {
 
         getTunnelsList,
         toggleTunnelState,
+
+        getInterfaceStatByIdData,
+        formatBytesColumn,
+        formatUptime,
     };
 })(...['utils', 'router', 'interfaces'].map(getAngularService));
 
@@ -100,7 +137,19 @@ function pointToPointController($scope, requesterFactory) {
             },
             destination: {
                 title: 'Destination',
-            }
+            },
+            txbytes: {
+                title: 'otherConnections.ppp.transmitted',
+                modify: pointToPointService.formatBytesColumn
+            },
+            rxbytes: {
+                title: 'otherConnections.ppp.received',
+                modify: pointToPointService.formatBytesColumn
+            },
+            uptime: {
+                title: 'otherConnections.ppp.connected',
+                modify: pointToPointService.formatUptime,
+            },
         },
         dataIsLoaded: false,
         data: [],
@@ -113,33 +162,41 @@ function pointToPointController($scope, requesterFactory) {
         (responses) => {
             const pollData = pointToPointService.destructureTableDataResponses(responses);
             const list = pointToPointService.getTunnelsList(pollData);
+            const idList = _.map(list, 'id');
 
-            vm.table.data = list.map(row => {
-                if (rowsToPreserveToggleState[row.id]) {
-                    row.isEnabled = rowsToPreserveToggleState[row.id];
-                    rowsToPreserveToggleState = _.omit(rowsToPreserveToggleState, [row.id]);
-                }
+            return pointToPointService.getInterfaceStatByIdData(idList).then(statDataById => {
+                vm.table.data = list.map(row => {
+                    const {id} = row;
 
-                const onToggle = (state) => {
-                    rowsToPreserveToggleState[row.id] = state;
-                    requester.stopPolling();
+                    if (rowsToPreserveToggleState[id]) {
+                        row.isEnabled = rowsToPreserveToggleState[id];
+                        rowsToPreserveToggleState = _.omit(rowsToPreserveToggleState, [id]);
+                    }
 
-                    return pointToPointService.toggleTunnelState(row.id, state)
-                        .finally(() => {
-                            requester.startPolling();
-                        });
-                };
+                    const statData = _.pick(statDataById[id], ['rxbytes', 'txbytes']);
 
-                return {
-                    ...row,
-                    onToggle,
-                };
+                    const onToggle = (state) => {
+                        rowsToPreserveToggleState[id] = state;
+                        requester.stopPolling();
+
+                        return pointToPointService.toggleTunnelState(id, state)
+                            .finally(() => {
+                                requester.startPolling();
+                            });
+                    };
+
+                    return {
+                        ...row,
+                        ...statData,
+                        onToggle,
+                    };
+                });
+
+                vm.table.dataIsLoaded = true;
+
+                vm.progress = 100;
+                vm.isReady = true;
             });
-
-            vm.table.dataIsLoaded = true;
-
-            vm.progress = 100;
-            vm.isReady = true;
         },
     );
 
