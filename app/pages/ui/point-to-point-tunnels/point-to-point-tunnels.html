@@ -1,0 +1,38 @@
+<ndm-page
+    class="page-point-to-point"
+    label="IPIP, GRE, EoIP"
+    progress="vm.progress"
+    description="&nbsp;"
+>
+    <br/><br/>
+
+    <ndm-table
+        ng-if="vm.table.dataIsLoaded && vm.table.data.length > 0"
+        class="page-point-to-point__table"
+        data="vm.table.data"
+        columns="vm.table.columns"
+        track-by-prop="id"
+        sort-name="description"
+        sort-reverse="false"
+        is-sortable="false"
+    >
+    </ndm-table>
+
+    <div
+        ng-if="!vm.table.dataIsLoaded || vm.table.data.length === 0"
+        class="empty-list"
+    >
+        <span
+            ng-if="!vm.table.dataIsLoaded"
+            data-translate
+        >
+            loading
+        </span>
+        <span
+            ng-if="vm.table.dataIsLoaded && vm.table.data.length === 0"
+            data-translate
+        >
+            otherConnections.no-connections
+        </span>
+    </div>
+</ndm-page>

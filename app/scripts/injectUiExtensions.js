@@ -21,6 +21,8 @@ import {
     UI_EXTENSIONS_KEY,
 } from './lib/constants';
 
+import {flags, sharedData} from './lib/state';
+
 import {
     ensureServiceTag,
     getServiceTag,
@@ -67,7 +69,6 @@ import {
     revertGatherStatForPortsChanges,
 } from './uiExtension/gatherStatForPorts';
 
-import {flags, sharedData} from './lib/state';
 import {
     overriderSandboxOptions,
     overrideSandboxesList,
@@ -78,6 +79,10 @@ import {
     extendDslStats,
     revertDslStatsChanges,
 } from './uiExtension/extendDslStat';
+
+import {
+    addPointToPointTunnelsPage,
+} from './uiExtension/pointToPointTunnelsPage';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -93,15 +98,15 @@ export const injectUiExtensions = () => {
     const $transitions = getAngularService('$transitions');
 
     // Should be done BEFORE authentication
-    const tpl = getDashboardSwitchportsTemplate();
+    const originalSwitchportsTemplate = getDashboardSwitchportsTemplate();
 
-    if (!tpl) {
+    if (!originalSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
     } else {
         window.postMessage(
             {
                 action: ORIGINAL_SWITCHPORTS_TEMPLATE,
-                payload: tpl,
+                payload: originalSwitchportsTemplate,
             },
             '*',
         );
@@ -254,6 +259,8 @@ export const injectUiExtensions = () => {
         }
 
         overrideSandboxesList();
+
+        addPointToPointTunnelsPage();
 
         addUiExtension(
             CONTROL_SYSTEM_STATE,
