@@ -217,6 +217,9 @@ function PointToPointController($scope, otherConnectionsService) {
 
     let rowsToPreserveToggleState = {};
 
+    // No need to dynamically check if UI extensions are enabled:
+    // if any other section is visible on the 'Other connections' page,
+    // `rci/show/interface` & `rci/interface` data will be polled regardless of UI extensions.
     requester.registerCallback(
         pointToPointService.getTableDateQueries(),
         (responses) => {
