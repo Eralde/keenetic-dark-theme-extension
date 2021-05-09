@@ -9,12 +9,52 @@ const pointToPointService = (function() {
     const router = getAngularService('router');
     const interfaces = getAngularService('interfaces');
 
+    const {
+        INTERFACE_STATE,
+        STATE_CATEGORY,
+    } = interfaces.constants;
+
     const SHOW_INTERFACE_PATH = 'show.interface';
     const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
     const SHOW_INTERFACE_STAT = 'show.interface.stat';
 
     const TUNNEL_TYPES = ['IPIP', 'Gre', 'EoIP']
     const EMPTY_VAL_HTML = '&mdash;';
+
+    const determineTunnelStatus = (
+        showInterfaceData,
+        showScheduleData = {},
+    ) => {
+        if (interfaces.isScheduleOff(showScheduleData)) {
+            return interfaces.getInterfaceStatusObject(
+                INTERFACE_STATE.DOWN_ON_SCHEDULE,
+                STATE_CATEGORY.INFO,
+                showInterfaceData,
+            );
+        }
+
+        if (showInterfaceData.state === 'down') {
+            return interfaces.getInterfaceStatusObject(
+                INTERFACE_STATE.DOWN,
+                STATE_CATEGORY.INFO,
+                showInterfaceData,
+            );
+        }
+
+        if (showInterfaceData.connected !== 'yes') {
+            return interfaces.getInterfaceStatusObject(
+                INTERFACE_STATE.NOT_READY,
+                STATE_CATEGORY.INFO,
+                showInterfaceData,
+            );
+        }
+
+        return interfaces.getInterfaceStatusObject(
+            INTERFACE_STATE.CONNECTED,
+            STATE_CATEGORY.OK,
+            showInterfaceData,
+        );
+    };
 
     const formatBytesColumn = val => {
         return isNaN(Number(val))
@@ -26,6 +66,12 @@ const pointToPointService = (function() {
         return tunnelRow.isEnabled
             ? utils.getSplittedTime(uptime)
             : EMPTY_VAL_HTML;
+    };
+
+    const formatIpData = (ip) => {
+        return ip === '0.0.0.0'
+            ? EMPTY_VAL_HTML
+            : ip;
     };
 
     const getInterfaceStatByIdData = (idList = []) => {
@@ -108,8 +154,12 @@ const pointToPointService = (function() {
         toggleTunnelState,
 
         getInterfaceStatByIdData,
+
         formatBytesColumn,
         formatUptime,
+        formatIpData,
+
+        determineTunnelStatus,
     };
 })();
 
@@ -138,21 +188,23 @@ function PointToPointController($scope, otherConnectionsService) {
                 },
             },
             type: {
-                title: 'Type',
+                title: 'otherConnections.ppp.type',
             },
             source: {
                 title: 'Source',
+                modify: pointToPointService.formatIpData,
             },
             destination: {
                 title: 'Destination',
+                modify: pointToPointService.formatIpData,
             },
             txbytes: {
                 title: 'otherConnections.ppp.transmitted',
-                modify: pointToPointService.formatBytesColumn
+                modify: pointToPointService.formatBytesColumn,
             },
             rxbytes: {
                 title: 'otherConnections.ppp.received',
-                modify: pointToPointService.formatBytesColumn
+                modify: pointToPointService.formatBytesColumn,
             },
             uptime: {
                 title: 'otherConnections.ppp.connected',
@@ -182,6 +234,7 @@ function PointToPointController($scope, otherConnectionsService) {
                     }
 
                     const statData = _.pick(statDataById[id], ['rxbytes', 'txbytes']);
+                    const status = pointToPointService.determineTunnelStatus(row.data.status);
 
                     const onToggle = (state) => {
                         rowsToPreserveToggleState[id] = state;
@@ -196,6 +249,7 @@ function PointToPointController($scope, otherConnectionsService) {
                     return {
                         ...row,
                         ...statData,
+                        status,
                         onToggle,
                     };
                 });
