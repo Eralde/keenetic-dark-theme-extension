@@ -142,23 +142,32 @@ export const clickOnTheRebootButton = () => {
 };
 
 export const goToDslTab = () => {
-    const $timeout = getAngularService('$timeout');
     const utils = getAngularService('utils');
 
-    $timeout(() => {
+    let retryCount = 3;
+
+    const attemptToSelectDslTab = () => {
         const tabs = [...document.querySelectorAll('.tabs-list__item')];
 
         const dslTab = _.find(tabs, item => item.innerText === utils.getTranslation('diagnostics.tabs.dsl'))
             || _.last(tabs);
 
         if (!dslTab) {
+            if (retryCount > 0) {
+                retryCount--;
+
+                setTimeout(() => attemptToSelectDslTab(), 100);
+            }
+
             return;
         }
 
         const linkElement = dslTab.querySelector('a');
 
         _.invoke(linkElement, 'click');
-    });
+    }
+
+    setTimeout(() => attemptToSelectDslTab());
 };
 
 export const interceptMouseover = (selector) => {
