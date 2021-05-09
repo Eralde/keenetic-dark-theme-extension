@@ -163,8 +163,11 @@ const pointToPointService = (function() {
     };
 })();
 
-function PointToPointController($scope, otherConnectionsService) {
+// Do not reference any services as the 'controller' parameters -- this will result in an injector error
+export function PointToPointController() {
     const vm = this;
+
+    const otherConnectionsService = getAngularService('otherConnectionsService');
     const requester = otherConnectionsService.requester;
 
     vm.progress = 0;
@@ -294,10 +297,4 @@ export const addPointToPointTunnelSection = () => {
     const suffix = otherConnectionsTemplate.substr(injectIndex);
 
     $templateCache.put(OTHER_CONNECTIONS_TEMPLATE_PATH, prefix + template + suffix);
-
-    const $rootScope = getAngularService('$rootScope');
-
-    // We add controller to the $rootScope,
-    // otherwise it won't be available on page load
-    $rootScope.PointToPointController = PointToPointController;
 }

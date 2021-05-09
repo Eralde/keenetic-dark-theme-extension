@@ -83,6 +83,7 @@ import {
 
 import {
     addPointToPointTunnelSection,
+    PointToPointController,
 } from './uiExtension/pointToPointTunnelsSection';
 
 export const injectUiExtensions = () => {
@@ -97,6 +98,10 @@ export const injectUiExtensions = () => {
 
     const $rootScope = getAngularService('$rootScope');
     const $transitions = getAngularService('$transitions');
+
+    // We add controller to the $rootScope,
+    // otherwise it won't be available on page load
+    $rootScope.PointToPointController = PointToPointController;
 
     // Should be done BEFORE authentication
     const originalSwitchportsTemplate = getDashboardSwitchportsTemplate();
