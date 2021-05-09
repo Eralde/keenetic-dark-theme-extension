@@ -1,5 +1,5 @@
 <div
-    class="page-point-to-point"
+    class="point-to-point-section"
     ng-controller="$root.PointToPointController as vm"
 >
     <ndm-form-header
@@ -10,7 +10,7 @@
 
     <ndm-table
         ng-if="vm.table.dataIsLoaded && vm.table.data.length > 0"
-        class="page-point-to-point__table"
+        class="point-to-point-section__table"
         data="vm.table.data"
         columns="vm.table.columns"
         track-by-prop="id"
