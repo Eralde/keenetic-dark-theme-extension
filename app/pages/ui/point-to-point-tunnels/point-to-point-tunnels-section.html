@@ -1,10 +1,12 @@
-<ndm-page
+<div
     class="page-point-to-point"
-    label="IPIP, GRE, EoIP"
-    progress="vm.progress"
-    description="&nbsp;"
+    ng-controller="$root.PointToPointController as vm"
 >
-    <br/><br/>
+    <ndm-form-header
+        hr="hr-light-blue"
+        label="IPIP, GRE, EoIP"
+    >
+    </ndm-form-header>
 
     <ndm-table
         ng-if="vm.table.dataIsLoaded && vm.table.data.length > 0"
@@ -35,4 +37,6 @@
             otherConnections.no-connections
         </span>
     </div>
-</ndm-page>
+
+    <br/><br/>
+</div>

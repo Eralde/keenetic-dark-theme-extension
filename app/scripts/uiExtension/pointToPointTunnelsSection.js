@@ -1,12 +1,14 @@
 import * as _ from 'lodash';
-import template from '../../pages/ui/point-to-point-tunnels/point-to-point-tunnels.html';
-import {getAngularService} from '../lib/ndmUtils';
-import {OTHER_CONNECTIONS_STATE} from "../lib/constants";
+import template from '../../pages/ui/point-to-point-tunnels/point-to-point-tunnels-section.html';
+import {getAngularService, getTemplate} from '../lib/ndmUtils';
+import {OTHER_CONNECTIONS_TEMPLATE_PATH} from '../lib/constants';
 
-const $stateRegistry = getAngularService('$stateRegistry');
+const pointToPointService = (function() {
+    const $q = getAngularService('$q');
+    const utils = getAngularService('utils');
+    const router = getAngularService('router');
+    const interfaces = getAngularService('interfaces');
 
-const MY_INTERNET_GROUP = 'menu.myInternet';
-const pointToPointService = (function(utils, router, interfaces) {
     const SHOW_INTERFACE_PATH = 'show.interface';
     const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
     const SHOW_INTERFACE_STAT = 'show.interface.stat';
@@ -21,13 +23,17 @@ const pointToPointService = (function(utils, router, interfaces) {
     };
 
     const formatUptime = (uptime, tunnelRow) => {
-        return tunnelRow.isEnabled ? utils.getSplittedTime(uptime) : EMPTY_VAL_HTML;
+        return tunnelRow.isEnabled
+            ? utils.getSplittedTime(uptime)
+            : EMPTY_VAL_HTML;
     };
 
     const getInterfaceStatByIdData = (idList = []) => {
-        const statQuery = idList.length > 0
-            ? _.set({}, SHOW_INTERFACE_STAT, idList.map(id => ({name: id})))
-            : {};
+        if (idList.length === 0) {
+            return $q.when({});
+        }
+
+        const statQuery = _.set({}, SHOW_INTERFACE_STAT, idList.map(id => ({name: id})));
 
         return router.postToRciRoot(statQuery).then(response => {
             const showInterfaceStat = _.get(response, SHOW_INTERFACE_STAT, []);
@@ -41,8 +47,8 @@ const pointToPointService = (function(utils, router, interfaces) {
                 },
                 {},
             );
-        })
-    }
+        });
+    };
 
     const getTableDateQueries = () => {
         return utils.toRciQueryList([
@@ -86,11 +92,13 @@ const pointToPointService = (function(utils, router, interfaces) {
                         configuration: interfaceConfiguration,
                     },
                 };
-            }
+            },
         );
     };
 
-    const toggleTunnelState = (tunnelId, state) => interfaces.toggleState(tunnelId, state);
+    const toggleTunnelState = (tunnelId, state) => {
+        return interfaces.toggleState(tunnelId, state);
+    };
 
     return {
         getTableDateQueries,
@@ -103,11 +111,11 @@ const pointToPointService = (function(utils, router, interfaces) {
         formatBytesColumn,
         formatUptime,
     };
-})(...['utils', 'router', 'interfaces'].map(getAngularService));
+})();
 
-function pointToPointController($scope, requesterFactory) {
+function PointToPointController($scope, otherConnectionsService) {
     const vm = this;
-    const requester = requesterFactory.createRequester();
+    const requester = otherConnectionsService.requester;
 
     vm.progress = 0;
     vm.isReady = false;
@@ -199,65 +207,28 @@ function pointToPointController($scope, requesterFactory) {
             });
         },
     );
-
-    requester.startPolling();
-
-    $scope.$on('$destroy', () => {
-        requester.clearCallbacks();
-        requester.stopPolling();
-    });
 }
 
+export const addPointToPointTunnelSection = () => {
+    const $templateCache = getAngularService('$templateCache');
+    const otherConnectionsTemplate = getTemplate(OTHER_CONNECTIONS_TEMPLATE_PATH);
 
-export const addPointToPointTunnelsPage = () => {
-    const pointToPointTunnelsState = {
-        name: 'controlPanel.pointToPoint',
-        url: '/point-to-point',
-        menuTitle: 'IPIP, GRE, EoIP ',
-        views: {
-            templateUrl: 'app/page/controlPanel/controlPanel.html',
-            'cp-main': {
-                controller: pointToPointController,
-                controllerAs: 'vm',
-                template: template,
-            }
-        }
-    };
+    if (otherConnectionsTemplate.includes('PointToPointController')) {
+        return;
+    }
 
+    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('wireguard.section.html');
+    const closingTag = '</div>';
+    const injectIndex = otherConnectionsTemplate.indexOf(closingTag, previousSectionIncludeIndex) + closingTag.length;
 
-    $stateRegistry.register(pointToPointTunnelsState);
+    const prefix = otherConnectionsTemplate.substr(0, injectIndex);
+    const suffix = otherConnectionsTemplate.substr(injectIndex);
 
-    const menuService = getAngularService('menuService');
-    const origGetMenu = menuService.getMenu;
+    $templateCache.put(OTHER_CONNECTIONS_TEMPLATE_PATH, prefix + template + suffix);
 
-    menuService.getMenu = () => {
-        return origGetMenu().then(menu => {
-            const keys = Object.keys(menu);
-            const otherConnectionsIndex = _.findIndex(keys, key => key === OTHER_CONNECTIONS_STATE);
+    const $rootScope = getAngularService('$rootScope');
 
-            const before = keys.slice(0, otherConnectionsIndex + 1);
-            const after = keys.slice(otherConnectionsIndex + 1);
-
-            const stateData = {...pointToPointTunnelsState, sref: pointToPointTunnelsState.name};
-
-            const _menu =  {
-                ..._.pick(menu, before),
-                [pointToPointTunnelsState.name]: stateData,
-                ..._.pick(menu, after),
-            }
-
-            if (!_menu[MY_INTERNET_GROUP]) {
-                return _menu;
-            }
-
-            _menu[MY_INTERNET_GROUP].points = {
-                ..._.cloneDeep(_menu[MY_INTERNET_GROUP].points),
-                [pointToPointTunnelsState.name]: stateData,
-            };
-
-            return _menu;
-        });
-    };
-
-    menuService.updateMenu();
+    // We add controller to the $rootScope,
+    // otherwise it won't be available on page load
+    $rootScope.PointToPointController = PointToPointController;
 }

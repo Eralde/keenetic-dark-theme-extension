@@ -104,6 +104,7 @@ export const NO_TAG = 'NO_TAG';
 export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
+export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
 export const DSL_STATS_FILENAME = 'proc:/driver/ensoc_dsl/dsl_stats';

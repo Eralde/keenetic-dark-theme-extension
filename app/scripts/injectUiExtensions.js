@@ -19,6 +19,7 @@ import {
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
     TOGGLE_DEFAULT_VALUES,
     UI_EXTENSIONS_KEY,
+    OTHER_CONNECTIONS_STATE,
 } from './lib/constants';
 
 import {flags, sharedData} from './lib/state';
@@ -81,8 +82,8 @@ import {
 } from './uiExtension/extendDslStat';
 
 import {
-    addPointToPointTunnelsPage,
-} from './uiExtension/pointToPointTunnelsPage';
+    addPointToPointTunnelSection,
+} from './uiExtension/pointToPointTunnelsSection';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -260,7 +261,13 @@ export const injectUiExtensions = () => {
 
         overrideSandboxesList();
 
-        addPointToPointTunnelsPage();
+        if (is3xVersion(ndwBranch)) {
+            const components = _.get(window, 'NDM.profile.components', {});
+
+            if (components.eoip || components.gre || components.ipip) {
+                addPointToPointTunnelSection();
+            }
+        }
 
         addUiExtension(
             CONTROL_SYSTEM_STATE,
