@@ -11,6 +11,8 @@ import {
     OLD_FW3X_BRANCHES,
 } from './constants.js';
 
+import {sharedData} from './state';
+
 export const getAngularService = (serviceName) => {
     if (!window.angular) {
         return null;
@@ -260,8 +262,21 @@ export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
 }
 
 export const toggleNdmTextareaClass = ({className, state, insertAfterClass}) => {
+    const SHARED_DATA_KEY = 'toggleNdmTextareaClassFailed';
+
+    if (sharedData.get(SHARED_DATA_KEY)) {
+        return;
+    }
+
     const $templateCache = getAngularService('$templateCache');
     const template = getTemplate(NDM_TEXTAREA_TEMPLATE_PATH);
+
+    if (!_.isString(template)) {
+        console.warn('Keenetic Dark Theme Extension: failed to get ndm-textarea component template');
+        sharedData.set(SHARED_DATA_KEY, true);
+
+        return;
+    }
 
     const updatedTemplate = state
         ? template.replace(className, '')
