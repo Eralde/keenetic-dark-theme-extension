@@ -178,8 +178,8 @@ function PointToPointController($scope, otherConnectionsService) {
                 directive: {
                     name: 'ndm-toggle',
                     options: {
-                        'label-on': '{{row.description | escapeHtml}}',
-                        'label-off': '{{row.description | escapeHtml}}',
+                        'label-on': '{{row.description}}',
+                        'label-off': '{{row.description}}',
                         'ng-attr-call-on-change': 'row.onToggle',
                         'name': 'tunnel-{{row.id}}-',
                         'model': 'row.isEnabled',
