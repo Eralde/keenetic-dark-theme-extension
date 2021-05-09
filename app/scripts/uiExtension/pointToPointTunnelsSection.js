@@ -271,7 +271,19 @@ export const addPointToPointTunnelSection = () => {
         return;
     }
 
-    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('wireguard.section.html');
+    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('ipsec.section.html');
+
+    if (previousSectionIncludeIndex === -1) {
+        const msg = [
+            'Keenetic Dark Theme Extension: ',
+            'failed to determine proper place to inject point-to-point tunnels section',
+        ].join('');
+
+        console.warn(msg);
+
+        return;
+    }
+
     const closingTag = '</div>';
     const injectIndex = otherConnectionsTemplate.indexOf(closingTag, previousSectionIncludeIndex) + closingTag.length;
 
