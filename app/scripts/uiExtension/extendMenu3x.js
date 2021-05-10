@@ -72,6 +72,10 @@ export const extendMenu3x = () => {
     const $menuEl = angular.element(document.querySelector(NDM_MENU_SELECTOR));
     const $scope = $menuEl.scope();
 
+    const NDM = _.get(window, 'NDM', {});
+    const isDslDevice = _.has(NDM, 'profile.components.dsl')
+        || _.get(NDM, 'DSL_ALWAYS_PRESENT', false);
+
     if (!$scope) {
         setExtendMenuTimeout();
         return;
@@ -91,9 +95,6 @@ export const extendMenu3x = () => {
             linkTitle: 'WebCLI',
             linkSref: WEBCLI_STATE,
         });
-
-        const NDM = _.get(window, 'NDM', {});
-        const isDslDevice = _.has(NDM, 'profile.components.dsl') || _.get(NDM, 'DSL_ALWAYS_PRESENT', false);
 
         if (isDslDevice) {
             const title = getDslDiagnosticsLinkTitle();
@@ -139,10 +140,15 @@ export const extendMenu3x = () => {
             }
         );
 
+        dupNode = linkEl;
+
         const dslDiagnosticsSelector = `[data-ui-sref="${DIAGNOSTICS_STATE}(point.srefParams)"]`;
         dslDiagnosticsElement = firstGroup.querySelector(dslDiagnosticsSelector);
 
-        dupNode = linkEl;
+        if (isDslDevice && !dslDiagnosticsElement) {
+            throw new Error('Failed to get DSL diagnostics selector element');
+        }
+
     } catch (e) {
         setExtendMenuTimeout();
         return;
