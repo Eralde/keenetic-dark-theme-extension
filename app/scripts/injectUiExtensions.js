@@ -19,7 +19,7 @@ import {
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
     TOGGLE_DEFAULT_VALUES,
     UI_EXTENSIONS_KEY,
-    OTHER_CONNECTIONS_STATE,
+    STORAGE_DEFAULTS,
 } from './lib/constants';
 
 import {flags, sharedData} from './lib/state';
@@ -167,10 +167,16 @@ export const injectUiExtensions = () => {
 
                     sharedData.set(UI_EXTENSIONS_KEY, uiExtensionsToggleValue);
 
+                    const replaceTextareaCursorValue = _.get(
+                        payload,
+                        REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
+                        STORAGE_DEFAULTS[REPLACE_TEXTAREA_CURSOR_STORAGE_KEY],
+                    );
+
                     toggleNdmTextareaClass({
                         className: 'ndm-textarea__textarea--default-cursor',
                         insertAfterClass: 'ndm-textarea__textarea',
-                        state: payload[REPLACE_TEXTAREA_CURSOR_STORAGE_KEY],
+                        state: replaceTextareaCursorValue,
                     })
 
                     if (!isSwitchportOverloadSupported(ndwBranch)) {

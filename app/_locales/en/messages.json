@@ -41,5 +41,29 @@
   },
   "deltaChannelText": {
     "message": "Select this if you know what you're doing"
+  },
+  "DSLFastMode": {
+    "message": "Fast mode"
+  },
+  "DSLInterleavedMode": {
+    "message": "Interleaved mode"
+  },
+  "FECErrorsFast": {
+    "message": "FEC errors"
+  },
+  "CRCErrorsFast": {
+    "message": "CRC errors"
+  },
+  "HECErrorsFast": {
+    "message": "HEC errors"
+  },
+  "FECErrorsInterleaved": {
+    "message": "FEC errors"
+  },
+  "CRCErrorsInterleaved": {
+    "message": "CRC errors"
+  },
+  "HECErrorsInterleaved": {
+    "message": "HEC errors"
   }
 }
