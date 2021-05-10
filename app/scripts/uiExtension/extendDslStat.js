@@ -78,9 +78,9 @@ const getAdditionalDslPropsList = (dslStatsFileLines) => {
                 : (getL10n(propName) || lineLabel);
 
             const values = valueData.trim().split(/\s+/g);
-            const info = values.length > 1
-                ? formatDslErrorCounters(...values)
-                : values[0];
+            const info = valueData.includes(':')
+                ? valueData
+                : formatDslErrorCounters(...values);
 
             return {
                 propName,
