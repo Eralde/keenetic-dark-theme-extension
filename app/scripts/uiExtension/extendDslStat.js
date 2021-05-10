@@ -59,8 +59,8 @@ const generateTrafficIconHtml = (direction = 'tx') => {
 };
 
 const formatDslErrorCounters = (rxText, txText) => {
-    return `${generateTrafficIconHtml('tx')}&nbsp;${rxText}&nbsp;&nbsp;
-            ${generateTrafficIconHtml('rx')}&nbsp;${txText}`;
+    return `${generateTrafficIconHtml('rx')}&nbsp;${rxText}&nbsp;&nbsp;
+            ${generateTrafficIconHtml('tx')}&nbsp;${txText}`;
 };
 
 const getAdditionalDslPropsList = (dslStatsFileLines) => {
