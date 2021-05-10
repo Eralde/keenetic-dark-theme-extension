@@ -150,3 +150,7 @@ export const SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY = 'switchportTemplateOrigi
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';
 export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
+
+export const STORAGE_DEFAULTS = {
+    [REPLACE_TEXTAREA_CURSOR_STORAGE_KEY]: true,
+};
