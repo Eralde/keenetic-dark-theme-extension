@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import {getAngularService, getElementController, getElementScope} from "../lib/ndmUtils";
-import {getL10n} from "../lib/l10nUtils";
+import {getAngularService, getElementController, getElementScope} from '../lib/ndmUtils';
+import {getL10n} from '../lib/l10nUtils';
 
 const watchers = [];
 const DELTA_CHANNEL = 'delta';

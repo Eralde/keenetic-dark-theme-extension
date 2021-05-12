@@ -94,15 +94,15 @@ export const injectUiExtensions = () => {
     const $transitions = getAngularService('$transitions');
 
     // Should be done BEFORE authentication
-    const tpl = getDashboardSwitchportsTemplate();
+    const originalSwitchportsTemplate = getDashboardSwitchportsTemplate();
 
-    if (!tpl) {
+    if (!originalSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
     } else {
         window.postMessage(
             {
                 action: ORIGINAL_SWITCHPORTS_TEMPLATE,
-                payload: tpl,
+                payload: originalSwitchportsTemplate,
             },
             '*',
         );

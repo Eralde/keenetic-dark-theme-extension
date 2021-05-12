@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import {getAngularService, getDashboardController} from "../lib/ndmUtils";
-import {addCssClass} from "../lib/domUtils";
+import {getAngularService, getDashboardController} from '../lib/ndmUtils';
+import {addCssClass} from '../lib/domUtils';
 
 /*
  * This UI extension shows links to the VPN server statistics
