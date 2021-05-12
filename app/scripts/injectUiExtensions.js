@@ -22,6 +22,8 @@ import {
     STORAGE_DEFAULTS,
 } from './lib/constants';
 
+import {flags, sharedData} from './lib/state';
+
 import {
     ensureServiceTag,
     getServiceTag,
@@ -68,7 +70,6 @@ import {
     revertGatherStatForPortsChanges,
 } from './uiExtension/gatherStatForPorts';
 
-import {flags, sharedData} from './lib/state';
 import {
     overriderSandboxOptions,
     overrideSandboxesList,
@@ -79,6 +80,11 @@ import {
     extendDslStats,
     revertDslStatsChanges,
 } from './uiExtension/extendDslStat';
+
+import {
+    addPointToPointTunnelSection,
+    PointToPointController,
+} from './uiExtension/pointToPointTunnelsSection';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -92,6 +98,10 @@ export const injectUiExtensions = () => {
 
     const $rootScope = getAngularService('$rootScope');
     const $transitions = getAngularService('$transitions');
+
+    // We add controller to the $rootScope,
+    // otherwise it won't be available on page load
+    $rootScope.PointToPointController = PointToPointController;
 
     // Should be done BEFORE authentication
     const originalSwitchportsTemplate = getDashboardSwitchportsTemplate();
@@ -261,6 +271,14 @@ export const injectUiExtensions = () => {
         }
 
         overrideSandboxesList();
+
+        if (is3xVersion(ndwBranch)) {
+            const components = _.get(window, 'NDM.profile.components', {});
+
+            if (components.eoip || components.gre || components.ipip) {
+                addPointToPointTunnelSection();
+            }
+        }
 
         addUiExtension(
             CONTROL_SYSTEM_STATE,

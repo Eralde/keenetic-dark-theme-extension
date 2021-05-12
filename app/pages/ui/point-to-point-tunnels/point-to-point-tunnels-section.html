@@ -1,0 +1,42 @@
+<div
+    class="point-to-point-section"
+    ng-controller="$root.PointToPointController as vm"
+>
+    <ndm-form-header
+        hr="hr-light-blue"
+        label="IPIP, GRE, EoIP"
+    >
+    </ndm-form-header>
+
+    <ndm-table
+        ng-if="vm.table.dataIsLoaded && vm.table.data.length > 0"
+        class="point-to-point-section__table"
+        data="vm.table.data"
+        columns="vm.table.columns"
+        track-by-prop="id"
+        sort-name="description"
+        sort-reverse="false"
+        is-sortable="false"
+    >
+    </ndm-table>
+
+    <div
+        ng-if="!vm.table.dataIsLoaded || vm.table.data.length === 0"
+        class="empty-list"
+    >
+        <span
+            ng-if="!vm.table.dataIsLoaded"
+            data-translate
+        >
+            loading
+        </span>
+        <span
+            ng-if="vm.table.dataIsLoaded && vm.table.data.length === 0"
+            data-translate
+        >
+            otherConnections.no-connections
+        </span>
+    </div>
+
+    <br/><br/>
+</div>

@@ -38,7 +38,7 @@ export const gatherStatForPorts = async () => {
         const portIds = _
             .chain(window.NDM)
             .get('PORTS_MAP')
-            .map(port => port.interfaceId)
+            .map(port => port.interfaceId || port.port)
             .value();
 
 
