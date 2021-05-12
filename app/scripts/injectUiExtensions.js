@@ -1,42 +1,9 @@
 import * as _ from 'lodash';
 
-import {
-    DIAGNOSTICS_LOG_STATE,
-    DIAGNOSTICS_STATE,
-    DEVICES_LIST_STATE,
-    WIFI_CLIENTS_STATE,
-    DASHBOARD_STATE,
-    NO_TAG,
-    TOGGLE_UI_EXTENSIONS_EVENT,
-    TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT,
-    POLICIES_STATE,
-    ORIGINAL_SWITCHPORTS_TEMPLATE,
-    RELOAD_DASHBOARD,
-    INJECTED_JS_INITIALIZED,
-    INITIAL_STORAGE_DATA,
-    CONTROL_SYSTEM_STATE,
-    SWITCHPORT_TEMPLATE_STORAGE_KEY,
-    REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
-    TOGGLE_DEFAULT_VALUES,
-    UI_EXTENSIONS_KEY,
-    STORAGE_DEFAULTS,
-} from './lib/constants';
+import * as CONSTANTS from './lib/constants';
+import * as ndmUtils from './lib/ndmUtils';
 
 import {flags, sharedData} from './lib/state';
-
-import {
-    ensureServiceTag,
-    getServiceTag,
-    getAngularService,
-    waitUntilAuthenticated,
-    addUiExtension,
-    getDashboardSwitchportsTemplate,
-    setDashboardSwitchportsTemplate,
-    is2xVersion,
-    is3xVersion,
-    isSwitchportOverloadSupported,
-    toggleNdmTextareaClass,
-} from './lib/ndmUtils';
 
 import {
     interceptMouseover,
@@ -90,28 +57,28 @@ export const injectUiExtensions = () => {
     let $state;
 
     try {
-        $state = getAngularService('$state');
+        $state = ndmUtils.getAngularService('$state');
     } catch (e) {
         console.warn(`Keenetic Dark Theme Extension: failed to access AngularJs service: ${e}`);
         return;
     }
 
-    const $rootScope = getAngularService('$rootScope');
-    const $transitions = getAngularService('$transitions');
+    const $rootScope = ndmUtils.getAngularService('$rootScope');
+    const $transitions = ndmUtils.getAngularService('$transitions');
 
     // We add controller to the $rootScope,
     // otherwise it won't be available on page load
     $rootScope.PointToPointController = PointToPointController;
 
     // Should be done BEFORE authentication
-    const originalSwitchportsTemplate = getDashboardSwitchportsTemplate();
+    const originalSwitchportsTemplate = ndmUtils.getDashboardSwitchportsTemplate();
 
     if (!originalSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
     } else {
         window.postMessage(
             {
-                action: ORIGINAL_SWITCHPORTS_TEMPLATE,
+                action: CONSTANTS.ORIGINAL_SWITCHPORTS_TEMPLATE,
                 payload: originalSwitchportsTemplate,
             },
             '*',
@@ -131,8 +98,8 @@ export const injectUiExtensions = () => {
             const action = _.get(event, 'data.action', '');
 
             switch (action) {
-                case TOGGLE_UI_EXTENSIONS_EVENT:
-                    window.postMessage({action: TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT}, '*');
+                case CONSTANTS.TOGGLE_UI_EXTENSIONS_EVENT:
+                    window.postMessage({action: CONSTANTS.TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT}, '*');
 
                     const menuController = sharedData.get('menuController');
 
@@ -146,49 +113,49 @@ export const injectUiExtensions = () => {
                         ? _.noop
                         : sharedData.get('originalMenuOnItemClick');
 
-                    sharedData.set(UI_EXTENSIONS_KEY, uiExtensionsEnabled);
+                    sharedData.set(CONSTANTS.UI_EXTENSIONS_KEY, uiExtensionsEnabled);
 
                     break;
 
-                case RELOAD_DASHBOARD:
-                    if ($state.current.name === DASHBOARD_STATE) {
+                case CONSTANTS.RELOAD_DASHBOARD:
+                    if ($state.current.name === CONSTANTS.DASHBOARD_STATE) {
                         window.location.reload();
                     }
                     break;
 
-                case INITIAL_STORAGE_DATA:
+                case CONSTANTS.INITIAL_STORAGE_DATA:
                     const payload = _.get(event, 'data.payload');
 
                     const uiExtensionsToggleValue = _.get(
                         payload,
-                        UI_EXTENSIONS_KEY,
-                        TOGGLE_DEFAULT_VALUES[UI_EXTENSIONS_KEY],
+                        CONSTANTS.UI_EXTENSIONS_KEY,
+                        CONSTANTS.TOGGLE_DEFAULT_VALUES[CONSTANTS.UI_EXTENSIONS_KEY],
                     );
 
-                    sharedData.set(UI_EXTENSIONS_KEY, uiExtensionsToggleValue);
+                    sharedData.set(CONSTANTS.UI_EXTENSIONS_KEY, uiExtensionsToggleValue);
 
                     const replaceTextareaCursorValue = _.get(
                         payload,
-                        REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
-                        STORAGE_DEFAULTS[REPLACE_TEXTAREA_CURSOR_STORAGE_KEY],
+                        CONSTANTS.REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
+                        CONSTANTS.STORAGE_DEFAULTS[CONSTANTS.REPLACE_TEXTAREA_CURSOR_STORAGE_KEY],
                     );
 
-                    toggleNdmTextareaClass({
+                    ndmUtils.toggleNdmTextareaClass({
                         className: 'ndm-textarea__textarea--default-cursor',
                         insertAfterClass: 'ndm-textarea__textarea',
                         state: replaceTextareaCursorValue,
                     })
 
-                    if (!isSwitchportOverloadSupported(ndwBranch)) {
+                    if (!ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
                         console.warn('Switchports template can be overloaded in web UI versions >= 3.4');
 
                         break;
                     }
 
-                    const switchportTemplate = _.get(payload, SWITCHPORT_TEMPLATE_STORAGE_KEY);
+                    const switchportTemplate = _.get(payload, CONSTANTS.SWITCHPORT_TEMPLATE_STORAGE_KEY);
 
                     if (switchportTemplate) {
-                        setDashboardSwitchportsTemplate(switchportTemplate);
+                        ndmUtils.setDashboardSwitchportsTemplate(switchportTemplate);
                     }
                     break;
             }
@@ -196,7 +163,7 @@ export const injectUiExtensions = () => {
     );
 
     const initFlags = () => {
-        if (__TAG !== NO_TAG) {
+        if (__TAG !== CONSTANTS.NO_TAG) {
             flags.init(__TAG);
 
             if (unbinder) {
@@ -204,7 +171,7 @@ export const injectUiExtensions = () => {
             }
         } else if (!unbinder) {
             unbinder = $transitions.onSuccess({}, () => {
-                getServiceTag().then(tag => {
+                ndmUtils.getServiceTag().then(tag => {
                     __TAG = tag;
 
                     initFlags();
@@ -213,7 +180,7 @@ export const injectUiExtensions = () => {
         }
     }
 
-    waitUntilAuthenticated().then(() => ensureServiceTag()).then((tag) => {
+    ndmUtils.waitUntilAuthenticated().then(() => ndmUtils.ensureServiceTag()).then((tag) => {
         __TAG = tag;
         initFlags();
 
@@ -224,47 +191,47 @@ export const injectUiExtensions = () => {
 
         let extendMenuFunction = _.noop;
 
-        if (is2xVersion(ndwBranch)) {
+        if (ndmUtils.is2xVersion(ndwBranch)) {
             extendMenuFunction = extendMenu2x;
             interceptMouseover('ndm-help');
 
-        } else if (is3xVersion(ndwBranch)) {
+        } else if (ndmUtils.is3xVersion(ndwBranch)) {
             extendMenuFunction = extendMenu3x;
         }
 
         setTimeout(extendMenuFunction, 500);
 
-        addUiExtension(
-            DASHBOARD_STATE,
+        ndmUtils.addUiExtension(
+            CONSTANTS.DASHBOARD_STATE,
             modifyAppsService,
             revertAppsServiceModifications,
         );
 
-        addUiExtension(
-            DEVICES_LIST_STATE,
+        ndmUtils.addUiExtension(
+            CONSTANTS.DEVICES_LIST_STATE,
             addDeviceListsFilters,
             cleanupDeviceListsFilters,
         );
 
-        addUiExtension(
-            WIFI_CLIENTS_STATE,
+        ndmUtils.addUiExtension(
+            CONSTANTS.WIFI_CLIENTS_STATE,
             addWifiClientsFilters,
             cleanupWifiClientsFilters,
         );
 
-        addUiExtension(
-            DIAGNOSTICS_LOG_STATE,
+        ndmUtils.addUiExtension(
+            CONSTANTS.DIAGNOSTICS_LOG_STATE,
             addSaveLogButton,
         );
 
-        addUiExtension(
-            POLICIES_STATE,
+        ndmUtils.addUiExtension(
+            CONSTANTS.POLICIES_STATE,
             fixPolicies,
         );
 
-        if (is3xVersion(ndwBranch)) {
-            addUiExtension(
-                DIAGNOSTICS_STATE,
+        if (ndmUtils.is3xVersion(ndwBranch)) {
+            ndmUtils.addUiExtension(
+                CONSTANTS.DIAGNOSTICS_STATE,
                 extendDslStats,
                 revertDslStatsChanges,
             );
@@ -272,7 +239,7 @@ export const injectUiExtensions = () => {
 
         overrideSandboxesList();
 
-        if (is3xVersion(ndwBranch)) {
+        if (ndmUtils.is3xVersion(ndwBranch)) {
             const components = _.get(window, 'NDM.profile.components', {});
 
             if (components.eoip || components.gre || components.ipip) {
@@ -280,21 +247,21 @@ export const injectUiExtensions = () => {
             }
         }
 
-        addUiExtension(
-            CONTROL_SYSTEM_STATE,
+        ndmUtils.addUiExtension(
+            CONSTANTS.CONTROL_SYSTEM_STATE,
             overriderSandboxOptions,
             cancelComponentsSectionsWatchers,
         )
 
-        if (isSwitchportOverloadSupported(ndwBranch)) {
-            addUiExtension(
-                DASHBOARD_STATE,
+        if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
+            ndmUtils.addUiExtension(
+                CONSTANTS.DASHBOARD_STATE,
                 gatherStatForPorts,
                 revertGatherStatForPortsChanges,
             );
         }
 
-        window.postMessage({action: INJECTED_JS_INITIALIZED, payload: true}, '*');
+        window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');
     });
 };
 
