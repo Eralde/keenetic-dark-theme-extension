@@ -58,6 +58,16 @@ const generateTrafficIconHtml = (direction = 'tx') => {
     return utils.generateIconHtml(direction + 'bytes-arrow');
 };
 
+const formatDslUptime = (uptime) => {
+    const locale = utils.getCurrentLanguage();
+
+    if (locale !== 'tr') {
+        return uptime;
+    }
+
+    return uptime.replace('day', 'gün');
+};
+
 const formatDslErrorCounters = (rxText, txText) => {
     return `${generateTrafficIconHtml('rx')}&nbsp;${rxText}&nbsp;&nbsp;
             ${generateTrafficIconHtml('tx')}&nbsp;${txText}`;
@@ -79,7 +89,7 @@ const getAdditionalDslPropsList = (dslStatsFileLines) => {
 
             const values = valueData.trim().split(/\s+/g);
             const info = valueData.includes(':')
-                ? valueData
+                ? formatDslUptime(valueData)
                 : formatDslErrorCounters(...values);
 
             return {
@@ -91,15 +101,13 @@ const getAdditionalDslPropsList = (dslStatsFileLines) => {
     );
 }
 
-const getAdditionalDslStatProps = (dslStatsFileLines) => {
-    const additionalPropsList = getAdditionalDslPropsList(dslStatsFileLines);
-
-    const groups = _.groupBy(
+const groupAdditionalDslProps = (additionalPropsList) => {
+    return _.groupBy(
         additionalPropsList,
         prop => {
             const {propName} = prop;
 
-            if (_.has(L10N_MAP, propName)) {
+            if (propName.toLowerCase().includes('uptime')) {
                 return ADDITIONAL_INFO_GROUPS.UPTIME;
             }
 
@@ -108,28 +116,37 @@ const getAdditionalDslStatProps = (dslStatsFileLines) => {
                 : ADDITIONAL_INFO_GROUPS.DSL_INTERLEAVED_MODE;
         },
     );
+};
 
+const getGroupPropsObject = (groupItemsList) => {
+    return groupItemsList.reduce(
+        (propsAcc, prop) => {
+            const {
+                propName,
+                label,
+                info,
+            } = prop;
+
+            return {
+                ...propsAcc,
+                [propName]: {label, info},
+            };
+        },
+        {},
+    );
+}
+
+const getAdditionalDslStatProps = (dslStatsFileLines) => {
+    const additionalPropsList = getAdditionalDslPropsList(dslStatsFileLines);
+
+    const groups = groupAdditionalDslProps(additionalPropsList);
     const groupKeys = _.sortBy(Object.keys(groups), groupId => GROUPS_SORT_ORDER[groupId]);
 
     return groupKeys.reduce(
-            (acc, groupId) => {
-                const groupProps = groups[groupId].reduce(
-                    (propsAcc, prop) => {
-                    const {
-                        propName,
-                        label,
-                        info,
-                    } = prop;
+        (acc, groupId) => {
+            const groupProps = getGroupPropsObject(groups[groupId]);
 
-                    return {
-                        ...propsAcc,
-                        [propName]: {label, info},
-                    };
-                },
-                {},
-            );
-
-            let delimiterProps;
+            let delimiterProps; // group header
 
             if (groupId === ADDITIONAL_INFO_GROUPS.UPTIME) {
                 delimiterProps = {};
