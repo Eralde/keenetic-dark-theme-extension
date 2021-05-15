@@ -1,0 +1,143 @@
+<div
+    class="point-to-point-editor"
+    ng-controller="$root.PointToPointEditorController as vm"
+>
+
+    <ndm-button
+        is-disabled="vm.isLocked"
+        btn-class="btn--long"
+        on-click="vm.addNewTunnel"
+        label="otherConnections.ppp.add-button"
+    >
+    </ndm-button>
+
+<!--    header-title="otherConnections.ppp.editor.header"-->
+<ndm-popup
+    is-visible="true"
+    ng-if="vm.isVisible"
+    class="point-to-point-editor__popup"
+    close="vm.close"
+>
+
+    <form
+        name="vm.form"
+        novalidate
+    >
+        <ndm-fieldset is-disabled="vm.isLocked">
+
+<!--            <ndm-text-->
+<!--                text="otherConnections.ppp.editor.description">-->
+<!--            </ndm-text>-->
+
+
+            <ndm-input
+                label="otherConnections.ppp.editor.connection-name"
+                model="vm.model.description"
+                name="description"
+                validation="required"
+            >
+            </ndm-input>
+
+            {{ vm.model }}
+            <br/>
+            {{ vm.model.type }} | {{ vm.TUNNEL_TYPE.EOIP }}
+
+<!--            class="otherConnections-ppp-popup__ppp-type"-->
+            <ndm-selectbox
+                disabled="vm.isLocked || !vm.model.isNew"
+                label="otherConnections.ppp.ppp-type"
+                name="tunnelType"
+                options="vm.options.type"
+                value="vm.model.type"
+            >
+            </ndm-selectbox>
+
+            <div
+                ng-if="vm.model.type === vm.TUNNEL_TYPE.EOIP"
+                ng-form="vm.form.eoipSubform"
+            >
+                <ndm-input
+                    name="eoipId"
+                    label="EoIP ID"
+                    model="vm.model.eoipId"
+                    validation="required,integer"
+                >
+                </ndm-input>
+            </div>
+
+            <div
+                ng-if="!vm.model.ipsec.isEnabled"
+                ng-form="vm.form.noIpsecSubform"
+            >
+                <ndm-input
+                    name="destinationAddress"
+                    label="Destination address"
+                    model="vm.model.destination.address"
+                    validation="required,ipOrDomain"
+                >
+                </ndm-input>
+            </div>
+
+            <div ng-if="vm.IS_IPSEC_AVAILABLE">
+
+
+<!--                <ndm-selectbox-->
+<!--                    disabled="vm.isLocked"-->
+<!--                    label="staticRoutes.route-properties.interface"-->
+<!--                    name="destinationInterface"-->
+<!--                    options="vm.options.interface"-->
+<!--                    value="vm.model.destination.interfaceId"-->
+<!--                >-->
+<!--                </ndm-selectbox>-->
+
+                <ndm-checkbox
+                    name="isIpsecEnabled"
+                    label="IPsec"
+                    model="vm.model.ipsec.isEnabled"
+                >
+                </ndm-checkbox>
+
+                <div
+                    ng-if="vm.model.ipsec.isEnabled"
+                    ng-form="vm.form.ipsecSubform"
+                >
+                    <ndm-input
+                        name="ipsecPresharedKey"
+                        label="Preshared key"
+                        model="vm.model.ipsec.presharedKey"
+                        validation="required,length[3..64]"
+                    >
+                    </ndm-input>
+                </div>
+            </div>
+
+
+            <div
+                ng-if="!vm.model.isNew"
+                class="point-to-point-editor__delete-panel"
+            >
+                <hr class="hr-light-blue"/>
+
+                <ndm-button
+                    is-disabled="vm.isLocked"
+                    btn-class="btn--long"
+                    on-click="vm.deleteTunnel"
+                    label="otherConnections.delete-connection"
+                >
+                </ndm-button>
+            </div>
+
+        </ndm-fieldset>
+
+        <ndm-control-footer
+            prefix="pointToPoint"
+            is-visible="vm.form.modified || vm.model.isNew"
+            is-popup="true"
+            is-save-disabled="vm.form.$invalid || vm.isLocked"
+            save="vm.saveTunnel()"
+            cancel="vm.closeEditor()"
+        >
+        </ndm-control-footer>
+    </form>
+</ndm-popup>
+</div>

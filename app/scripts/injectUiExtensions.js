@@ -50,8 +50,13 @@ import {
 
 import {
     addPointToPointTunnelSection,
-    PointToPointController,
 } from './uiExtension/pointToPointTunnelsSection';
+import {
+    PointToPointController,
+} from './uiExtension/pointToPointTunnels/point-to-point.controller';
+import {
+    PointToPointEditorController,
+} from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -69,6 +74,7 @@ export const injectUiExtensions = () => {
     // We add controller to the $rootScope,
     // otherwise it won't be available on page load
     $rootScope.PointToPointController = PointToPointController;
+    $rootScope.PointToPointEditorController = PointToPointEditorController;
 
     // Should be done BEFORE authentication
     const originalSwitchportsTemplate = ndmUtils.getDashboardSwitchportsTemplate();
