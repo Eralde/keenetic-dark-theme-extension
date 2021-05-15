@@ -19,6 +19,7 @@ export function PointToPointEditorController() {
     const $scope = element.scope();
     const parentController = $scope.$parent.vm;
 
+    const ifaceIpModel = getAngularService('ifaceIpModel');
     const modal = getAngularService('modal');
     const otherConnectionsService = getAngularService('otherConnectionsService');
     const requester = otherConnectionsService.requester;
@@ -37,6 +38,7 @@ export function PointToPointEditorController() {
     vm.model = {};
     vm.options = {
         interface: [],
+        mask: ifaceIpModel.getMasksSelectOptions(),
         type: pointToPointService.getTunnelTypeOptions(),
     };
 
@@ -45,10 +47,12 @@ export function PointToPointEditorController() {
             return;
         }
 
-        console.log(parentController.defaultInterfaceId);
-
         vm.options.interface = parentController.interfaceOptionsList;
         vm.defaultInterfaceId = parentController.defaultInterfaceId;
+
+        vm.restrictedSubnetsList = parentController.restrictedSubnetsList
+            .filter(item => item.ifaceId !== connectionModel.id);
+
         vm.model = connectionModel;
 
         requester.stopPolling();
@@ -58,7 +62,21 @@ export function PointToPointEditorController() {
 
     vm.closeEditor = () => {
         vm.isVisible = false;
+        vm.isLocked = false;
+        vm.model = {};
         requester.startPolling();
+    }
+
+    vm.saveTunnel = () => {
+        if (vm.isLocked) {
+            return;
+        }
+
+        vm.isLocked = true;
+
+        return pointToPointService.saveTunnel(vm.model).finally(() => {
+            vm.closeEditor();
+        });
     }
 
     vm.deleteTunnel = () => {
@@ -80,6 +98,6 @@ export function PointToPointEditorController() {
     };
 
     $scope.$on(pointToPointService.EVENTS.OPEN_EDITOR, ($event, row) => {
-        console.log(row);
+        vm.openEditor(row.model);
     });
 }

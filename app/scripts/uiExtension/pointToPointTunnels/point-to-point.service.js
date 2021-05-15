@@ -6,6 +6,7 @@ export const pointToPointService = (function() {
     const utils = getAngularService('utils');
     const router = getAngularService('router');
     const interfaces = getAngularService('interfaces');
+    const CONSTANT = getAngularService('CONSTANT');
     // const wifiOptions = getAngularService('wifiOptions');
     // const Ipv6To4Service = getAngularService('Ipv6To4Service');
 
@@ -17,6 +18,15 @@ export const pointToPointService = (function() {
     const SHOW_INTERFACE_PATH = 'show.interface';
     const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
     const SHOW_INTERFACE_STAT = 'show.interface.stat';
+
+    const NO = {no: true};
+
+    const INTERFACE_CMD = 'interface';
+    const TUNNEL_DESTINATION_PROP = 'tunnel.destination';
+    const TUNNEL_EOIP_ID_PROP = 'tunnel.eoip.id';
+    const IP_ADDRESS_PROP = 'ip.address';
+    const IP_ADDRESS_ADDRESS_PROP = 'ip.address.address';
+    const IP_ADDRESS_MASK_PROP = 'ip.address.mask';
 
     const TUNNEL_TYPE = {
         IPIP: 'IPIP',
@@ -35,6 +45,10 @@ export const pointToPointService = (function() {
 
     const EVENTS = {
         OPEN_EDITOR: 'POINT_TO_POINT_OPEN_EDITOR',
+    };
+
+    const getInterfaceDescriptionQuery = (interfaceId, description) => {
+        return _.set({}, [INTERFACE_CMD, interfaceId], {description});
     };
 
     // const {AP_IFACE_PREFIX} = wifiOptions;
@@ -69,6 +83,20 @@ export const pointToPointService = (function() {
             || _.get(globalInterface, 'id', '');
     };
 
+    const getNextFreeId = (type) => {
+        const query = _.set({}, SHOW_INTERFACE_PATH, {});
+
+        return router.postToRciRoot(query).then(response => {
+            const showInterface = _.get(response, SHOW_INTERFACE_PATH, {});
+            const existingIndexes = _.filter(showInterface, item => item.type === type)
+                .map(item => Number(item.id.replace(type, '')));
+
+            const unusedIndex = utils.firstUnusedId(existingIndexes);
+
+            return `${type}${unusedIndex}`;
+        });
+    };
+
     const getTunnelTypeOptions = () => {
         return TUNNEL_TYPES_LIST.map(item => ({id: item, label: item}));
     };
@@ -76,10 +104,13 @@ export const pointToPointService = (function() {
     const getDefaultTunnelModel = (defaultInterfaceId) => {
         return {
             isNew: true,
+            id: '',
             description: '',
             type: TUNNEL_TYPE.IPIP,
-            eoipId: '',
             address: '',
+            mask: CONSTANT.DEFAULT_NETMASK,
+            eoipId: '',
+            destinationAddress: '',
             interfaceId: defaultInterfaceId,
 
             ipsec: {
@@ -89,6 +120,43 @@ export const pointToPointService = (function() {
             },
         };
     };
+
+    const saveTunnel = (model) => {
+        const id$ = model.isNew
+            ? getNextFreeId(model.type)
+            : $q.when(model.id)
+
+        return id$.then(id => {
+            const prefix = `${INTERFACE_CMD}.${id}`;
+
+            const descriptionQuery = getInterfaceDescriptionQuery(id, model.description);
+            const ipAddressQuery = _.set(
+                {},
+                `${prefix}.${IP_ADDRESS_PROP}`,
+                _.pick(model, ['address', 'mask']),
+            );
+
+            const eoipIdQuery = model.type === TUNNEL_TYPE.EOIP
+                ? _.set({}, `${prefix}.${TUNNEL_EOIP_ID_PROP}`, model.eoipId)
+                : {};
+
+            const tunnelDestinationQuery = _.set(
+                {},
+                `${prefix}.${TUNNEL_DESTINATION_PROP}`,
+                model.destinationAddress,
+            );
+
+            const queries = [
+                descriptionQuery,
+                upQuery,
+                ipAddressQuery,
+                eoipIdQuery,
+                tunnelDestinationQuery,
+            ];
+
+            return router.postAndSave(queries);
+        });
+    }
 
     const determineTunnelStatus = (
         showInterfaceData,
@@ -182,6 +250,17 @@ export const pointToPointService = (function() {
         };
     };
 
+    const getRestrictedSubnetsList = ({showInterface, showRcInterface}) => {
+        const labelByIfaceId = interfaces.getInterfaceIdToLabelMap(showInterface);
+
+        const usedSubnets = interfaces.getAllUsedSubnets(
+            showInterface,
+            showRcInterface,
+        );
+
+        return usedSubnets.map(subnet => ({...subnet, label: labelByIfaceId[subnet.ifaceId]}));
+    }
+
     const getTunnelsList = ({showInterface, showRcInterface}) => {
         const matchingShowInterfaceObjects = _.pickBy(
             showInterface,
@@ -194,11 +273,13 @@ export const pointToPointService = (function() {
                 const {id, uptime, type} = showInterfaceItem;
                 const interfaceConfiguration = showRcInterface[id];
 
+                const description = showInterfaceItem.description || id;
+
                 return {
                     id: id,
                     type: type.toUpperCase(),
                     isEnabled: Boolean(interfaceConfiguration.up),
-                    description: showInterfaceItem.description || id,
+                    description,
                     source: _.get(showInterfaceItem, 'tunnel-local-source', ''),
                     destination: _.get(showInterfaceItem, 'tunnel-remote-destination', ''),
                     uptime: uptime || 0,
@@ -206,6 +287,15 @@ export const pointToPointService = (function() {
                         status: showInterfaceItem,
                         configuration: interfaceConfiguration,
                     },
+                    model: {
+                        isNew: false,
+                        id,
+                        type,
+                        description,
+                        address: _.get(interfaceConfiguration, IP_ADDRESS_ADDRESS_PROP),
+                        mask: _.get(interfaceConfiguration, IP_ADDRESS_MASK_PROP),
+                        destinationAddress: _.get(interfaceConfiguration, TUNNEL_DESTINATION_PROP)
+                    }
                 };
             },
         );
@@ -216,7 +306,7 @@ export const pointToPointService = (function() {
     };
 
     const deleteTunnel = (tunnelId) => {
-        const query = interfaces.getInterfaceDeletionQuery(tunnelId);
+        const query = _.set({}, [INTERFACE_CMD, tunnelId], NO);
 
         return router.postAndSave(query);
     };
@@ -227,6 +317,7 @@ export const pointToPointService = (function() {
         IS_IPSEC_AVAILABLE,
 
         getInterfaceOptionsList,
+        getRestrictedSubnetsList,
         getDefaultInterfaceId,
         getTableDateQueries,
         destructureTableDataResponses,
@@ -235,6 +326,7 @@ export const pointToPointService = (function() {
 
         toggleTunnelState,
         deleteTunnel,
+        saveTunnel,
 
         getInterfaceStatByIdData,
 

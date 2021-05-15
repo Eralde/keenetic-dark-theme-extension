@@ -85,8 +85,15 @@ export function PointToPointController() {
             const list = pointToPointService.getTunnelsList(pollData);
             const idList = _.map(list, 'id');
 
-            vm.interfaceOptionsList = pointToPointService.getInterfaceOptionsList(pollData.showInterface);
-            vm.defaultInterfaceId = pointToPointService.getDefaultInterfaceId(pollData.showInterface);
+            const {showInterface} = pollData;
+
+            vm.interfaceOptionsList = pointToPointService.getInterfaceOptionsList(showInterface);
+            vm.defaultInterfaceId = pointToPointService.getDefaultInterfaceId(showInterface);
+            vm.restrictedSubnetsList = pointToPointService.getRestrictedSubnetsList(pollData);
+
+            console.log(
+                vm.restrictedSubnetsList,
+            );
 
             return pointToPointService.getInterfaceStatByIdData(idList).then(statDataById => {
                 vm.table.data = list.map(row => {
