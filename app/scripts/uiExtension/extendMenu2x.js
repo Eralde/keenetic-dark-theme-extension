@@ -11,7 +11,7 @@ import {
 
 import {
     getAngularService,
-    getL10n,
+    getNgL10n,
     onLanguageChange,
     addLinkToMenuSection,
 } from '../lib/ndmUtils';
@@ -113,7 +113,7 @@ export const extendMenu2x = () => {
 
     const {dupNode, linkEl} = getMenuElementItem(
         firstGroup,
-        getL10n(LOG_LINK_TITLE),
+        getNgL10n(LOG_LINK_TITLE),
         {
             href: '/controlPanel/diagnostics/log'
         });
@@ -126,10 +126,10 @@ export const extendMenu2x = () => {
     const link = rebootNode.querySelector('a');
 
     link.setAttribute('href', '/controlPanel/system');
-    link.innerText = getL10n(REBOOT_LINK_TITLE);
+    link.innerText = getNgL10n(REBOOT_LINK_TITLE);
 
     onLanguageChange(() => {
-        link.innerText = getL10n(REBOOT_LINK_TITLE);
+        link.innerText = getNgL10n(REBOOT_LINK_TITLE);
     });
 
     link.addEventListener(
