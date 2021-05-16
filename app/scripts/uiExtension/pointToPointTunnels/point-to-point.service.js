@@ -1,5 +1,5 @@
-import {getAngularService} from "../../lib/ndmUtils";
-import * as _ from "lodash";
+import {getAngularService} from '../../lib/ndmUtils';
+import * as _ from 'lodash';
 
 export const pointToPointService = (function() {
     const $q = getAngularService('$q');
@@ -15,6 +15,8 @@ export const pointToPointService = (function() {
         STATE_CATEGORY,
     } = interfaces.constants;
 
+    const {DEFAULT_NETMASK} = CONSTANT;
+
     const SHOW_INTERFACE_PATH = 'show.interface';
     const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
     const SHOW_INTERFACE_STAT = 'show.interface.stat';
@@ -22,11 +24,17 @@ export const pointToPointService = (function() {
     const NO = {no: true};
 
     const INTERFACE_CMD = 'interface';
-    const TUNNEL_DESTINATION_PROP = 'tunnel.destination';
-    const TUNNEL_EOIP_ID_PROP = 'tunnel.eoip.id';
     const IP_ADDRESS_PROP = 'ip.address';
     const IP_ADDRESS_ADDRESS_PROP = 'ip.address.address';
     const IP_ADDRESS_MASK_PROP = 'ip.address.mask';
+    const TUNNEL_EOIP_ID_PROP = 'tunnel.eoip.id';
+    const TUNNEL_DESTINATION_PROP = 'tunnel.destination';
+    const TUNNEL_SOURCE_ADDRESS_PROP = 'tunnel.source.address';
+    const TUNNEL_SOURCE_INTERFACE_PROP = 'tunnel.source.interface';
+    const TUNNEL_SOURCE_PROP = 'tunnel.source';
+    const IPSEC_PRESHARED_KEY_PROP = 'ipsec.preshared-key';
+    const IPSEC_IKEV2_PROP = 'ipsec.ikev2';
+    const IPSEC_PRESHARED_KEY_KEY_PROP = 'ipsec.preshared-key.key';
 
     const TUNNEL_TYPE = {
         IPIP: 'IPIP',
@@ -41,36 +49,23 @@ export const pointToPointService = (function() {
     ];
 
     const EMPTY_VAL_HTML = '&mdash;';
-    const IS_IPSEC_AVAILABLE = 0 && _.has(window, 'NDM.profile.components.ipsec');
+    const IS_IPSEC_AVAILABLE = _.has(window, 'NDM.profile.components.ipsec');
 
     const EVENTS = {
         OPEN_EDITOR: 'POINT_TO_POINT_OPEN_EDITOR',
     };
 
+    const isPointToPoint = ({type}) => TUNNEL_TYPES_LIST.includes(type);
+    const isPort = ({type}) => type === 'Port';
+
     const getInterfaceDescriptionQuery = (interfaceId, description) => {
         return _.set({}, [INTERFACE_CMD, interfaceId], {description});
     };
 
-    // const {AP_IFACE_PREFIX} = wifiOptions;
-    // const {TUNNEL_6_TO_4_TYPE} = Ipv6To4Service;
-
-    // const canBeGlobal = ({global}) => !_.isUndefined(global);
-    // const isAccessPoint = ({type}) => type === AP_IFACE_PREFIX;
-    // const indexIsLessThen2 = ({id}) => Number(id.split(AP_IFACE_PREFIX)[1]) <= 1;
-    // const isTunnel6to4 = ({type}) => type === TUNNEL_6_TO_4_TYPE;
-    const isPointToPoint = ({type}) => TUNNEL_TYPES_LIST.includes(type);
-
     const getInterfaceOptionsList = (showInterfaceData) => {
         return interfaces.getInterfaceOptions(showInterfaceData)
-            .filter(item => !isPointToPoint(item));
-
-        // return [
-        //     ...options
-        //         .filter(canBeGlobal)
-        //         .filter(option => !isAccessPoint(option) || indexIsLessThen2(option)),
-        //
-        //     ...options.filter(isTunnel6to4)
-        // ];
+            .filter(item => !isPointToPoint(item))
+            .filter(item => !isPort(item));
     };
 
     const getDefaultInterfaceId = (showInterfaceData) => {
@@ -83,6 +78,10 @@ export const pointToPointService = (function() {
             || _.get(globalInterface, 'id', '');
     };
 
+    /**
+     * @param {string} type
+     * @returns {Promise<string>}
+     */
     const getNextFreeId = (type) => {
         const query = _.set({}, SHOW_INTERFACE_PATH, {});
 
@@ -108,18 +107,135 @@ export const pointToPointService = (function() {
             description: '',
             type: TUNNEL_TYPE.IPIP,
             address: '',
-            mask: CONSTANT.DEFAULT_NETMASK,
+            mask: DEFAULT_NETMASK,
             eoipId: '',
             destinationAddress: '',
-            interfaceId: defaultInterfaceId,
 
             ipsec: {
-                isServer: true,
                 isEnabled: false,
+                isServer: true,
                 presharedKey: '',
+                tunnelSourceIsInterface: true,
+                tunnelSourceAddress: '',
+                tunnelSourceInterfaceId: defaultInterfaceId,
+                tunnelDestination: '',
             },
         };
     };
+
+    const getTunnelEditorModel = ({
+        interfaceConfiguration,
+        showInterfaceItem,
+        interfaceOptionsList,
+        defaultInterfaceId,
+    }) => {
+        const {id, type} = showInterfaceItem;
+        const description = showInterfaceItem.description || id;
+
+        const address = _.get(interfaceConfiguration, IP_ADDRESS_ADDRESS_PROP, '');
+        const mask = _.get(interfaceConfiguration, IP_ADDRESS_MASK_PROP, DEFAULT_NETMASK);
+
+        const eoipId = _.get(interfaceConfiguration, TUNNEL_EOIP_ID_PROP, '');
+
+        const destinationAddress = _.get(interfaceConfiguration, TUNNEL_DESTINATION_PROP, '');
+
+        // IPsec
+        const isIpsecEnabled = _.has(interfaceConfiguration, 'ipsec');
+        const presharedKey = _.get(interfaceConfiguration, IPSEC_PRESHARED_KEY_KEY_PROP, '');
+        const isServer = _.has(interfaceConfiguration, TUNNEL_SOURCE_PROP);
+
+        const tunnelSourceIsInterface = _.has(interfaceConfiguration, TUNNEL_SOURCE_INTERFACE_PROP);
+
+        const sourceInterface = _.get(interfaceConfiguration, TUNNEL_SOURCE_INTERFACE_PROP, '');
+        const tunnelSourceOption = _.find(
+            interfaceOptionsList,
+                option => option.id === sourceInterface || option.name === sourceInterface
+        );
+
+        const tunnelSourceInterfaceId = _.get(tunnelSourceOption, 'id', defaultInterfaceId);
+        const tunnelSourceAddress = _.get(interfaceConfiguration, TUNNEL_SOURCE_ADDRESS_PROP, '');
+
+        return {
+            isNew: false,
+            id,
+            type,
+            description,
+            eoipId,
+            address,
+            mask,
+            destinationAddress,
+            ipsec: {
+                isEnabled: isIpsecEnabled,
+                isServer,
+                presharedKey,
+                tunnelSourceIsInterface,
+                tunnelSourceInterfaceId,
+                tunnelSourceAddress,
+                tunnelDestination: destinationAddress,
+            },
+        };
+    };
+
+    const getTunnelIpsecQueries = (model, id) => {
+        if (!IS_IPSEC_AVAILABLE) {
+            return [];
+        }
+
+        const prefix = `${INTERFACE_CMD}.${id}`;
+
+        let tunnelDestinationQuery;
+
+        if (!model.ipsec.isEnabled) {
+            tunnelDestinationQuery = {};
+        } else {
+            const value = model.ipsec.isServer
+                ? NO
+                : model.ipsec.tunnelDestination;
+
+            tunnelDestinationQuery = _.set(
+                {},
+                `${prefix}.${TUNNEL_DESTINATION_PROP}`,
+                value,
+            );
+        }
+
+        let tunnelSourceQuery;
+
+        if (!model.ipsec.isEnabled || !model.ipsec.isServer) {
+            tunnelSourceQuery = _.set(
+                {},
+                `${prefix}.${TUNNEL_SOURCE_PROP}`,
+                NO
+            );
+        } else {
+            if (model.ipsec.tunnelSourceIsInterface) {
+                tunnelSourceQuery = _.set(
+                    {},
+                    `${prefix}.${TUNNEL_SOURCE_INTERFACE_PROP}`,
+                    model.ipsec.tunnelSourceInterfaceId,
+                );
+            } else {
+                tunnelSourceQuery = _.set(
+                    {},
+                    `${prefix}.${TUNNEL_SOURCE_ADDRESS_PROP}`,
+                    model.ipsec.tunnelSourceAddress,
+                );
+            }
+        }
+
+        const ipsecPresharedKeyQuery = model.ipsec.isEnabled
+                ? _.set({}, `${prefix}.${IPSEC_PRESHARED_KEY_PROP}`, {key: model.ipsec.presharedKey})
+                : _.set({}, `${prefix}.${IPSEC_PRESHARED_KEY_PROP}`, NO);
+
+        const ipsecIkev2Query = _.set({}, `${prefix}.${IPSEC_IKEV2_PROP}`, model.ipsec.isEnabled);
+
+        return [
+            tunnelDestinationQuery,
+            tunnelSourceQuery,
+            ipsecPresharedKeyQuery,
+            ipsecIkev2Query,
+        ];
+    }
 
     const saveTunnel = (model) => {
         const id$ = model.isNew
@@ -140,21 +256,22 @@ export const pointToPointService = (function() {
                 ? _.set({}, `${prefix}.${TUNNEL_EOIP_ID_PROP}`, model.eoipId)
                 : {};
 
-            const tunnelDestinationQuery = _.set(
-                {},
-                `${prefix}.${TUNNEL_DESTINATION_PROP}`,
-                model.destinationAddress,
-            );
+
+            const tunnelDestinationQuery = model.ipsec.isEnabled
+                ? {} // another query will be returned from the `getTunnelIpsecQueries` function
+                : _.set({}, `${prefix}.${TUNNEL_DESTINATION_PROP}`, model.destinationAddress);
+
+            const ipsecQueries = getTunnelIpsecQueries(model, id);
 
             const queries = [
                 descriptionQuery,
-                upQuery,
                 ipAddressQuery,
                 eoipIdQuery,
                 tunnelDestinationQuery,
+                ...ipsecQueries,
             ];
 
-            return router.postAndSave(queries);
+            return router.postAndSave(queries.filter(item => !_.isEmpty(item)));
         });
     }
 
@@ -283,19 +400,10 @@ export const pointToPointService = (function() {
                     source: _.get(showInterfaceItem, 'tunnel-local-source', ''),
                     destination: _.get(showInterfaceItem, 'tunnel-remote-destination', ''),
                     uptime: uptime || 0,
-                    data: {
-                        status: showInterfaceItem,
-                        configuration: interfaceConfiguration,
+                    rawData: {
+                        showInterfaceItem,
+                        interfaceConfiguration,
                     },
-                    model: {
-                        isNew: false,
-                        id,
-                        type,
-                        description,
-                        address: _.get(interfaceConfiguration, IP_ADDRESS_ADDRESS_PROP),
-                        mask: _.get(interfaceConfiguration, IP_ADDRESS_MASK_PROP),
-                        destinationAddress: _.get(interfaceConfiguration, TUNNEL_DESTINATION_PROP)
-                    }
                 };
             },
         );
@@ -323,6 +431,7 @@ export const pointToPointService = (function() {
         destructureTableDataResponses,
 
         getTunnelsList,
+        getTunnelEditorModel,
 
         toggleTunnelState,
         deleteTunnel,

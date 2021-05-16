@@ -27,7 +27,7 @@ export function PointToPointController() {
     vm.table = {
         columns: {
             'description': {
-                title: 'Name',
+                title: 'otherConnections.ppp.connection',
                 width: 180,
                 directive: {
                     name: 'ndm-toggle',
@@ -91,10 +91,6 @@ export function PointToPointController() {
             vm.defaultInterfaceId = pointToPointService.getDefaultInterfaceId(showInterface);
             vm.restrictedSubnetsList = pointToPointService.getRestrictedSubnetsList(pollData);
 
-            console.log(
-                vm.restrictedSubnetsList,
-            );
-
             return pointToPointService.getInterfaceStatByIdData(idList).then(statDataById => {
                 vm.table.data = list.map(row => {
                     const {id} = row;
@@ -105,7 +101,7 @@ export function PointToPointController() {
                     }
 
                     const statData = _.pick(statDataById[id], ['rxbytes', 'txbytes']);
-                    const status = pointToPointService.determineTunnelStatus(row.data.status);
+                    const status = pointToPointService.determineTunnelStatus(row.rawData.showInterfaceItem);
 
                     const onToggle = (state) => {
                         rowsToPreserveToggleState[id] = state;

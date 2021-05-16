@@ -90,17 +90,6 @@
                 </div>
 
                 <div ng-if="vm.IS_IPSEC_AVAILABLE">
-
-
-    <!--                <ndm-selectbox-->
-    <!--                    disabled="vm.isLocked"-->
-    <!--                    label="staticRoutes.route-properties.interface"-->
-    <!--                    name="destinationInterface"-->
-    <!--                    options="vm.options.interface"-->
-    <!--                    value="vm.model.destination.interfaceId"-->
-    <!--                >-->
-    <!--                </ndm-selectbox>-->
-
                     <ndm-checkbox
                         name="isIpsecEnabled"
                         label="IPsec"
@@ -119,6 +108,57 @@
                             validation="required,length[3..64]"
                         >
                         </ndm-input>
+
+                        <ndm-checkbox
+                            name="isServer"
+                            label="Is server"
+                            model="vm.model.ipsec.isServer"
+                        >
+                        </ndm-checkbox>
+
+                        <div
+                            ng-if="vm.model.ipsec.isServer"
+                            ng-form="vm.form.tunnelSourceSubform"
+                        >
+                            <ndm-checkbox
+                                name="tunnelSourceIsInterface"
+                                label="Tunnel source is interface"
+                                model="vm.model.ipsec.tunnelSourceIsInterface"
+                            >
+                            </ndm-checkbox>
+
+                            <ndm-selectbox
+                                name="tunnelSourceInterfaceId"
+                                disabled="vm.isLocked || !vm.model.ipsec.tunnelSourceIsInterface"
+                                label="staticRoutes.route-properties.interface"
+                                value="vm.model.ipsec.tunnelSourceInterfaceId"
+                                options="vm.options.interface"
+                            >
+                            </ndm-selectbox>
+
+                            <ndm-input
+                                name="tunnelSourceAddress"
+                                disabled="vm.model.ipsec.tunnelSourceIsInterface"
+                                label="otherConnections.wireguard.table.address"
+                                model="vm.model.ipsec.tunnelSourceAddress"
+                                validation="required,ipOrDomain"
+                            >
+                            </ndm-input>
+                        </div>
+
+                        <div
+                            ng-if="!vm.model.ipsec.isServer"
+                            ng-form="vm.form.tunnelDestinationSubform"
+                        >
+                            <ndm-input
+                                name="tunnelSourceAddress"
+                                label="Tunnel destination"
+                                model="vm.model.ipsec.tunnelDestination"
+                                validation="required,ipOrDomain"
+                            >
+                            </ndm-input>
+                        </div>
+
                     </div>
                 </div>
 

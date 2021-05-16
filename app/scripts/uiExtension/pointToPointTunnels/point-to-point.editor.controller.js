@@ -42,16 +42,18 @@ export function PointToPointEditorController() {
         type: pointToPointService.getTunnelTypeOptions(),
     };
 
+    const getDataFromParentController = (idToExclude) => {
+        vm.options.interface = _.cloneDeep(parentController.interfaceOptionsList);
+        vm.defaultInterfaceId = parentController.defaultInterfaceId;
+
+        vm.restrictedSubnetsList = _.cloneDeep(parentController.restrictedSubnetsList)
+            .filter(item => item.ifaceId !== idToExclude);
+    };
+
     vm.openEditor = (connectionModel) => {
         if (vm.isVisible) {
             return;
         }
-
-        vm.options.interface = parentController.interfaceOptionsList;
-        vm.defaultInterfaceId = parentController.defaultInterfaceId;
-
-        vm.restrictedSubnetsList = parentController.restrictedSubnetsList
-            .filter(item => item.ifaceId !== connectionModel.id);
 
         vm.model = connectionModel;
 
@@ -94,10 +96,26 @@ export function PointToPointEditorController() {
     };
 
     vm.addNewTunnel = () => {
+        getDataFromParentController('idToExclude');
+
         return vm.openEditor(pointToPointService.getDefaultTunnelModel());
     };
 
     $scope.$on(pointToPointService.EVENTS.OPEN_EDITOR, ($event, row) => {
-        vm.openEditor(row.model);
+        const {
+            showInterfaceItem,
+            interfaceConfiguration,
+        } = row.rawData;
+
+        getDataFromParentController(row.id);
+
+        const model = pointToPointService.getTunnelEditorModel({
+            interfaceConfiguration,
+            showInterfaceItem,
+            interfaceOptionsList: vm.options.interface,
+            defaultInterfaceId: vm.defaultInterfaceId,
+        });
+
+        vm.openEditor(model);
     });
 }
