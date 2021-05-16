@@ -65,5 +65,29 @@
   },
   "HECErrorsInterleaved": {
     "message": "HEC errors"
+  },
+  "PointToPointSource": {
+    "message": "Source"
+  },
+  "PointToPointDestination": {
+    "message": "Destination"
+  },
+  "PointToPointTunnelSource": {
+    "message": "Tunnel source"
+  },
+  "PointToPointTunnelDestination": {
+    "message": "Tunnel destination"
+  },
+  "PointToPointEditorTitle": {
+    "message": "Tunnel configuration editor"
+  },
+  "PointToPointEditorIpsecEnabled": {
+    "message": "Enable IPsec"
+  },
+  "PointToPointEditorIpsecIsServer": {
+    "message": "Is server"
+  },
+  "PointToPointEditorIpsecTunnelSourceIsInterface": {
+    "message": "Tunnel source is interface"
   }
 }

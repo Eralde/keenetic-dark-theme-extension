@@ -34,6 +34,7 @@ export const pointToPointService = (function() {
     const TUNNEL_SOURCE_PROP = 'tunnel.source';
     const IPSEC_PRESHARED_KEY_PROP = 'ipsec.preshared-key';
     const IPSEC_IKEV2_PROP = 'ipsec.ikev2';
+    const IPSEC_IGNORE_PROP = 'ipsec.ignore';
     const IPSEC_PRESHARED_KEY_KEY_PROP = 'ipsec.preshared-key.key';
 
     const TUNNEL_TYPE = {
@@ -116,8 +117,8 @@ export const pointToPointService = (function() {
                 isServer: true,
                 presharedKey: '',
                 tunnelSourceIsInterface: true,
-                tunnelSourceAddress: '',
                 tunnelSourceInterfaceId: defaultInterfaceId,
+                tunnelSourceAddress: '',
                 tunnelDestination: '',
             },
         };
@@ -140,7 +141,9 @@ export const pointToPointService = (function() {
         const destinationAddress = _.get(interfaceConfiguration, TUNNEL_DESTINATION_PROP, '');
 
         // IPsec
-        const isIpsecEnabled = _.has(interfaceConfiguration, 'ipsec');
+        const isIpsecEnabled = _.has(interfaceConfiguration, 'ipsec')
+            && !_.get(interfaceConfiguration, IPSEC_IGNORE_PROP, false);
+
         const presharedKey = _.get(interfaceConfiguration, IPSEC_PRESHARED_KEY_KEY_PROP, '');
         const isServer = _.has(interfaceConfiguration, TUNNEL_SOURCE_PROP);
 
@@ -227,13 +230,15 @@ export const pointToPointService = (function() {
                 ? _.set({}, `${prefix}.${IPSEC_PRESHARED_KEY_PROP}`, {key: model.ipsec.presharedKey})
                 : _.set({}, `${prefix}.${IPSEC_PRESHARED_KEY_PROP}`, NO);
 
-        const ipsecIkev2Query = _.set({}, `${prefix}.${IPSEC_IKEV2_PROP}`, model.ipsec.isEnabled);
+        const ipsecIkev2Query = _.set({}, `${prefix}.${IPSEC_IKEV2_PROP}`, model.ipsec.isEnabled)
+        const ipsecIgnoreQuery = _.set({}, `${prefix}.${IPSEC_IGNORE_PROP}`, !model.ipsec.isEnabled);
 
         return [
             tunnelDestinationQuery,
             tunnelSourceQuery,
             ipsecPresharedKeyQuery,
             ipsecIkev2Query,
+            ipsecIgnoreQuery,
         ];
     }
 

@@ -16,7 +16,7 @@
         ng-if="vm.isVisible"
         class="point-to-point-editor__popup"
         close="vm.closeEditor"
-        header-title="Tunnel editor"
+        header-title="{{vm.l10n.title}}"
     >
         <br/><br/>
 
@@ -82,7 +82,7 @@
                 >
                     <ndm-input
                         name="destinationAddress"
-                        label="Destination address"
+                        label="{{vm.l10n.tunnelDestination}}"
                         model="vm.model.destinationAddress"
                         validation="required,ipOrDomain"
                     >
@@ -92,7 +92,7 @@
                 <div ng-if="vm.IS_IPSEC_AVAILABLE">
                     <ndm-checkbox
                         name="isIpsecEnabled"
-                        label="IPsec"
+                        label="{{vm.l10n.ipsecIsEnabled}}"
                         model="vm.model.ipsec.isEnabled"
                     >
                     </ndm-checkbox>
@@ -103,7 +103,7 @@
                     >
                         <ndm-input
                             name="ipsecPresharedKey"
-                            label="Preshared key"
+                            label="otherConnections.wireguard.peer.preshared-key.label"
                             model="vm.model.ipsec.presharedKey"
                             validation="required,length[3..64]"
                         >
@@ -111,7 +111,7 @@
 
                         <ndm-checkbox
                             name="isServer"
-                            label="Is server"
+                            label="{{vm.l10n.ipsecIsServer}}"
                             model="vm.model.ipsec.isServer"
                         >
                         </ndm-checkbox>
@@ -152,7 +152,7 @@
                         >
                             <ndm-input
                                 name="tunnelSourceAddress"
-                                label="Tunnel destination"
+                                label="{{vm.l10n.tunnelDestination}}"
                                 model="vm.model.ipsec.tunnelDestination"
                                 validation="required,ipOrDomain"
                             >

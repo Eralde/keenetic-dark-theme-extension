@@ -1,6 +1,7 @@
-import {getAngularService} from '../../lib/ndmUtils';
+import {getAngularService, onLanguageChange} from '../../lib/ndmUtils';
 import {pointToPointService} from './point-to-point.service';
 import * as _ from 'lodash';
+import {getL10n} from '../../lib/l10nUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.point-to-point-section';
 
@@ -45,11 +46,11 @@ export function PointToPointController() {
                 title: 'otherConnections.ppp.type',
             },
             source: {
-                title: 'Source',
+                title: getL10n('PointToPointSource'),
                 modify: pointToPointService.formatIpData,
             },
             destination: {
-                title: 'Destination',
+                title: getL10n('PointToPointDestination'),
                 modify: pointToPointService.formatIpData,
             },
             txbytes: {
@@ -68,6 +69,11 @@ export function PointToPointController() {
         dataIsLoaded: false,
         data: [],
     };
+
+    onLanguageChange(() => {
+        vm.table.columns.source.title = getL10n('PointToPointSource');
+        vm.table.columns.destination.title = getL10n('PointToPointDestination');
+    });
 
     vm.editTunnel = (row) => {
         $scope.$broadcast(pointToPointService.EVENTS.OPEN_EDITOR, row);

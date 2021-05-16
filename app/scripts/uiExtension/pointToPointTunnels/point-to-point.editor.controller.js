@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
 import {pointToPointService} from './point-to-point.service';
+import {getL10n} from '../../lib/l10nUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.point-to-point-editor';
 
@@ -41,6 +42,15 @@ export function PointToPointEditorController() {
         mask: ifaceIpModel.getMasksSelectOptions(),
         type: pointToPointService.getTunnelTypeOptions(),
     };
+
+    vm.l10n = {
+        tunnelSource: getL10n('PointToPointTunnelSource'),
+        tunnelDestination: getL10n('PointToPointTunnelDestination'),
+        title: getL10n('PointToPointEditorTitle'),
+        ipsecIsEnabled: getL10n('PointToPointEditorIpsecEnabled'),
+        ipsecIsServer: getL10n('PointToPointEditorIpsecIsServer'),
+        ipsecTunnelSourceIsInterface: getL10n('PointToPointEditorIpsecTunnelSourceIsInterface'),
+    }
 
     const getDataFromParentController = (idToExclude) => {
         vm.options.interface = _.cloneDeep(parentController.interfaceOptionsList);
@@ -98,7 +108,9 @@ export function PointToPointEditorController() {
     vm.addNewTunnel = () => {
         getDataFromParentController('idToExclude');
 
-        return vm.openEditor(pointToPointService.getDefaultTunnelModel());
+        const model = pointToPointService.getDefaultTunnelModel(vm.defaultInterfaceId);
+
+        return vm.openEditor(model);
     };
 
     $scope.$on(pointToPointService.EVENTS.OPEN_EDITOR, ($event, row) => {
