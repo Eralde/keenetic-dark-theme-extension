@@ -36,6 +36,7 @@ export function PointToPointEditorController() {
     vm.isLocked = false;
     vm.isVisible = false;
 
+    vm.l10n = {};
     vm.model = {};
     vm.options = {
         interface: [],
@@ -43,14 +44,16 @@ export function PointToPointEditorController() {
         type: pointToPointService.getTunnelTypeOptions(),
     };
 
-    vm.l10n = {
-        tunnelSource: getL10n('PointToPointTunnelSource'),
-        tunnelDestination: getL10n('PointToPointTunnelDestination'),
-        title: getL10n('PointToPointEditorTitle'),
-        ipsecIsEnabled: getL10n('PointToPointEditorIpsecEnabled'),
-        ipsecIsServer: getL10n('PointToPointEditorIpsecIsServer'),
-        ipsecTunnelSourceIsInterface: getL10n('PointToPointEditorIpsecTunnelSourceIsInterface'),
-    }
+    const updateL10n = () => {
+        vm.l10n = {
+            tunnelSource: getL10n('PointToPointTunnelSource'),
+            tunnelDestination: getL10n('PointToPointTunnelDestination'),
+            title: getL10n('PointToPointEditorTitle'),
+            ipsecIsEnabled: getL10n('PointToPointEditorIpsecEnabled'),
+            ipsecIsServer: getL10n('PointToPointEditorIpsecIsServer'),
+            ipsecTunnelSourceIsInterface: getL10n('PointToPointEditorIpsecTunnelSourceIsInterface'),
+        }
+    };
 
     const getDataFromParentController = (idToExclude) => {
         vm.options.interface = _.cloneDeep(parentController.interfaceOptionsList);
@@ -64,6 +67,8 @@ export function PointToPointEditorController() {
         if (vm.isVisible) {
             return;
         }
+
+        updateL10n();
 
         vm.model = connectionModel;
 
