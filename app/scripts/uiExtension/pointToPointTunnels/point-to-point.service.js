@@ -37,6 +37,12 @@ export const pointToPointService = (function() {
     const IPSEC_IGNORE_PROP = 'ipsec.ignore';
     const IPSEC_PRESHARED_KEY_KEY_PROP = 'ipsec.preshared-key.key';
 
+    const SECURITY_LEVEL = {
+        PUBLIC: 'public',
+        PROTECTED: 'protected',
+        PRIVATE: 'private',
+    };
+
     const TUNNEL_TYPE = {
         IPIP: 'IPIP',
         GRE: 'Gre',
@@ -61,6 +67,16 @@ export const pointToPointService = (function() {
 
     const getInterfaceDescriptionQuery = (interfaceId, description) => {
         return _.set({}, [INTERFACE_CMD, interfaceId], {description});
+    };
+
+    const getInterfaceSecurityLevelQuery = (interfaceId, securityLevel) => {
+        const value = {
+            'security-level': {
+                [securityLevel]: true,
+            },
+        };
+
+        return _.set({}, [INTERFACE_CMD, interfaceId], value);
     };
 
     const getInterfaceOptionsList = (showInterfaceData) => {
@@ -257,6 +273,8 @@ export const pointToPointService = (function() {
                 _.pick(model, ['address', 'mask']),
             );
 
+            const securityLevelQuery = getInterfaceSecurityLevelQuery(id, SECURITY_LEVEL.PRIVATE);
+
             const eoipIdQuery = model.type === TUNNEL_TYPE.EOIP
                 ? _.set({}, `${prefix}.${TUNNEL_EOIP_ID_PROP}`, model.eoipId)
                 : {};
@@ -270,6 +288,7 @@ export const pointToPointService = (function() {
 
             const queries = [
                 descriptionQuery,
+                securityLevelQuery,
                 ipAddressQuery,
                 eoipIdQuery,
                 tunnelDestinationQuery,
