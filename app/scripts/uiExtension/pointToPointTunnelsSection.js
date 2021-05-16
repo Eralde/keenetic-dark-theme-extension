@@ -9,19 +9,21 @@ export const addPointToPointTunnelSection = () => {
     const $templateCache = getAngularService('$templateCache');
     const otherConnectionsTemplate = getTemplate(OTHER_CONNECTIONS_TEMPLATE_PATH);
 
-    if (otherConnectionsTemplate.includes('PointToPointController')) {
+    const errMsg = [
+        'Keenetic Dark Theme Extension: ',
+        'failed to determine proper place to inject point-to-point tunnels section',
+    ].join('');
+
+    if (!otherConnectionsTemplate || otherConnectionsTemplate.includes('PointToPointController')) {
+        console.warn(errMsg);
+
         return;
     }
 
     const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('ipsec.section.html');
 
     if (previousSectionIncludeIndex === -1) {
-        const msg = [
-            'Keenetic Dark Theme Extension: ',
-            'failed to determine proper place to inject point-to-point tunnels section',
-        ].join('');
-
-        console.warn(msg);
+        console.warn(errMsg);
 
         return;
     }
