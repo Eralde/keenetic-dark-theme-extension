@@ -65,7 +65,9 @@ const formatDslUptime = (uptime) => {
         return uptime;
     }
 
-    return uptime.replace('day', 'gün');
+    return uptime
+        .replace('days', 'gün')
+        .replace('day', 'gün');
 };
 
 const formatDslErrorCounters = (rxText, txText) => {
