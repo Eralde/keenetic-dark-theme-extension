@@ -41,5 +41,53 @@
   },
   "deltaChannelText": {
     "message": "Выберите этот канал, если вы знаете, что делаете."
+  },
+  "DSLFastMode": {
+    "message": "Режим Fast"
+  },
+  "DSLInterleavedMode": {
+    "message": "Режим Interleaved"
+  },
+  "FECErrorsFast": {
+    "message": "Ошибки FEC"
+  },
+  "CRCErrorsFast": {
+    "message": "Ошибки CRC"
+  },
+  "HECErrorsFast": {
+    "message": "Ошибки HEC"
+  },
+  "FECErrorsInterleaved": {
+    "message": "Ошибки FEC"
+  },
+  "CRCErrorsInterleaved": {
+    "message": "Ошибки CRC"
+  },
+  "HECErrorsInterleaved": {
+    "message": "Ошибки HEC"
+  },
+  "PointToPointSource": {
+    "message": "Источник"
+  },
+  "PointToPointDestination": {
+    "message": "Назначение"
+  },
+  "PointToPointTunnelSource": {
+    "message": "Источник"
+  },
+  "PointToPointTunnelDestination": {
+    "message": "Назначение"
+  },
+  "PointToPointEditorTitle": {
+    "message": "Редактор конфигурации туннеля"
+  },
+  "PointToPointEditorIpsecEnabled": {
+    "message": "Использовать IPSec"
+  },
+  "PointToPointEditorIpsecIsServer": {
+    "message": "Это устройство &mdash; сервер"
+  },
+  "PointToPointEditorIpsecTunnelSourceIsInterface": {
+    "message": "Использовать интерфейс в качестве источника"
   }
 }

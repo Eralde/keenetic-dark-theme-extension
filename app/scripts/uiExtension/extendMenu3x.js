@@ -16,7 +16,7 @@ import {
 
 import {
     getAngularService,
-    getL10n,
+    getNgL10n,
     onLanguageChange,
     addLinkToMenuSection,
 } from '../lib/ndmUtils';
@@ -132,7 +132,7 @@ export const extendMenu3x = () => {
         const firstGroup = menuGroups[0];
         const {dupNodeEl, linkEl} = getMenuElementItem(
             firstGroup,
-            getL10n(DASHBOARD_TITLE),
+            getNgL10n(DASHBOARD_TITLE),
             {
                 itemSelector: '.ndm-menu__item',
                 classToAdd: LOG_LINK_CLASS,
@@ -173,10 +173,10 @@ export const extendMenu3x = () => {
     const link = dupNode.cloneNode(true);
 
     link.classList.add(REBOOT_LINK_CLASS);
-    link.innerText = getL10n(REBOOT_LINK_TITLE);
+    link.innerText = getNgL10n(REBOOT_LINK_TITLE);
 
     onLanguageChange(() => {
-        link.innerText = getL10n(REBOOT_LINK_TITLE);
+        link.innerText = getNgL10n(REBOOT_LINK_TITLE);
     });
 
     link.addEventListener(

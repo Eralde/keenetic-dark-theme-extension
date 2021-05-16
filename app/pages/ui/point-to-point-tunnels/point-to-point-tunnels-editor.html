@@ -1,0 +1,195 @@
+<div
+    class="point-to-point-editor"
+    ng-controller="$root.PointToPointEditorController as vm"
+>
+
+    <ndm-button
+        is-disabled="vm.isLocked"
+        btn-class="btn--long"
+        on-click="vm.addNewTunnel"
+        label="otherConnections.ppp.add-button"
+    >
+    </ndm-button>
+
+    <ndm-popup
+        is-visible="true"
+        ng-if="vm.isVisible"
+        class="point-to-point-editor__popup"
+        close="vm.closeEditor"
+        header-title="{{vm.l10n.title}}"
+    >
+        <br/><br/>
+
+        <form
+            name="vm.form"
+            novalidate
+        >
+            <ndm-fieldset is-disabled="vm.isLocked">
+
+                <ndm-input
+                    label="otherConnections.ppp.editor.connection-name"
+                    model="vm.model.description"
+                    name="description"
+                    validation="required"
+                >
+                </ndm-input>
+
+                <ndm-selectbox
+                    disabled="vm.isLocked || !vm.model.isNew"
+                    label="otherConnections.ppp.ppp-type"
+                    name="tunnelType"
+                    options="vm.options.type"
+                    value="vm.model.type"
+                >
+                </ndm-selectbox>
+
+                <div
+                    ng-if="vm.model.type === vm.TUNNEL_TYPE.EOIP"
+                    ng-form="vm.form.eoipSubform"
+                >
+                    <ndm-input
+                        name="eoipId"
+                        label="EoIP ID"
+                        model="vm.model.eoipId"
+                        validation="required,integer"
+                    >
+                    </ndm-input>
+                </div>
+
+                <!-- IP ADDRESS -->
+                <ndm-input
+                    label="iface-ip.address"
+                    model="vm.model.address"
+                    name="address"
+                    validation-data="{nets: vm.restrictedSubnetsList, mask: vm.model.mask}"
+                    validation="required,ip,isHost[{{vm.model.mask}}],notInNets[mask,nets]"
+                >
+                </ndm-input>
+
+                <!-- MASK -->
+                <ndm-selectbox
+                    disabled="vm.isLocked"
+                    label="iface-ip.mask"
+                    value="vm.model.mask"
+                    name="mask"
+                    options="vm.options.mask"
+                >
+                </ndm-selectbox>
+
+                <div
+                    ng-if="!vm.model.ipsec.isEnabled"
+                    ng-form="vm.form.noIpsecSubform"
+                >
+                    <ndm-input
+                        name="destinationAddress"
+                        label="{{vm.l10n.tunnelDestination}}"
+                        model="vm.model.destinationAddress"
+                        validation="required,ipOrDomain"
+                    >
+                    </ndm-input>
+                </div>
+
+                <div ng-if="vm.IS_IPSEC_AVAILABLE">
+                    <ndm-checkbox
+                        name="isIpsecEnabled"
+                        label="{{vm.l10n.ipsecIsEnabled}}"
+                        model="vm.model.ipsec.isEnabled"
+                    >
+                    </ndm-checkbox>
+
+                    <div
+                        ng-if="vm.model.ipsec.isEnabled"
+                        ng-form="vm.form.ipsecSubform"
+                    >
+                        <ndm-input
+                            name="ipsecPresharedKey"
+                            label="otherConnections.wireguard.peer.preshared-key.label"
+                            model="vm.model.ipsec.presharedKey"
+                            validation="required,length[3..64]"
+                        >
+                        </ndm-input>
+
+                        <ndm-checkbox
+                            name="isServer"
+                            label="{{vm.l10n.ipsecIsServer}}"
+                            model="vm.model.ipsec.isServer"
+                        >
+                        </ndm-checkbox>
+
+                        <div
+                            ng-if="vm.model.ipsec.isServer"
+                            ng-form="vm.form.tunnelSourceSubform"
+                        >
+                            <ndm-checkbox
+                                name="tunnelSourceIsInterface"
+                                label="Tunnel source is interface"
+                                model="vm.model.ipsec.tunnelSourceIsInterface"
+                            >
+                            </ndm-checkbox>
+
+                            <ndm-selectbox
+                                name="tunnelSourceInterfaceId"
+                                disabled="vm.isLocked || !vm.model.ipsec.tunnelSourceIsInterface"
+                                label="staticRoutes.route-properties.interface"
+                                value="vm.model.ipsec.tunnelSourceInterfaceId"
+                                options="vm.options.interface"
+                            >
+                            </ndm-selectbox>
+
+                            <ndm-input
+                                name="tunnelSourceAddress"
+                                disabled="vm.model.ipsec.tunnelSourceIsInterface"
+                                label="otherConnections.wireguard.table.address"
+                                model="vm.model.ipsec.tunnelSourceAddress"
+                                validation="required,ipOrDomain"
+                            >
+                            </ndm-input>
+                        </div>
+
+                        <div
+                            ng-if="!vm.model.ipsec.isServer"
+                            ng-form="vm.form.tunnelDestinationSubform"
+                        >
+                            <ndm-input
+                                name="tunnelSourceAddress"
+                                label="{{vm.l10n.tunnelDestination}}"
+                                model="vm.model.ipsec.tunnelDestination"
+                                validation="required,ipOrDomain"
+                            >
+                            </ndm-input>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div
+                    ng-if="!vm.model.isNew"
+                    class="point-to-point-editor__delete-panel"
+                >
+                    <hr class="hr-light-blue"/>
+
+                    <ndm-button
+                        is-disabled="vm.isLocked"
+                        btn-class="btn--long"
+                        on-click="vm.deleteTunnel"
+                        label="otherConnections.delete-connection"
+                    >
+                    </ndm-button>
+                </div>
+
+            </ndm-fieldset>
+
+            <ndm-control-footer
+                prefix="pointToPoint"
+                is-visible="vm.form.modified || vm.model.isNew"
+                is-popup="true"
+                is-save-disabled="vm.form.$invalid || vm.isLocked"
+                save="vm.saveTunnel()"
+                cancel="vm.closeEditor()"
+            >
+            </ndm-control-footer>
+        </form>
+    </ndm-popup>
+
+</div>

@@ -150,7 +150,7 @@ export const ensureServiceTag = () => {
     return deferred.promise;
 }
 
-export const getL10n = (id, args = {}) => {
+export const getNgL10n = (id, args = {}) => {
     return getAngularService('$translate').instant(id, args);
 };
 
