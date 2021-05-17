@@ -25,7 +25,12 @@ module.exports = {
                 path.resolve(__dirname, 'app', 'pages', 'ui')
             ],
             exclude: /node_modules/,
-            use: {loader: 'html-loader'}
+            use: {
+                loader: 'html-loader',
+                options: {
+                    minimize: false
+                },
+            },
         });
 
         config.module.rules.push({
