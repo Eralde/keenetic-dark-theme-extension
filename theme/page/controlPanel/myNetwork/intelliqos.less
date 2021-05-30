@@ -1,0 +1,22 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+@import (reference) "../../../__ndwVars__";
+
+.page-intelliqos {
+  .ndm-toggle {
+    .toggle-description {
+      .warning-text {
+        color: @red-contrast;
+      }
+    }
+  }
+
+  .qos-group {
+    background-color: inherit;
+
+    &--dragged {
+      background-color: @dt__grey3;
+      border: 2px solid @new-blue;
+    }
+  }
+}
