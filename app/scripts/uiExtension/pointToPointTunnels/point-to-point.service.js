@@ -55,6 +55,12 @@ export const pointToPointService = (function() {
         TUNNEL_TYPE.EOIP,
     ];
 
+    const COMPONENT_DEPENDENCIES = {
+        [TUNNEL_TYPE.IPIP]: 'ipip',
+        [TUNNEL_TYPE.GRE]: 'gre',
+        [TUNNEL_TYPE.EOIP]: 'eoip',
+    }
+
     const EMPTY_VAL_HTML = '&mdash;';
     const IS_IPSEC_AVAILABLE = _.has(window, 'NDM.profile.components.ipsec');
 
@@ -114,7 +120,13 @@ export const pointToPointService = (function() {
     };
 
     const getTunnelTypeOptions = () => {
-        return TUNNEL_TYPES_LIST.map(item => ({id: item, label: item}));
+        return _
+            .chain(TUNNEL_TYPE)
+            .pickBy(type => {
+                return _.has(window, ['NDM', 'profile', 'components', COMPONENT_DEPENDENCIES[type]]);
+            })
+            .map(item => ({id: item, label: item}))
+            .value();
     };
 
     const getDefaultTunnelModel = (defaultInterfaceId) => {
@@ -403,10 +415,7 @@ export const pointToPointService = (function() {
     }
 
     const getTunnelsList = ({showInterface, showRcInterface}) => {
-        const matchingShowInterfaceObjects = _.pickBy(
-            showInterface,
-            ({type}) => TUNNEL_TYPES_LIST.includes(type),
-        );
+        const matchingShowInterfaceObjects = _.pickBy(showInterface, isPointToPoint);
 
         return _.map(
             matchingShowInterfaceObjects,
