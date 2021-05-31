@@ -29,6 +29,7 @@
   "dependencies": {
     "@simonwep/pickr": "^1.6.0",
     "js-beautify": "^1.13.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "sortablejs": "^1.13.0"
   }
 }
