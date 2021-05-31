@@ -27,6 +27,8 @@ const SHOW_INTERFACE_STAT_PROPS = [
     'txdropped',
     'timestamp',
     'last-overflow',
+    'rxShort',
+    'txShort',
 ];
 
 export const gatherStatForPorts = async () => {
@@ -73,10 +75,15 @@ export const gatherStatForPorts = async () => {
                     (port) => {
                         const {interfaceId} = port;
                         const index = _.findIndex(portIds, item => item === interfaceId);
+                        const statData = _.get(statArray, [index], {});
+                        const rxShort = utils.format.size(statData.rxbytes, true);
+                        const txShort = utils.format.size(statData.txbytes, true);
 
                         return {
                             ...port,
-                            ..._.get(statArray, [index], {}),
+                            ...statData,
+                            rxShort,
+                            txShort,
                         };
                     });
             });
