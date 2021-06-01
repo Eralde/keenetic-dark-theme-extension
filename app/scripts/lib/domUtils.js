@@ -388,3 +388,32 @@ export const getSpecialMenuItemClickListener = (callback, stateName) => {
             });
     };
 }
+
+export const removeAllChildNodes = (parent) => {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+export const addElementToUl = (ulElement, text, props = {}) => {
+    const li = document.createElement('LI');
+
+    li.appendChild(document.createTextNode(text));
+    _.forEach(props, (value, key) => {
+        li.setAttribute(key, value);
+    });
+
+    ulElement.appendChild(li);
+}
+
+export const createDocumentFragmentFromString = (htmlStr) => {
+    return document.createRange().createContextualFragment(htmlStr);
+}
+
+export const getDocumentFragmentInnerHtml = (fragment) => {
+    const div= document.createElement('DIV');
+
+    div.appendChild(fragment);
+
+    return div.innerHTML;
+}

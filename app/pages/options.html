@@ -53,6 +53,67 @@
         </label>
     </form>
 
+    <div class="switchports-template-editor">
+        <div class="switchports-template-editor__available">
+            <h4>Available properties</h4>
+            <ul id="available-props">
+            </ul>
+        </div>
+
+        <div class="switchports-template-editor__selected">
+            <h4>Selected properties</h4>
+            <ul id="selected-props">
+            </ul>
+        </div>
+
+        <div class="switchports-template-editor__trash">
+            <h4>Drop here to delete:</h4>
+            <div class="switchports-template-editor__trash-wrapper">
+                <div id="trash">
+                </div>
+
+                <div class="switchports-template-editor__trash-icon-wrapper">
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                    >
+                        <path
+                                d="M16 9v4.5c-.75.31-1.42.77-2 1.32V9a1 1 0 112 0zm-4 0v10a1 1 0 11-2 0V9a1 1 0 112 0zm1.82 15H2V6h2v16h8.5a6.5 6.5 0 001.32 2zM7 8a1 1 0 011 1v10a1 1 0 11-2 0V9a1 1 0 011-1zm14-4H1V2h5.71c.9 0 1.63-1.1 1.63-2h5.32c0 .9.73 2 1.63 2H21v2zm-1 2v7.18a6.45 6.45 0 00-1.5-.18l-.5.03V6h2zm3 13.5a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-3.09-2.12l-1.41 1.41-1.41-1.41-.71.7 1.41 1.42-1.41 1.41.7.71 1.42-1.41 1.41 1.41.71-.7-1.41-1.42 1.41-1.41-.7-.71z"
+                        />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="switchports-template-editor__preview preview">
+            <h4>Preview</h4>
+
+            <div class="preview__contents">
+                <div class="preview__icon">
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="46"
+                    height="37"
+                >
+                    <path
+                        d="M43.5.5h-41a2 2 0 00-2 2v22a2 2 0 002 2h6v5h4v5h21v-5h4v-5h6a2 2 0 002-2v-22a2 2 0 00-2-2z"
+                        fill="#fff"
+                        stroke="#8e8e8e"
+                        stroke-miterlimit="10"
+                    />
+                </svg>
+                    <div class="preview__port-id">
+                        0
+                    </div>
+                </div>
+
+                <ul id="props-preview">
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <form
         name="switchportTemplate"
         class="switchport-template-form"
@@ -62,6 +123,7 @@
             rows="30"
             name="switchportTemplate"
             id="template"
+            readonly
         >
         </textarea>
 

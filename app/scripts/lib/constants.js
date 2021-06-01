@@ -149,6 +149,7 @@ export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
 // storage keys
 export const SWITCHPORT_TEMPLATE_STORAGE_KEY = 'switchportTemplate';
 export const SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY = 'switchportTemplateOriginal';
+export const SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY = 'switchportTemplateProps';
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';
 export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
@@ -156,3 +157,57 @@ export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
 export const STORAGE_DEFAULTS = {
     [REPLACE_TEXTAREA_CURSOR_STORAGE_KEY]: true,
 };
+
+// switchport template
+
+export const SWITCHPORT_TEMPLATE_PROP = {
+    PORT_ID: 'port',
+    DESCRIPTION: 'description',
+    DUPLEX: 'duplex',
+    SPEED: 'speed',
+    TRANSMITTED: 'transmitted',
+    RECEIVED: 'received',
+}
+
+export const TEMPLATE_PROP_LABEL = {
+    [SWITCHPORT_TEMPLATE_PROP.DUPLEX]: 'Duplex',
+    [SWITCHPORT_TEMPLATE_PROP.SPEED]: 'Speed',
+    [SWITCHPORT_TEMPLATE_PROP.TRANSMITTED]: 'Transmitted bytes',
+    [SWITCHPORT_TEMPLATE_PROP.RECEIVED]: 'Received bytes',
+    [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: 'Description',
+    [SWITCHPORT_TEMPLATE_PROP.PORT_ID]: 'Port #',
+};
+
+export const TEMPLATE_PROP_DATA = {
+    [SWITCHPORT_TEMPLATE_PROP.DUPLEX]: {
+        prop: 'duplex',
+        testValue: 'FDX',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.SPEED]: {
+        prop: 'speed',
+        testValue: '100M',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.TRANSMITTED]: {
+        prop: 'txShort',
+        propToCheck: 'txbytes',
+        prefix: 'TX ',
+        testValue: 'TX 2.2 GB',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.RECEIVED]: {
+        prop: 'rxShort',
+        propToCheck: 'rxbytes',
+        prefix: 'RX ',
+        testValue: 'RX 3.5 GB',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: {
+        prop: 'description',
+        fallback: 'port',
+        testValue: 'my desc.',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.PORT_ID]: {
+        prop: 'port',
+        testValue: '0',
+    },
+};
+
+
