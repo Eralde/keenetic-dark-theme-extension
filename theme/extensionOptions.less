@@ -1,10 +1,39 @@
 @import (reference) "__ndwVars__";
 @import (reference) "__vars__";
+@import (reference) "__mixins__";
+
+.button {
+    background-color: @new-blue;
+    border: 0;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
+    margin-top: 1.5rem;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background: @new-blue-dark;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px #cbd6ee;
+    }
+
+    & + & {
+        margin-left: @new-gap-lg;
+    }
+}
+
+.buttons-row {
+    .__mixin__flex-container(row);
+}
 
 .options-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    .__mixin__flex-container();
+
     width: 50%;
     margin: 0 auto;
     min-width: 300px;
@@ -15,18 +44,20 @@
 }
 
 .replace-textarea-cursor-form {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    .__mixin__flex-container(row);
+
     margin-top: @new-gap-sm;
     margin-bottom: @new-gap-sm;
 }
 
+.switchports-template {
+    .__mixin__flex-container(column, flex-start);
+}
+
 .switchports-template-editor {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
+    .__mixin__flex-container(row);
+
+    align-items: stretch;
 
     h4 {
         text-align: center;
@@ -57,36 +88,34 @@
     }
 
     &__trash {
+        .__mixin__flex-container();
+
         width: 100px;
-        display: flex;
-        flex-direction: column;
         position: relative;
 
         &-wrapper {
+            .__mixin__flex-container();
+
             flex: 1;
-            display: flex;
-            flex-direction: column;
             position: relative;
         }
 
         #trash {
+            .__mixin__flex-container(row);
+
             border: 2px dotted @red;
             flex: 1;
-            width: 100%;
-            display: flex;
-            align-items: center;
             justify-content: center;
         }
 
         &-icon-wrapper {
+            .__mixin__flex-center();
+
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .trash-placeholder {
@@ -95,7 +124,7 @@
     }
 
     &__preview {
-        margin-left: @new-gap-md;
+        margin-left: @new-gap-lg;
         padding: 0 @new-gap-sm;
         display: flex;
         flex-direction: column;
@@ -130,12 +159,20 @@
 }
 
 .switchport-template-form {
-    margin-top: 40px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+    .__mixin__flex-container();
 
-    & > textarea {
+    margin-top: 40px;
+
+    details {
+        width: 100%;
+    }
+
+    summary {
+        font-family: @main-font;
+        font-size: 14px;
+    }
+
+    textarea {
         margin: 10px 0 10px 0;
         width: 100%;
     }
