@@ -3,12 +3,11 @@ import * as beautify from 'js-beautify';
 import Sortable from 'sortablejs';
 import {
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
-    SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY,
     SWITCHPORT_TEMPLATE_PROP,
-    TEMPLATE_PROP_LABEL,
     TEMPLATE_PROP_DATA,
+    DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
     SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
-    SWITCHPORT_TEMPLATE_STORAGE_KEY,
+    SWITCHPORT_TEMPLATE_DATA_KEY,
 } from './lib/constants';
 import {
     addElementToUl,
@@ -33,7 +32,7 @@ const processSwitchportTemplateData = async () => {
 
     const switchportTemplateOriginal = _.get(
         data,
-        SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY,
+        DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
         {},
     );
 
@@ -193,8 +192,8 @@ async function updateUI() {
 
     const data = await browser.storage.local.get();
 
-    const switchportTemplateOriginal = _.get(data, SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY, {});
-    const switchportTemplate = _.get(data, SWITCHPORT_TEMPLATE_STORAGE_KEY, {});
+    const switchportTemplateOriginal = _.get(data, DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
+    const switchportTemplate = _.get(data, SWITCHPORT_TEMPLATE_DATA_KEY, {});
 
     const {updateTemplate, resetTemplate} = await processSwitchportTemplateData(switchportTemplateOriginal.template);
 

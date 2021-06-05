@@ -147,8 +147,8 @@ export const ORIGINAL_SWITCHPORTS_TEMPLATE = 'ORIGINAL_SWITCHPORTS_TEMPLATE';
 export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
 
 // storage keys
-export const SWITCHPORT_TEMPLATE_STORAGE_KEY = 'switchportTemplate';
-export const SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY = 'switchportTemplateOriginal';
+export const SWITCHPORT_TEMPLATE_DATA_KEY = 'switchportTemplate';
+export const DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY = 'switchportTemplateOriginal';
 export const SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY = 'switchportTemplateProps';
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';

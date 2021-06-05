@@ -158,7 +158,7 @@ export const injectUiExtensions = () => {
                         break;
                     }
 
-                    const switchportTemplate = _.get(payload, CONSTANTS.SWITCHPORT_TEMPLATE_STORAGE_KEY);
+                    const switchportTemplate = _.get(payload, CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY);
 
                     if (switchportTemplate) {
                         ndmUtils.setDashboardSwitchportsTemplate(switchportTemplate);

@@ -16,8 +16,8 @@ import {
     RELOAD_DASHBOARD,
     INJECTED_JS_INITIALIZED,
     INITIAL_STORAGE_DATA,
-    SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY,
-    SWITCHPORT_TEMPLATE_STORAGE_KEY,
+    DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
+    SWITCHPORT_TEMPLATE_DATA_KEY,
 } from './lib/constants';
 
 import {
@@ -353,7 +353,7 @@ const processSwitchportsTemplateMessage = (event) => {
     const payload = _.get(event, 'data.payload');
 
     browser.storage.local.set({
-        [SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY]: payload,
+        [DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY]: payload,
     });
 };
 
@@ -410,7 +410,7 @@ browser.storage.onChanged.addListener((changes, area) => {
         return;
     }
 
-    if (!_.has(changes, SWITCHPORT_TEMPLATE_STORAGE_KEY)) {
+    if (!_.has(changes, SWITCHPORT_TEMPLATE_DATA_KEY)) {
         return;
     }
 
