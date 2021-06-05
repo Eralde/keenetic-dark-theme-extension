@@ -227,10 +227,10 @@ export const getTemplate = (path) => {
     const $templateCache = getAngularService('$templateCache');
 
     return _.cloneDeep($templateCache.get(path));
-}
+};
 
-export const getDashboardSwitchportsTemplate = () => {
-    const wholeTemplate = getTemplate(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+export const getSwitchportsTemplateChunks = (fullTemplatePath) => {
+    const wholeTemplate = getTemplate(fullTemplatePath);
 
     if (!_.isString(wholeTemplate)) {
         return false;
