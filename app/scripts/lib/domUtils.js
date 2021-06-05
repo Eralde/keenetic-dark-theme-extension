@@ -395,10 +395,11 @@ export const removeAllChildNodes = (parent) => {
     }
 }
 
-export const addElementToUl = (ulElement, text, props = {}) => {
+export const addElementToUnorderedList = (ulElement, text, props = {}) => {
     const li = document.createElement('LI');
 
     li.appendChild(document.createTextNode(text));
+
     _.forEach(props, (value, key) => {
         li.setAttribute(key, value);
     });
@@ -408,6 +409,18 @@ export const addElementToUl = (ulElement, text, props = {}) => {
 
 export const createDocumentFragmentFromString = (htmlStr) => {
     return document.createRange().createContextualFragment(htmlStr);
+}
+
+export const wrapHtmlStringIntoDiv = (htmlStr, props = {}) => {
+    const div= document.createElement('DIV');
+
+    div.appendChild(createDocumentFragmentFromString(htmlStr));
+
+    _.forEach(props, (value, key) => {
+        div.setAttribute(key, value);
+    });
+
+    return div;
 }
 
 export const getDocumentFragmentInnerHtml = (fragment) => {

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {
     getAngularService,
     getDashboardController,
-    getSwitchportsCardController,
+    getElementController,
 } from '../lib/ndmUtils';
 import {sharedData} from '../lib/state';
 import {UI_EXTENSIONS_KEY} from '../lib/constants';
@@ -34,7 +34,7 @@ const SHOW_INTERFACE_STAT_PROPS = [
 export const gatherStatForPorts = async () => {
     await getDashboardController();
 
-    const switchportsController = await getSwitchportsCardController();
+    const switchportsController = await getElementController('#card_switchports');
 
     dashboardDataService.registerCallback([], () => {
         const portIds = _

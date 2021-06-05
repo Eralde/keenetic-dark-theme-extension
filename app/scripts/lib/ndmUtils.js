@@ -8,7 +8,7 @@ import {
     NDM_SWITCHPORT_CONTAINER_TAG,
     NDM_TEXTAREA_TEMPLATE_PATH,
     NO_TAG,
-    OLD_FW3X_BRANCHES,
+    OLD_FW3X_BRANCHES, SYSTEM_SWITCHPORTS_TEMPLATE_PATH,
 } from './constants.js';
 
 import {sharedData} from './state';
@@ -246,19 +246,24 @@ export const getSwitchportsTemplateChunks = (fullTemplatePath) => {
 
     const template = middleChunk.substr(1, middleChunk.length - 3);
     const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTAINER_TAG}>`;
-    const suffix =  `</${NDM_SWITCHPORT_CONTAINER_TAG}${chunks[2]}`;
+    const suffix = `</${NDM_SWITCHPORT_CONTAINER_TAG}${chunks[2]}`;
 
     return {
         template,
         prefix,
         suffix,
     };
-}
+};
 
-export const setDashboardSwitchportsTemplate = ({prefix, suffix, template}) => {
+export const replaceSwitchportsTemplate = (templateData, path) => {
+    if (!templateData) {
+        return;
+    }
+
+    const {prefix, suffix, template} = templateData;
     const $templateCache = getAngularService('$templateCache');
 
-    $templateCache.put(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, prefix + template + suffix);
+    $templateCache.put(path, prefix + template + suffix);
 }
 
 export const toggleNdmTextareaClass = ({className, state, insertAfterClass}) => {
@@ -329,8 +334,8 @@ export const getDashboardController = () => {
     return getElementController('.d-dashboard');
 };
 
-export const getSwitchportsCardController = () => {
-    return getElementController('#card_switchports');
+export const getNdmPageController = () => {
+    return getElementController('.ndm-page');
 };
 
 export const is2xVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));

@@ -1,6 +1,11 @@
 import * as _ from 'lodash';
+import fp from 'lodash/fp';
 import * as beautify from 'js-beautify';
 import Sortable from 'sortablejs';
+
+import {Toast} from 'toaster-js';
+import 'toaster-js/default.scss';
+
 import {
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
     SWITCHPORT_TEMPLATE_PROP,
@@ -8,13 +13,17 @@ import {
     DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
     SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
     SWITCHPORT_TEMPLATE_DATA_KEY,
+    SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
 } from './lib/constants';
+
 import {
-    addElementToUl,
+    addElementToUnorderedList,
     removeAllChildNodes,
     createDocumentFragmentFromString,
-    getDocumentFragmentInnerHtml,
+    getDocumentFragmentInnerHtml, wrapHtmlStringIntoDiv,
 } from './lib/domUtils';
+
+import {logWarning} from './lib/log';
 
 const inputSelector = '#shortcut';
 const switchportTemplateSelector = '#template';
@@ -30,18 +39,24 @@ const processSwitchportTemplateData = async () => {
 
     const data = await browser.storage.local.get();
 
-    const switchportTemplateOriginal = _.get(
+    const dashboardTemplateOriginal = _.get(
         data,
         DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
         {},
     );
 
+    if (_.isEmpty(dashboardTemplateOriginal)) {
+        const msg = '' +
+            'Extension storage is empty.\n' +
+            'For the switchport template editor to work it is necessary to open the Keenetic web UI.';
+
+        new Toast(msg);
+    }
+
     const switchportTemplateProps = _.get(
         data,
         SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
         {
-            originalTemplate: switchportTemplateOriginal,
-            template: switchportTemplateOriginal.template,
             defaultProps: getDefaultTemplateProps(),
             selectedProps: getDefaultTemplateProps(),
         },
@@ -53,7 +68,7 @@ const processSwitchportTemplateData = async () => {
 
     generateSelectedPropsList(selectedProps, switchportTemplateProps.selectedProps);
 
-    const sortable = new Sortable(availableProps, {
+    new Sortable(availableProps, {
         group: {
             name: SORTABLE_GROUP_NAME,
             pull: 'clone',
@@ -69,12 +84,8 @@ const processSwitchportTemplateData = async () => {
 
         generatePropsPreviewList(propsPreview, props);
 
-        console.log(
-            generateFullTemplate(switchportTemplateOriginal.template, props),
-        );
-
-        document.querySelector(switchportTemplateSelector).value = generateFullTemplate(switchportTemplateOriginal.template, props);
-    }
+        document.querySelector(switchportTemplateSelector).value = getPropsTemplateChunk(props);
+    };
 
     const sortable2 = new Sortable(selectedProps, {
         group: SORTABLE_GROUP_NAME,
@@ -84,18 +95,12 @@ const processSwitchportTemplateData = async () => {
             setTimeout(() => {
                 const props = sortable2.toArray();
 
-                console.log(props);
-
-                console.log(
-                    getPropsTemplateChunk(props),
-                );
-
                 refreshPreview();
             });
         },
     });
 
-    const sortable3 = new Sortable(document.getElementById('trash'), {
+    new Sortable(document.getElementById('trash'), {
         group: SORTABLE_GROUP_NAME,
         ghostClass: 'trash-placeholder',
         animation: 150,
@@ -112,47 +117,52 @@ const processSwitchportTemplateData = async () => {
     const updateTemplate = async ($event) => {
         $event.preventDefault();
 
-        const template = document.querySelector(switchportTemplateSelector).value;
-
         const data = await browser.storage.local.get();
-        const switchportTemplateOriginal = _.get(data, SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY, {});
 
-        const {prefix, suffix} = switchportTemplateOriginal;
-        await browser.storage.local.set({[SWITCHPORT_TEMPLATE_STORAGE_KEY]: {prefix, suffix, template}});
+        const dashboardTemplateOriginal = _.get(data, DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
+        const systemTemplateOriginal = _.get(data, SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
 
         const selectedProps = sortable2.toArray();
-        // const template = generateFullTemplate(switchportTemplateOriginal.template, selectedProps);
+
+        const dashboardTemplate = generateFullDashboardTemplate(dashboardTemplateOriginal.template, selectedProps);
+        const systemTemplate = generateFullSystemTemplate(systemTemplateOriginal.template, selectedProps);
+
         const templatePropsData = {
-            originalTemplate: switchportTemplateOriginal,
-            template,
             defaultProps: getDefaultTemplateProps(),
             selectedProps,
         };
 
-        await browser.storage.local.set({[SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY]: templatePropsData});
+        await browser.storage.local.set({
+            [SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY]: templatePropsData,
+            [SWITCHPORT_TEMPLATE_DATA_KEY]: {
+                dashboard: {...dashboardTemplateOriginal, template: dashboardTemplate},
+                system: {...systemTemplateOriginal, template: systemTemplate},
+            },
+        });
     }
 
     const resetTemplate = async ($event) => {
         $event.preventDefault();
 
         const data = await browser.storage.local.get();
-        const switchportTemplateOriginal = _.get(data, SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY, {});
 
-        await browser.storage.local.set({[SWITCHPORT_TEMPLATE_STORAGE_KEY]: switchportTemplateOriginal});
+        const dashboardTemplateOriginal = _.get(data, DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
+        const systemTemplateOriginal = _.get(data, SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
 
-        console.log(resetTemplate);
-        // const selectedProps = sortable2.toArray();
         const templatePropsData = {
-            originalTemplate: switchportTemplateOriginal,
-            template: switchportTemplateOriginal.template,
             defaultProps: getDefaultTemplateProps(),
             selectedProps: getDefaultTemplateProps(),
         };
 
-        // await updateUI();
-        await browser.storage.local.set({[SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY]: templatePropsData});
+        await browser.storage.local.set({
+            [SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY]: templatePropsData,
+            [SWITCHPORT_TEMPLATE_DATA_KEY]: {
+                dashboard: {...dashboardTemplateOriginal},
+                system: {...systemTemplateOriginal},
+            },
+        });
 
-        updateUI();
+        await updateUI();
     }
 
     return {
@@ -161,24 +171,86 @@ const processSwitchportTemplateData = async () => {
     };
 }
 
-const generateFullTemplate = (originalTemplate, propsList) => {
-    const fragment = createDocumentFragmentFromString(originalTemplate);
-    const stateDivs = [...fragment.querySelectorAll('.switchport-state')];
-    const templateStr = getPropsTemplateChunk(propsList);
+const overrideSwitchportTemplatePortLabel = (templateStr) => {
+    const match = templateStr.match(/label="([^"]+?)\.([^"]+?)"/);
 
-    stateDivs.forEach(div => {
-        div.innerHTML = templateStr;
-    });
+    if (!match) {
+        return templateStr;
+    }
 
-    const finalHtml = getDocumentFragmentInnerHtml(fragment);
+    const wholeMatch = match[0];
+    const replacement = wholeMatch.replace(match[2], 'port');
 
+    return templateStr.replace(wholeMatch, replacement);
+}
+
+const beautifyHtml = (htmlStr) => {
     return beautify.html(
-        finalHtml,
+        htmlStr,
         {
             indent_size: 2,
             wrap_attributes: 'force-expand-multiline',
         },
     );
+}
+
+const getFinishedTemplateHtml = fp.compose(
+    beautifyHtml,
+    overrideSwitchportTemplatePortLabel,
+    getDocumentFragmentInnerHtml,
+)
+
+const generateFullDashboardTemplate = (originalTemplate, propsList) => {
+    if (!originalTemplate) {
+        logWarning('"original" template is not a string (extension storage is empty?)');
+
+        return '';
+    }
+
+    const fragment = createDocumentFragmentFromString(originalTemplate);
+    const stateDivs = [...fragment.querySelectorAll('.switchport-state')];
+    const templateStr = getPropsTemplateChunk(propsList);
+
+    if (stateDivs.length === 0) {
+        logWarning('failed to parse original template [[generateFullDashboardTemplate]]');
+
+        return beautify.html(
+            originalTemplate,
+            {
+                indent_size: 2,
+                wrap_attributes: 'force-expand-multiline',
+            },
+        );
+    }
+
+    stateDivs.forEach(div => {
+        div.innerHTML = templateStr;
+    });
+
+    return getFinishedTemplateHtml(fragment);
+}
+
+const generateFullSystemTemplate = (originalTemplate, propsList) => {
+    if (!originalTemplate) {
+        logWarning('"original" template is not a string (extension storage is empty?)');
+
+        return '';
+    }
+
+    const fragment = createDocumentFragmentFromString(originalTemplate);
+    const controlsDiv = fragment.querySelector('.switchport-configuration');
+    const templateStr = getPropsTemplateChunk(propsList);
+
+    const wrapper = document.createElement('DIV');
+    const elToAttachTo = controlsDiv.parentNode;
+
+    wrapper.appendChild(wrapHtmlStringIntoDiv(elToAttachTo.innerHTML));
+    wrapper.appendChild(wrapHtmlStringIntoDiv(templateStr, {'class': 'extended-switchport-status'}));
+
+    removeAllChildNodes(elToAttachTo);
+    elToAttachTo.appendChild(wrapper);
+
+    return getFinishedTemplateHtml(fragment);
 }
 
 async function updateUI() {
@@ -190,24 +262,12 @@ async function updateUI() {
         }
     }
 
-    const data = await browser.storage.local.get();
-
-    const switchportTemplateOriginal = _.get(data, DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
-    const switchportTemplate = _.get(data, SWITCHPORT_TEMPLATE_DATA_KEY, {});
-
-    const {updateTemplate, resetTemplate} = await processSwitchportTemplateData(switchportTemplateOriginal.template);
+    const {updateTemplate, resetTemplate} = await processSwitchportTemplateData();
 
     document.querySelector('#saveTemplate').addEventListener('click', updateTemplate);
     document.querySelector('#resetTemplate').addEventListener('click', resetTemplate);
 
-    // document.querySelector(switchportTemplateSelector).value = beautify.html(
-    //     switchportTemplate.template || switchportTemplateOriginal.template,
-    //     {
-    //         indent_size: 2,
-    //         wrap_attributes: 'force-expand-multiline',
-    //     },
-    // );
-
+    const data = await browser.storage.local.get();
     const replaceTextareaCursorEl = document.querySelector('#replaceTextareaCursor');
 
     replaceTextareaCursorEl.checked = _.get(data, REPLACE_TEXTAREA_CURSOR_STORAGE_KEY, true);
@@ -226,18 +286,10 @@ async function updateShortcut() {
 
 async function resetShortcut() {
     await browser.commands.reset(commandName);
-    updateUI();
-}
-
-async function resetTemplate($event) {
-    $event.preventDefault();
-
-    const data = await browser.storage.local.get();
-    const switchportTemplateOriginal = _.get(data, SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY, {});
-
-    await browser.storage.local.set({[SWITCHPORT_TEMPLATE_STORAGE_KEY]: switchportTemplateOriginal});
     await updateUI();
 }
+
+const isWrappedInParentheses = (s) => s[0] === '(' && s[s.length - 1] === ')';
 
 const getPropsTemplateChunk = (propsList) => {
     return propsList.reduce(
@@ -260,6 +312,8 @@ const getPropsTemplateChunk = (propsList) => {
 
             if (data.propToCheck) {
                 ngString = `(port.${data.propToCheck} ? ${ngString} : '&nbsp;')`;
+            } else if (isWrappedInParentheses(ngString)) {
+                ngString = `${ngString} || '&nbsp;'`;
             } else {
                 ngString = `(${ngString}) || '&nbsp;'`;
             }
@@ -281,7 +335,7 @@ const generatePropsList = (parentEl, props, propToElement = _.identity, propToPr
     removeAllChildNodes(parentEl);
 
     _.forEach(props, (prop) => {
-        addElementToUl(parentEl, propToElement(prop), propToPropsList(prop));
+        addElementToUnorderedList(parentEl, propToElement(prop), propToPropsList(prop));
     });
 }
 
@@ -289,7 +343,7 @@ const generateAvailablePropsList = (parentEl) => {
     generatePropsList(
         parentEl,
         SWITCHPORT_TEMPLATE_PROP,
-        prop => TEMPLATE_PROP_LABEL[prop],
+        prop => TEMPLATE_PROP_DATA[prop].label,
         prop => ({[DATA_PROP]: prop}),
     );
 };
@@ -298,7 +352,7 @@ const generateSelectedPropsList = (parentEl, selectedProps) => {
     generatePropsList(
         parentEl,
         selectedProps,
-        prop => TEMPLATE_PROP_LABEL[prop],
+        prop => TEMPLATE_PROP_DATA[prop].label,
         prop => ({[DATA_PROP]: prop}),
     );
 };
@@ -307,7 +361,8 @@ const generatePropsPreviewList = (parentEl, selectedProps) => {
     generatePropsList(
         parentEl,
         selectedProps,
-        prop => TEMPLATE_PROP_DATA[prop].testValue,
+        prop => TEMPLATE_PROP_DATA[prop].previewValue,
+        prop => TEMPLATE_PROP_DATA[prop].previewValueProps || {},
     );
 };
 
@@ -317,11 +372,17 @@ const awaitTimeout = (delayInMs, resolveValue = true) => {
     });
 }
 
+const clearStorage = async () => {
+    await browser.storage.local.clear();
+
+    window.location.reload();
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-    updateUI();
+    await updateUI();
 
     document.querySelector('#updateShortcut').addEventListener('click', updateShortcut);
     document.querySelector('#resetShortcut').addEventListener('click', resetShortcut);
-
     document.querySelector('#replaceTextareaCursor').addEventListener('change', updateResetTextareaCursorValue);
+    document.querySelector('#clearStorage').addEventListener('click', clearStorage);
 });

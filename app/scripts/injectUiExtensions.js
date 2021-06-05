@@ -269,6 +269,12 @@ export const injectUiExtensions = () => {
             cancelComponentsSectionsWatchers,
         )
 
+        ndmUtils.addUiExtension(
+            CONSTANTS.CONTROL_SYSTEM_STATE,
+            extendSystemSwitchportData,
+            // cancelComponentsSectionsWatchers,
+        )
+
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DASHBOARD_STATE,
