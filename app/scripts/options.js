@@ -14,6 +14,7 @@ import {
     SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
     SWITCHPORT_TEMPLATE_DATA_KEY,
     SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
+    WIDE_SWITCHPORT_TEMPLATE_PROPS,
 } from './lib/constants';
 
 import {
@@ -139,7 +140,7 @@ const processSwitchportTemplateData = async () => {
                 system: {...systemTemplateOriginal, template: systemTemplate},
             },
         });
-    }
+    };
 
     const resetTemplate = async ($event) => {
         $event.preventDefault();
@@ -163,13 +164,13 @@ const processSwitchportTemplateData = async () => {
         });
 
         await updateUI();
-    }
+    };
 
     return {
         updateTemplate,
         resetTemplate,
     };
-}
+};
 
 const overrideSwitchportTemplatePortLabel = (templateStr) => {
     const match = templateStr.match(/label="([^"]+?)\.([^"]+?)"/);
@@ -182,7 +183,45 @@ const overrideSwitchportTemplatePortLabel = (templateStr) => {
     const replacement = wholeMatch.replace(match[2], 'port');
 
     return templateStr.replace(wholeMatch, replacement);
-}
+};
+
+const toggleTagClassName = (templateStr, tagName, className, state) => {
+    const tagStartStr = '<' + tagName;
+    const tagStartIdx = templateStr.indexOf(tagStartStr);
+
+    if (tagStartIdx === -1) {
+        return templateStr;
+    }
+
+    const tagEnd = templateStr.indexOf('>', tagStartIdx);
+    const matchStr = templateStr.substr(tagStartIdx);
+    const regexp = /class="[^"]+?"/;
+    const startIdx = tagStartIdx;
+    const tagPropsStart = tagStartIdx + tagStartStr.length;
+
+    regexp.lastIndex = startIdx;
+
+    const match = matchStr.match(regexp);
+
+    if (!match || match.index > tagEnd) {
+        if (!state) {
+            return templateStr;
+        } else {
+            return [
+                templateStr.substr(0, tagPropsStart),
+                ` class="${className}" `,
+                templateStr.substr(tagPropsStart),
+            ].join('');
+        }
+    }
+
+    const wholeMatch = match[0];
+    const replacement = state
+        ? wholeMatch.substr(wholeMatch.length - 2) + ` ${className}"`
+        : wholeMatch.replace(className, '');
+
+    return templateStr.replace(wholeMatch, replacement);
+};
 
 const beautifyHtml = (htmlStr) => {
     return beautify.html(
@@ -192,13 +231,22 @@ const beautifyHtml = (htmlStr) => {
             wrap_attributes: 'force-expand-multiline',
         },
     );
-}
+};
 
 const getFinishedTemplateHtml = fp.compose(
     beautifyHtml,
     overrideSwitchportTemplatePortLabel,
     getDocumentFragmentInnerHtml,
-)
+);
+
+const addClassToTheRootSwitchportElement = (originalTemplate, propsList) => {
+    return toggleTagClassName(
+        originalTemplate,
+        'ndm-switchport',
+        'wide',
+        propsList.some(item => WIDE_SWITCHPORT_TEMPLATE_PROPS.includes(item)),
+    );
+};
 
 const generateFullDashboardTemplate = (originalTemplate, propsList) => {
     if (!originalTemplate) {
@@ -207,20 +255,16 @@ const generateFullDashboardTemplate = (originalTemplate, propsList) => {
         return '';
     }
 
-    const fragment = createDocumentFragmentFromString(originalTemplate);
+    const _origTemplate = addClassToTheRootSwitchportElement(originalTemplate, propsList);
+
+    const fragment = createDocumentFragmentFromString(_origTemplate);
     const stateDivs = [...fragment.querySelectorAll('.switchport-state')];
     const templateStr = getPropsTemplateChunk(propsList);
 
     if (stateDivs.length === 0) {
         logWarning('failed to parse original template [[generateFullDashboardTemplate]]');
 
-        return beautify.html(
-            originalTemplate,
-            {
-                indent_size: 2,
-                wrap_attributes: 'force-expand-multiline',
-            },
-        );
+        return beautifyHtml(originalTemplate);
     }
 
     stateDivs.forEach(div => {
@@ -228,7 +272,7 @@ const generateFullDashboardTemplate = (originalTemplate, propsList) => {
     });
 
     return getFinishedTemplateHtml(fragment);
-}
+};
 
 const generateFullSystemTemplate = (originalTemplate, propsList) => {
     if (!originalTemplate) {
@@ -237,9 +281,17 @@ const generateFullSystemTemplate = (originalTemplate, propsList) => {
         return '';
     }
 
-    const fragment = createDocumentFragmentFromString(originalTemplate);
+    const _origTemplate = addClassToTheRootSwitchportElement(originalTemplate, propsList);
+
+    const fragment = createDocumentFragmentFromString(_origTemplate);
     const controlsDiv = fragment.querySelector('.switchport-configuration');
     const templateStr = getPropsTemplateChunk(propsList);
+
+    if (!controlsDiv) {
+        logWarning('failed to parse original template [[generateFullSystemTemplate]]');
+
+        return beautifyHtml(originalTemplate);
+    }
 
     const wrapper = document.createElement('DIV');
     const elToAttachTo = controlsDiv.parentNode;
@@ -251,7 +303,7 @@ const generateFullSystemTemplate = (originalTemplate, propsList) => {
     elToAttachTo.appendChild(wrapper);
 
     return getFinishedTemplateHtml(fragment);
-}
+};
 
 async function updateUI() {
     let commands = await browser.commands.getAll();
@@ -318,11 +370,15 @@ const getPropsTemplateChunk = (propsList) => {
                 ngString = `(${ngString}) || '&nbsp;'`;
             }
 
-            return `${acc}\n<div>{{ ${ngString} }}</div>`;
+            const classStr = data.className
+                ? ` class="${data.className}" `
+                : '';
+
+            return `${acc}\n<div ${classStr}>{{ ${ngString} }}</div>`;
         },
         '',
     );
-}
+};
 
 const getDefaultTemplateProps = () => {
     return [
@@ -337,7 +393,7 @@ const generatePropsList = (parentEl, props, propToElement = _.identity, propToPr
     _.forEach(props, (prop) => {
         addElementToUnorderedList(parentEl, propToElement(prop), propToPropsList(prop));
     });
-}
+};
 
 const generateAvailablePropsList = (parentEl) => {
     generatePropsList(
@@ -370,13 +426,13 @@ const awaitTimeout = (delayInMs, resolveValue = true) => {
     return new Promise(resolve => {
         setTimeout(() => {resolve(resolveValue)}, delayInMs);
     });
-}
+};
 
 const clearStorage = async () => {
     await browser.storage.local.clear();
 
     window.location.reload();
-}
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
     await updateUI();
