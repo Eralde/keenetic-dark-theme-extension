@@ -7,8 +7,6 @@ export const pointToPointService = (function() {
     const router = getAngularService('router');
     const interfaces = getAngularService('interfaces');
     const CONSTANT = getAngularService('CONSTANT');
-    // const wifiOptions = getAngularService('wifiOptions');
-    // const Ipv6To4Service = getAngularService('Ipv6To4Service');
 
     const {
         INTERFACE_STATE,
@@ -346,24 +344,6 @@ export const pointToPointService = (function() {
         );
     };
 
-    const formatBytesColumn = val => {
-        return isNaN(Number(val))
-            ? EMPTY_VAL_HTML
-            : utils.format.size(Number(val));
-    };
-
-    const formatUptime = (uptime, tunnelRow) => {
-        return tunnelRow.isEnabled
-            ? utils.getSplittedTime(uptime)
-            : EMPTY_VAL_HTML;
-    };
-
-    const formatIpData = (ip) => {
-        return ip === '0.0.0.0'
-            ? EMPTY_VAL_HTML
-            : ip;
-    };
-
     const getInterfaceStatByIdData = (idList = []) => {
         if (idList.length === 0) {
             return $q.when({});
@@ -471,10 +451,6 @@ export const pointToPointService = (function() {
         saveTunnel,
 
         getInterfaceStatByIdData,
-
-        formatBytesColumn,
-        formatUptime,
-        formatIpData,
 
         determineTunnelStatus,
 

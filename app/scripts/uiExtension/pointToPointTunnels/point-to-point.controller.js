@@ -2,6 +2,7 @@ import {getAngularService, onLanguageChange} from '../../lib/ndmUtils';
 import {pointToPointService} from './point-to-point.service';
 import * as _ from 'lodash';
 import {getL10n} from '../../lib/l10nUtils';
+import {formatBytesColumn, formatIpData, formatUptime} from '../../lib/formatUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.point-to-point-section';
 
@@ -47,23 +48,23 @@ export function PointToPointController() {
             },
             source: {
                 title: getL10n('PointToPointSource'),
-                modify: pointToPointService.formatIpData,
+                modify: formatIpData,
             },
             destination: {
                 title: getL10n('PointToPointDestination'),
-                modify: pointToPointService.formatIpData,
+                modify: formatIpData,
             },
             txbytes: {
                 title: 'otherConnections.ppp.transmitted',
-                modify: pointToPointService.formatBytesColumn,
+                modify: formatBytesColumn,
             },
             rxbytes: {
                 title: 'otherConnections.ppp.received',
-                modify: pointToPointService.formatBytesColumn,
+                modify: formatBytesColumn,
             },
             uptime: {
                 title: 'otherConnections.ppp.connected',
-                modify: pointToPointService.formatUptime,
+                modify: formatUptime,
             },
         },
         dataIsLoaded: false,
