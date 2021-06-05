@@ -158,6 +158,8 @@ export const STORAGE_DEFAULTS = {
     [REPLACE_TEXTAREA_CURSOR_STORAGE_KEY]: true,
 };
 
+export const LOG_PREFIX = '[Keenetic Dark Theme Extension]:';
+
 // switchport template
 
 export const SWITCHPORT_TEMPLATE_PROP = {

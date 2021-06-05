@@ -59,6 +59,7 @@ import {
 } from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
 import {extendSystemSwitchportData} from './uiExtension/extendSystemSwitchportData';
 import {DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, SYSTEM_SWITCHPORTS_TEMPLATE_PATH} from './lib/constants';
+import {logWarning} from './lib/log';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -66,7 +67,7 @@ export const injectUiExtensions = () => {
     try {
         $state = ndmUtils.getAngularService('$state');
     } catch (e) {
-        console.warn(`Keenetic Dark Theme Extension: failed to access AngularJs service: ${e}`);
+        logWarning(`failed to access AngularJs service: ${e}`);
         return;
     }
 
