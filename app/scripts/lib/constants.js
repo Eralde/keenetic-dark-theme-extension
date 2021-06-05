@@ -189,14 +189,14 @@ export const TEMPLATE_PROP_DATA = {
     },
     [SWITCHPORT_TEMPLATE_PROP.TXBYTES]: {
         label: 'Transmitted bytes',
-        prop: 'txShort',
+        prop: 'txbytes-formatted-short',
         propToCheck: 'txbytes',
         prefix: 'TX ',
         previewValue: 'TX 2.2 GB',
     },
     [SWITCHPORT_TEMPLATE_PROP.RXBYTES]: {
         label: 'Received bytes',
-        prop: 'rxShort',
+        prop: 'rxbytes-formatted-short',
         propToCheck: 'rxbytes',
         prefix: 'RX ',
         previewValue: 'RX 3.5 GB',

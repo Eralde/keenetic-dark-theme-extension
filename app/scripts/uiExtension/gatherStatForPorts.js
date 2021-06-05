@@ -27,8 +27,8 @@ const SHOW_INTERFACE_STAT_PROPS = [
     'txdropped',
     'timestamp',
     'last-overflow',
-    'rxShort',
-    'txShort',
+    'rxbytes-formatted-short',
+    'txbytes-formatted-short',
 ];
 
 export const gatherStatForPorts = async () => {
@@ -82,8 +82,8 @@ export const gatherStatForPorts = async () => {
                         return {
                             ...port,
                             ...statData,
-                            rxShort,
-                            txShort,
+                            'rxbytes-formatted-short': rxShort,
+                            'txbytes-formatted-short': txShort,
                         };
                     });
             });

@@ -296,10 +296,10 @@ const getPropsTemplateChunk = (propsList) => {
         (acc, prop) => {
             const data = TEMPLATE_PROP_DATA[prop];
 
-            let ngString = `port.${data.prop}`;
+            let ngString = `port['${data.prop}']`;
 
             if (data.fallback) {
-                ngString = `(${ngString} || port.${data.fallback})`;
+                ngString = `(${ngString} || port['${data.fallback}'])`;
             }
 
             if (data.filter) {
@@ -311,7 +311,7 @@ const getPropsTemplateChunk = (propsList) => {
             }
 
             if (data.propToCheck) {
-                ngString = `(port.${data.propToCheck} ? ${ngString} : '&nbsp;')`;
+                ngString = `(port['${data.propToCheck}'] ? ${ngString} : '&nbsp;')`;
             } else if (isWrappedInParentheses(ngString)) {
                 ngString = `${ngString} || '&nbsp;'`;
             } else {
