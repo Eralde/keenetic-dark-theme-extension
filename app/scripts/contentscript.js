@@ -16,8 +16,9 @@ import {
     RELOAD_DASHBOARD,
     INJECTED_JS_INITIALIZED,
     INITIAL_STORAGE_DATA,
-    SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY,
-    SWITCHPORT_TEMPLATE_STORAGE_KEY,
+    DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
+    SWITCHPORT_TEMPLATE_DATA_KEY,
+    SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
 } from './lib/constants';
 
 import {
@@ -349,12 +350,22 @@ const processNdmVerMessage = (event) => {
 
     isScriptReady = true;
 };
-const processSwitchportsTemplateMessage = (event) => {
+const processSwitchportsTemplateMessage = async (event) => {
     const payload = _.get(event, 'data.payload');
+    const dashboardData = _.get(payload, 'dashboard', {});
+    const systemData = _.get(payload, 'system', {});
 
-    browser.storage.local.set({
-        [SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY]: payload,
-    });
+    const storageData = {};
+
+    if (!_.isEmpty(dashboardData)) {
+        storageData[DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = dashboardData;
+    }
+
+    if (!_.isEmpty(systemData)) {
+        storageData[SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = systemData;
+    }
+
+    await browser.storage.local.set(storageData);
 };
 
 const sendStorageUntilJsInitialized = () => {
@@ -384,7 +395,7 @@ const sendStorageUntilJsInitialized = () => {
 
 window.addEventListener(
     'message',
-    (event) => {
+    async (event) => {
         const action = _.get(event, 'data.action');
 
 
@@ -394,7 +405,7 @@ window.addEventListener(
                 break;
 
             case ORIGINAL_SWITCHPORTS_TEMPLATE:
-                processSwitchportsTemplateMessage(event);
+                await processSwitchportsTemplateMessage(event);
                 break;
 
             case INJECTED_JS_INITIALIZED:
@@ -410,7 +421,7 @@ browser.storage.onChanged.addListener((changes, area) => {
         return;
     }
 
-    if (!_.has(changes, SWITCHPORT_TEMPLATE_STORAGE_KEY)) {
+    if (!_.has(changes, SWITCHPORT_TEMPLATE_DATA_KEY)) {
         return;
     }
 

@@ -145,3 +145,16 @@
     -ms-text-overflow: ellipsis;
     display: block;
 }
+
+.__mixin__flex-center() {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.__mixin__flex-container(@direction: column, @align-items: center) {
+    width: 100%;
+    display: flex;
+    flex-direction: @direction;
+    align-items: @align-items;
+}

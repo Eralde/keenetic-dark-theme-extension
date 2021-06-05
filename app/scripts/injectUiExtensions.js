@@ -57,6 +57,9 @@ import {
 import {
     PointToPointEditorController,
 } from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
+import {extendSystemSwitchportData} from './uiExtension/extendSystemSwitchportData';
+import {DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, SYSTEM_SWITCHPORTS_TEMPLATE_PATH} from './lib/constants';
+import {logWarning} from './lib/log';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -64,7 +67,7 @@ export const injectUiExtensions = () => {
     try {
         $state = ndmUtils.getAngularService('$state');
     } catch (e) {
-        console.warn(`Keenetic Dark Theme Extension: failed to access AngularJs service: ${e}`);
+        logWarning(`failed to access AngularJs service: ${e}`);
         return;
     }
 
@@ -77,15 +80,19 @@ export const injectUiExtensions = () => {
     $rootScope.PointToPointEditorController = PointToPointEditorController;
 
     // Should be done BEFORE authentication
-    const originalSwitchportsTemplate = ndmUtils.getDashboardSwitchportsTemplate();
+    const dashboardSwitchportsTemplate = ndmUtils.getSwitchportsTemplateChunks(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+    const systemSwitchportsTemplate = ndmUtils.getSwitchportsTemplateChunks(SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
 
-    if (!originalSwitchportsTemplate) {
+    if (!dashboardSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
     } else {
         window.postMessage(
             {
                 action: CONSTANTS.ORIGINAL_SWITCHPORTS_TEMPLATE,
-                payload: originalSwitchportsTemplate,
+                payload: {
+                    dashboard: dashboardSwitchportsTemplate,
+                    system: systemSwitchportsTemplate,
+                },
             },
             '*',
         );
@@ -158,11 +165,14 @@ export const injectUiExtensions = () => {
                         break;
                     }
 
-                    const switchportTemplate = _.get(payload, CONSTANTS.SWITCHPORT_TEMPLATE_STORAGE_KEY);
+                    const dashboardSwitchportsTemplate = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, 'dashboard']);
 
-                    if (switchportTemplate) {
-                        ndmUtils.setDashboardSwitchportsTemplate(switchportTemplate);
-                    }
+                    ndmUtils.replaceSwitchportsTemplate(dashboardSwitchportsTemplate, DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+
+                    const systemSwitchportTemplate = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, 'system']);
+
+                    ndmUtils.replaceSwitchportsTemplate(systemSwitchportTemplate, SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
+
                     break;
             }
         },
@@ -257,6 +267,12 @@ export const injectUiExtensions = () => {
             CONSTANTS.CONTROL_SYSTEM_STATE,
             overriderSandboxOptions,
             cancelComponentsSectionsWatchers,
+        )
+
+        ndmUtils.addUiExtension(
+            CONSTANTS.CONTROL_SYSTEM_STATE,
+            extendSystemSwitchportData,
+            revertGatherStatForPortsChanges,
         )
 
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {

@@ -388,3 +388,45 @@ export const getSpecialMenuItemClickListener = (callback, stateName) => {
             });
     };
 }
+
+export const removeAllChildNodes = (parent) => {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+export const addElementToUnorderedList = (ulElement, text, props = {}) => {
+    const li = document.createElement('LI');
+
+    li.appendChild(document.createTextNode(text));
+
+    _.forEach(props, (value, key) => {
+        li.setAttribute(key, value);
+    });
+
+    ulElement.appendChild(li);
+}
+
+export const createDocumentFragmentFromString = (htmlStr) => {
+    return document.createRange().createContextualFragment(htmlStr);
+}
+
+export const wrapHtmlStringIntoDiv = (htmlStr, props = {}) => {
+    const div= document.createElement('DIV');
+
+    div.appendChild(createDocumentFragmentFromString(htmlStr));
+
+    _.forEach(props, (value, key) => {
+        div.setAttribute(key, value);
+    });
+
+    return div;
+}
+
+export const getDocumentFragmentInnerHtml = (fragment) => {
+    const div= document.createElement('DIV');
+
+    div.appendChild(fragment);
+
+    return div.innerHTML;
+}

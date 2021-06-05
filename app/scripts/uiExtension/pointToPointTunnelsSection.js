@@ -2,6 +2,7 @@ import sectionTemplate from '../../pages/ui/point-to-point-tunnels/point-to-poin
 import editorTemplate from '../../pages/ui/point-to-point-tunnels/point-to-point-tunnels-editor.html';
 import {getAngularService, getTemplate} from '../lib/ndmUtils';
 import {OTHER_CONNECTIONS_TEMPLATE_PATH} from '../lib/constants';
+import {logWarning} from '../lib/log';
 
 const EDITOR_INJECTION_POINT = '<!-- EDITOR -->';
 
@@ -9,13 +10,10 @@ export const addPointToPointTunnelSection = () => {
     const $templateCache = getAngularService('$templateCache');
     const otherConnectionsTemplate = getTemplate(OTHER_CONNECTIONS_TEMPLATE_PATH);
 
-    const errMsg = [
-        'Keenetic Dark Theme Extension: ',
-        'failed to determine proper place to inject point-to-point tunnels section',
-    ].join('');
+    const errMsg = 'failed to determine proper place to inject point-to-point tunnels section';
 
     if (!otherConnectionsTemplate || otherConnectionsTemplate.includes('PointToPointController')) {
-        console.warn(errMsg);
+        logWarning(errMsg);
 
         return;
     }
@@ -23,7 +21,7 @@ export const addPointToPointTunnelSection = () => {
     const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('ipsec.section.html');
 
     if (previousSectionIncludeIndex === -1) {
-        console.warn(errMsg);
+        logWarning(errMsg);
 
         return;
     }

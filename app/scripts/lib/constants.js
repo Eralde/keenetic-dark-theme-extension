@@ -104,6 +104,7 @@ export const NO_TAG = 'NO_TAG';
 export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
+export const SYSTEM_SWITCHPORTS_TEMPLATE_PATH = 'app/page/controlPanel/control/system/switchports/switchports.html';
 export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
@@ -147,8 +148,10 @@ export const ORIGINAL_SWITCHPORTS_TEMPLATE = 'ORIGINAL_SWITCHPORTS_TEMPLATE';
 export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
 
 // storage keys
-export const SWITCHPORT_TEMPLATE_STORAGE_KEY = 'switchportTemplate';
-export const SWITCHPORT_TEMPLATE_ORIGINAL_STORAGE_KEY = 'switchportTemplateOriginal';
+export const SWITCHPORT_TEMPLATE_DATA_KEY = 'switchportTemplate';
+export const DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY = 'dashboardSwitchportTemplate';
+export const SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY = 'systemSwitchportTemplate';
+export const SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY = 'switchportTemplateProps';
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';
 export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
@@ -156,3 +159,96 @@ export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
 export const STORAGE_DEFAULTS = {
     [REPLACE_TEXTAREA_CURSOR_STORAGE_KEY]: true,
 };
+
+export const LOG_PREFIX = '[Keenetic Dark Theme Extension]:';
+
+// switchport template
+
+export const SWITCHPORT_TEMPLATE_PROP = {
+    PORT_ID: 'port',
+    DESCRIPTION: 'description',
+    DUPLEX: 'duplex',
+    SPEED: 'speed',
+    TXBYTES: 'txbytes',
+    RXBYTES: 'rxbytes',
+    TXERRORS: 'txerrors',
+    RXERRORS: 'rxerrors',
+    SEPARATOR: 'separator',
+}
+
+export const TEMPLATE_PROP_DATA = {
+    [SWITCHPORT_TEMPLATE_PROP.DUPLEX]: {
+        label: 'Duplex',
+        prop: 'duplex',
+        previewValue: 'FDX',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.SPEED]: {
+        label: 'Speed',
+        prop: 'speed',
+        previewValue: '100M',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.TXBYTES]: {
+        label: 'Transmitted bytes',
+        prop: 'txbytes-formatted-short',
+        propToCheck: 'txbytes',
+        prefix: 'TX ',
+        previewValue: 'TX 2.2 GB',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.RXBYTES]: {
+        label: 'Received bytes',
+        prop: 'rxbytes-formatted-short',
+        propToCheck: 'rxbytes',
+        prefix: 'RX ',
+        previewValue: 'RX 3.5 GB',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.TXERRORS]: {
+        label: 'TX errors',
+        prop: 'txerrors',
+        propToCheck: 'txerrors',
+        prefix: 'TXErr ',
+        previewValue: 'TXErr 0',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.RXERRORS]: {
+        label: 'RX errors',
+        prop: 'rxerrors',
+        propToCheck: 'rxerrors',
+        prefix: 'RXErr ',
+        previewValue: 'RXErr 0',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: {
+        label: 'Description',
+        prop: 'description',
+        fallback: 'port',
+        previewValue: 'my desc.',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.PORT_ID]: {
+        label: 'Port #',
+        prop: 'port',
+        previewValue: '0',
+    },
+    [SWITCHPORT_TEMPLATE_PROP.SEPARATOR]: {
+        label: 'Separator (empty line)',
+        prop: 'foobar',
+        previewValue: ' ',
+        previewValueProps: {'style': 'min-height: 18px;'}
+    },
+};
+
+export const SHOW_INTERFACE_STAT_PROPS = [
+    'rxpackets',
+    'rx-multicast-packets',
+    'rx-broadcast-packets',
+    'rxbytes',
+    'rxerrors',
+    'rxdropped',
+    'txpackets',
+    'tx-multicast-packets',
+    'tx-broadcast-packets',
+    'txbytes',
+    'txerrors',
+    'txdropped',
+    'timestamp',
+    'last-overflow',
+    'rxbytes-formatted-short',
+    'txbytes-formatted-short',
+];

@@ -1,4 +1,5 @@
-import * as _ from "lodash";
+import * as _ from 'lodash';
+
 import {
     FLAGS,
 } from './constants.js';
