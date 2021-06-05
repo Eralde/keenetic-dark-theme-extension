@@ -222,6 +222,7 @@ export const TEMPLATE_PROP_DATA = {
     [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: {
         label: 'Description',
         prop: 'description',
+        alias: 'name',
         fallback: 'port',
         previewValue: 'my desc.',
     },
