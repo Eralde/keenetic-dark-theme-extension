@@ -13,7 +13,7 @@ import {
     TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT,
     BACKGROUND_PAGE_INITIALIZED_EVENT,
     ORIGINAL_SWITCHPORTS_TEMPLATE,
-    RELOAD_DASHBOARD,
+    RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS,
     INJECTED_JS_INITIALIZED,
     INITIAL_STORAGE_DATA,
     DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
@@ -427,7 +427,7 @@ browser.storage.onChanged.addListener((changes, area) => {
 
     window.postMessage(
         {
-            action: RELOAD_DASHBOARD,
+            action: RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS,
             payload: true,
         },
         {

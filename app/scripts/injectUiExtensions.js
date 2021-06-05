@@ -130,8 +130,8 @@ export const injectUiExtensions = () => {
 
                     break;
 
-                case CONSTANTS.RELOAD_DASHBOARD:
-                    if ($state.current.name === CONSTANTS.DASHBOARD_STATE) {
+                case CONSTANTS.RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS:
+                    if ([CONSTANTS.DASHBOARD_STATE, CONSTANTS.CONTROL_SYSTEM_STATE].includes($state.current.name)) {
                         window.location.reload();
                     }
                     break;

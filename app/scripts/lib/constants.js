@@ -142,7 +142,7 @@ export const LOGIN_STATE = 'login';
 export const BACKGROUND_PAGE_INITIALIZED_EVENT = 'BACKGROUND_PAGE_INITIALIZED_EVENT';
 export const TOGGLE_UI_EXTENSIONS_EVENT = 'TOGGLE_UI_EXTENSION';
 export const TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT = 'TOGGLE_UI_EXTENSION_RECEIVED';
-export const RELOAD_DASHBOARD = 'RELOAD_DASHBOARD';
+export const RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS = 'RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS';
 export const INJECTED_JS_INITIALIZED = 'INJECTED_JS_INITIALIZED';
 export const ORIGINAL_SWITCHPORTS_TEMPLATE = 'ORIGINAL_SWITCHPORTS_TEMPLATE';
 export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
@@ -193,6 +193,7 @@ export const TEMPLATE_PROP_DATA = {
         propToCheck: 'txbytes',
         prefix: 'TX ',
         previewValue: 'TX 2.2 GB',
+        className: 'kdte-small-row',
     },
     [SWITCHPORT_TEMPLATE_PROP.RXBYTES]: {
         label: 'Received bytes',
@@ -200,6 +201,7 @@ export const TEMPLATE_PROP_DATA = {
         propToCheck: 'rxbytes',
         prefix: 'RX ',
         previewValue: 'RX 3.5 GB',
+        className: 'kdte-small-row',
     },
     [SWITCHPORT_TEMPLATE_PROP.TXERRORS]: {
         label: 'TX errors',
@@ -207,6 +209,7 @@ export const TEMPLATE_PROP_DATA = {
         propToCheck: 'txerrors',
         prefix: 'TXErr ',
         previewValue: 'TXErr 0',
+        className: 'kdte-small-row'
     },
     [SWITCHPORT_TEMPLATE_PROP.RXERRORS]: {
         label: 'RX errors',
@@ -214,6 +217,7 @@ export const TEMPLATE_PROP_DATA = {
         propToCheck: 'rxerrors',
         prefix: 'RXErr ',
         previewValue: 'RXErr 0',
+        className: 'kdte-small-row',
     },
     [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: {
         label: 'Description',
@@ -233,6 +237,13 @@ export const TEMPLATE_PROP_DATA = {
         previewValueProps: {'style': 'min-height: 18px;'}
     },
 };
+
+export const WIDE_SWITCHPORT_TEMPLATE_PROPS = [
+    SWITCHPORT_TEMPLATE_PROP.TXBYTES,
+    SWITCHPORT_TEMPLATE_PROP.RXBYTES,
+    SWITCHPORT_TEMPLATE_PROP.TXERRORS,
+    SWITCHPORT_TEMPLATE_PROP.RXERRORS,
+];
 
 export const SHOW_INTERFACE_STAT_PROPS = [
     'rxpackets',
