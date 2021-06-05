@@ -4,14 +4,19 @@ import {
     getAngularService,
     getNdmPageController,
     getElementController,
+    extendSwitchportsListWithStatData,
 } from '../lib/ndmUtils';
 import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
+import {SHOW_INTERFACE_STAT_PROPS} from "../lib/constants";
 
 const switchportsService = getAngularService('switchportsService');
 const utils = getAngularService('utils');
 
+const originalGetSwitchportsList = utils.getSwitchportsList;
+
 const SHOW_INTERFACE = 'show.interface';
 const SHOW_RC_INTERFACE = 'show.rc.interface';
+const SHOW_INTERFACE_STAT = 'show.interface.stat';
 
 const originalProcessConfiguration = switchportsService.processConfiguration;
 
@@ -52,5 +57,47 @@ export const extendSystemSwitchportData = async () => {
 
     const switchportsController = await getElementController('.system__switchports-section');
 
-    console.log({switchportsController});
+    const portIds = _
+        .chain(window.NDM)
+        .get('PORTS_MAP')
+        .map(port => port.interfaceId || port.port)
+        .value();
+
+    const statQueries = portIds.map(id => _.set({}, SHOW_INTERFACE_STAT, {name: id}));
+
+    switchportsController.requester.registerCallback(
+        statQueries,
+        (responses) => {
+            const statArray = responses.map(item => _.get(item, SHOW_INTERFACE_STAT, {}));
+
+            switchportsController.groupedSwitchportsList = extendSwitchportsListWithStatData(
+                switchportsController.groupedSwitchportsList,
+                portIds,
+                statArray,
+            );
+        },
+    );
+
+    // Overload to preserve existing stat data
+    utils.getSwitchportsList = () => {
+        const portsList = originalGetSwitchportsList();
+
+        return portsList.map((port) => {
+            const controllerPort = _.find(
+                switchportsController.groupedSwitchportsList,
+                item => item.interfaceId === port.interfaceId,
+            );
+
+            const existingStatData = _.pick(controllerPort, SHOW_INTERFACE_STAT_PROPS);
+
+            return {
+                ...port,
+                ...existingStatData,
+            }
+        });
+    }
+};
+
+export const revertExtendSystemSwitchportData = () => {
+    utils.getSwitchportsList = originalGetSwitchportsList;
 };

@@ -272,7 +272,7 @@ export const injectUiExtensions = () => {
         ndmUtils.addUiExtension(
             CONSTANTS.CONTROL_SYSTEM_STATE,
             extendSystemSwitchportData,
-            // cancelComponentsSectionsWatchers,
+            revertGatherStatForPortsChanges,
         )
 
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {

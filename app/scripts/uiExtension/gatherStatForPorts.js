@@ -1,35 +1,17 @@
 import * as _ from 'lodash';
 import {
+    extendSwitchportsListWithStatData,
     getAngularService,
     getDashboardController,
     getElementController,
 } from '../lib/ndmUtils';
 import {sharedData} from '../lib/state';
-import {UI_EXTENSIONS_KEY} from '../lib/constants';
+import {SHOW_INTERFACE_STAT_PROPS, UI_EXTENSIONS_KEY} from '../lib/constants';
 
 const dashboardDataService = getAngularService('dashboardDataService');
 const utils = getAngularService('utils');
 
 const originalGetSwitchportsList = utils.getSwitchportsList;
-
-const SHOW_INTERFACE_STAT_PROPS = [
-    'rxpackets',
-    'rx-multicast-packets',
-    'rx-broadcast-packets',
-    'rxbytes',
-    'rxerrors',
-    'rxdropped',
-    'txpackets',
-    'tx-multicast-packets',
-    'tx-broadcast-packets',
-    'txbytes',
-    'txerrors',
-    'txdropped',
-    'timestamp',
-    'last-overflow',
-    'rxbytes-formatted-short',
-    'txbytes-formatted-short',
-];
 
 export const gatherStatForPorts = async () => {
     await getDashboardController();
@@ -71,21 +53,11 @@ export const gatherStatForPorts = async () => {
             dashboardDataService.getInterfaceStatistics(portIds).then((responseData) => {
                 const statArray = _.get(responseData[1], 'show.interface.stat', []);
 
-                switchportsController.switchports = _.map(switchportsController.switchports,
-                    (port) => {
-                        const {interfaceId} = port;
-                        const index = _.findIndex(portIds, item => item === interfaceId);
-                        const statData = _.get(statArray, [index], {});
-                        const rxShort = utils.format.size(statData.rxbytes, true);
-                        const txShort = utils.format.size(statData.txbytes, true);
-
-                        return {
-                            ...port,
-                            ...statData,
-                            'rxbytes-formatted-short': rxShort,
-                            'txbytes-formatted-short': txShort,
-                        };
-                    });
+                switchportsController.switchports = extendSwitchportsListWithStatData(
+                    _.map(switchportsController.switchports),
+                    portIds,
+                    statArray,
+                );
             });
         }, 1000);
     });

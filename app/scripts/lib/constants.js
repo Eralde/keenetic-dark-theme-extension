@@ -234,4 +234,21 @@ export const TEMPLATE_PROP_DATA = {
     },
 };
 
-
+export const SHOW_INTERFACE_STAT_PROPS = [
+    'rxpackets',
+    'rx-multicast-packets',
+    'rx-broadcast-packets',
+    'rxbytes',
+    'rxerrors',
+    'rxdropped',
+    'txpackets',
+    'tx-multicast-packets',
+    'tx-broadcast-packets',
+    'txbytes',
+    'txerrors',
+    'txdropped',
+    'timestamp',
+    'last-overflow',
+    'rxbytes-formatted-short',
+    'txbytes-formatted-short',
+];

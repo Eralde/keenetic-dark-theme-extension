@@ -358,3 +358,22 @@ export const isSwitchportOverloadSupported = (ndwVersion) => {
 
     return !is3xBranchWithoutOverload;
 }
+
+export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, statDataList) => {
+    const utils = getAngularService('utils');
+
+    return switchportsList.map(port => {
+        const {interfaceId} = port;
+        const index = _.findIndex(portIdsList, item => item === interfaceId);
+        const statData = _.get(statDataList, [index], {});
+        const rxShort = utils.format.size(statData.rxbytes, true);
+        const txShort = utils.format.size(statData.txbytes, true);
+
+        return {
+            ...port,
+            ...statData,
+            'rxbytes-formatted-short': rxShort,
+            'txbytes-formatted-short': txShort,
+        };
+    });
+}
