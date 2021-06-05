@@ -7,7 +7,8 @@ import {
     extendSwitchportsListWithStatData,
 } from '../lib/ndmUtils';
 import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
-import {SHOW_INTERFACE_STAT_PROPS} from "../lib/constants";
+import {SHOW_INTERFACE_STAT_PROPS, UI_EXTENSIONS_KEY} from '../lib/constants';
+import {sharedData} from '../lib/state';
 
 const switchportsService = getAngularService('switchportsService');
 const utils = getAngularService('utils');
@@ -65,8 +66,12 @@ export const extendSystemSwitchportData = async () => {
 
     const statQueries = portIds.map(id => _.set({}, SHOW_INTERFACE_STAT, {name: id}));
 
-    switchportsController.requester.registerCallback(
-        statQueries,
+    switchportsController.requester.registerDynamicCallback(
+        () => {
+            return sharedData.get(UI_EXTENSIONS_KEY) === false
+                ? []
+                : statQueries;
+        },
         (responses) => {
             const statArray = responses.map(item => _.get(item, SHOW_INTERFACE_STAT, {}));
 
