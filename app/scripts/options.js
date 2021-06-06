@@ -32,9 +32,9 @@ import {
     toggleTagClassName,
 } from './lib/ngTemplate';
 
-const inputSelector = '#shortcut';
-const switchportTemplateSelector = '#template';
-const commandName = 'toggle-theme';
+const TOGGLE_THEME_SHORTCUT_INPUT = '#shortcut';
+const TOGGLE_THEME_COMMAND = 'toggle-theme';
+const SWITCHPORT_TEMPLATE_TEXTAREA = '#template';
 
 const DATA_PROP = 'data-prop';
 const SORTABLE_GROUP_NAME = 'switchport-props';
@@ -55,7 +55,7 @@ const processSwitchportTemplateData = async () => {
     if (_.isEmpty(dashboardTemplateOriginal)) {
         const msg = '' +
             'Extension storage is empty.\n' +
-            'For the switchport template editor to work it is necessary to open the Keenetic web UI.';
+            'To use the switchport template editor, you must first open the Keenetic web UI.';
 
         new Toast(msg);
     }
@@ -91,7 +91,7 @@ const processSwitchportTemplateData = async () => {
 
         generatePropsPreviewList(propsPreview, props);
 
-        document.querySelector(switchportTemplateSelector).value = getPropsTemplateChunk(props);
+        document.querySelector(SWITCHPORT_TEMPLATE_TEXTAREA).value = getPropsTemplateChunk(props);
     };
 
     const sortable2 = new Sortable(selectedProps, {
@@ -168,6 +168,9 @@ const processSwitchportTemplateData = async () => {
                 system: {...systemTemplateOriginal},
             },
         });
+
+        generateSelectedPropsList(selectedProps, getDefaultTemplateProps());
+        refreshPreview();
 
         await updateUI();
     };
@@ -278,8 +281,8 @@ async function updateUI() {
     let commands = await browser.commands.getAll();
 
     for (let command of commands) {
-        if (command.name === commandName) {
-            document.querySelector(inputSelector).value = command.shortcut;
+        if (command.name === TOGGLE_THEME_COMMAND) {
+            document.querySelector(TOGGLE_THEME_SHORTCUT_INPUT).value = command.shortcut;
         }
     }
 
@@ -295,13 +298,13 @@ async function updateResetTextareaCursorValue(event) {
 
 async function updateShortcut() {
     await browser.commands.update({
-        name: commandName,
-        shortcut: document.querySelector(inputSelector).value
+        name: TOGGLE_THEME_COMMAND,
+        shortcut: document.querySelector(TOGGLE_THEME_SHORTCUT_INPUT).value
     });
 }
 
 async function resetShortcut() {
-    await browser.commands.reset(commandName);
+    await browser.commands.reset(TOGGLE_THEME_COMMAND);
     await updateUI();
 }
 
