@@ -48,6 +48,15 @@
     min-height: 36px;
     text-align: center;
     flex: 1;
+
+    & + & { // link group
+        margin-left: 11px;
+        margin-right: -2px;
+    }
+}
+
+.extended-switchport-status-wrapper {
+    .__mixin__flex-container(row);
 }
 
 .switchport-state {

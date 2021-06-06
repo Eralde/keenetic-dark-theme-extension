@@ -193,6 +193,12 @@ const addClassToTheRootSwitchportElement = (originalTemplate, propsList) => {
     );
 };
 
+const getLinkedPortTemplate = (portTemplate) => {
+    return portTemplate
+        .replace(/port\./g, 'port.linkedPort.')
+        .replace(/port\[/g, 'port.linkedPort[');
+}
+
 const generateFullDashboardTemplate = (originalTemplate, propsList) => {
     if (!originalTemplate) {
         logWarning('"original" template is not a string (extension storage is empty?)');
@@ -213,9 +219,7 @@ const generateFullDashboardTemplate = (originalTemplate, propsList) => {
     }
 
     stateDivs[0].innerHTML = templateStr;
-    stateDivs[1].innerHTML = templateStr
-        .replace(/port\./g, 'port.linkedPort.')
-        .replace(/port\[/g, 'port.linkedPort[');
+    stateDivs[1].innerHTML = getLinkedPortTemplate(templateStr);
 
     return getFinishedTemplateHtml(fragment);
 };
@@ -243,7 +247,26 @@ const generateFullSystemTemplate = (originalTemplate, propsList) => {
     const elToAttachTo = controlsDiv.parentNode;
 
     wrapper.appendChild(wrapHtmlStringIntoDiv(elToAttachTo.innerHTML));
-    wrapper.appendChild(wrapHtmlStringIntoDiv(templateStr, {'class': 'extended-switchport-status'}));
+
+    const innerWrapper = document.createElement('DIV');
+
+    innerWrapper.classList.add('extended-switchport-status-wrapper')
+
+    innerWrapper.appendChild(
+        wrapHtmlStringIntoDiv(templateStr, {'class': 'extended-switchport-status'}),
+    );
+
+    innerWrapper.appendChild(
+        wrapHtmlStringIntoDiv(
+            getLinkedPortTemplate(templateStr),
+            {
+                'class': 'extended-switchport-status',
+                'ng-if': 'port.linkedPort',
+            },
+        ),
+    );
+
+    wrapper.appendChild(innerWrapper);
 
     removeAllChildNodes(elToAttachTo);
     elToAttachTo.appendChild(wrapper);
