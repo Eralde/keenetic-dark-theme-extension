@@ -9,7 +9,14 @@ import {
 } from '../lib/ndmUtils';
 
 import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
-import {SHOW_INTERFACE_STAT_PROPS, UI_EXTENSIONS_KEY} from '../lib/constants';
+import {
+    SHOW_INTERFACE,
+    SHOW_INTERFACE_STAT,
+    SHOW_RC_INTERFACE,
+    UI_EXTENSIONS_KEY,
+    __SHOW_INTERFACE_STAT_PROPS__,
+} from '../lib/constants';
+
 import {sharedData} from '../lib/state';
 
 const switchportsService = getAngularService('switchportsService');
@@ -17,10 +24,6 @@ const utils = getAngularService('utils');
 
 const originalGetSwitchportsList = utils.getSwitchportsList;
 const originalGetGroupedSwitchportsList = switchportsService.getGroupedSwitchportsList;
-
-const SHOW_INTERFACE = 'show.interface';
-const SHOW_RC_INTERFACE = 'show.rc.interface';
-const SHOW_INTERFACE_STAT = 'show.interface.stat';
 
 const originalProcessConfiguration = switchportsService.processConfiguration;
 
@@ -100,7 +103,7 @@ export const extendSystemSwitchportData = async () => {
                 item => item.interfaceId === port.interfaceId,
             );
 
-            const existingStatData = _.pick(controllerPort, SHOW_INTERFACE_STAT_PROPS);
+            const existingStatData = _.pick(controllerPort, __SHOW_INTERFACE_STAT_PROPS__);
 
             return {
                 ...port,

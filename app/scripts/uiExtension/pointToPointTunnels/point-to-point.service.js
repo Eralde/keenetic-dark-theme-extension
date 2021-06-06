@@ -1,5 +1,6 @@
 import {getAngularService} from '../../lib/ndmUtils';
 import * as _ from 'lodash';
+import {SHOW_INTERFACE, SHOW_RC_INTERFACE, SHOW_INTERFACE_STAT} from '../../lib/constants';
 
 export const pointToPointService = (function() {
     const $q = getAngularService('$q');
@@ -14,10 +15,6 @@ export const pointToPointService = (function() {
     } = interfaces.constants;
 
     const {DEFAULT_NETMASK} = CONSTANT;
-
-    const SHOW_INTERFACE_PATH = 'show.interface';
-    const SHOW_RC_INTERFACE_PATH = 'show.rc.interface';
-    const SHOW_INTERFACE_STAT = 'show.interface.stat';
 
     const NO = {no: true};
 
@@ -104,10 +101,10 @@ export const pointToPointService = (function() {
      * @returns {Promise<string>}
      */
     const getNextFreeId = (type) => {
-        const query = _.set({}, SHOW_INTERFACE_PATH, {});
+        const query = _.set({}, SHOW_INTERFACE, {});
 
         return router.postToRciRoot(query).then(response => {
-            const showInterface = _.get(response, SHOW_INTERFACE_PATH, {});
+            const showInterface = _.get(response, SHOW_INTERFACE, {});
             const existingIndexes = _.filter(showInterface, item => item.type === type)
                 .map(item => Number(item.id.replace(type, '')));
 
@@ -368,14 +365,14 @@ export const pointToPointService = (function() {
 
     const getTableDateQueries = () => {
         return utils.toRciQueryList([
-            SHOW_INTERFACE_PATH,
-            SHOW_RC_INTERFACE_PATH,
+            SHOW_INTERFACE,
+            SHOW_RC_INTERFACE,
         ]);
     };
 
     const destructureTableDataResponses = (responses) => {
-        const showInterface = _.get(responses, `[0].${SHOW_INTERFACE_PATH}`, {});
-        const showRcInterface = _.get(responses, `[1].${SHOW_RC_INTERFACE_PATH}`, {});
+        const showInterface = _.get(responses, `[0].${SHOW_INTERFACE}`, {});
+        const showRcInterface = _.get(responses, `[1].${SHOW_RC_INTERFACE}`, {});
 
         return {
             showInterface,

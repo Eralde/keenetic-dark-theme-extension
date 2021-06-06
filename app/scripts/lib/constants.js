@@ -249,7 +249,7 @@ export const WIDE_SWITCHPORT_TEMPLATE_PROPS = [
     SWITCHPORT_TEMPLATE_PROP.RXERRORS,
 ];
 
-export const SHOW_INTERFACE_STAT_PROPS = [
+export const __SHOW_INTERFACE_STAT_PROPS__ = [
     'rxpackets',
     'rx-multicast-packets',
     'rx-broadcast-packets',
@@ -267,3 +267,9 @@ export const SHOW_INTERFACE_STAT_PROPS = [
     'rxbytes-formatted-short',
     'txbytes-formatted-short',
 ];
+
+// RCI
+
+export const SHOW_INTERFACE = 'show.interface';
+export const SHOW_RC_INTERFACE = 'show.rc.interface';
+export const SHOW_INTERFACE_STAT = 'show.interface.stat';

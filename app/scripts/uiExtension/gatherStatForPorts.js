@@ -6,7 +6,7 @@ import {
     getElementController, getGroupedSwitchportsListOverload,
 } from '../lib/ndmUtils';
 import {sharedData} from '../lib/state';
-import {SHOW_INTERFACE_STAT_PROPS, UI_EXTENSIONS_KEY} from '../lib/constants';
+import {__SHOW_INTERFACE_STAT_PROPS__, UI_EXTENSIONS_KEY} from '../lib/constants';
 
 const dashboardDataService = getAngularService('dashboardDataService');
 const utils = getAngularService('utils');
@@ -42,7 +42,7 @@ export const gatherStatForPorts = async () => {
                     item => item.interfaceId === port.interfaceId,
                 );
 
-                const existingStatData = _.pick(controllerPort, SHOW_INTERFACE_STAT_PROPS);
+                const existingStatData = _.pick(controllerPort, __SHOW_INTERFACE_STAT_PROPS__);
 
                 return {
                     ...port,
