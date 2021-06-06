@@ -5,7 +5,9 @@ import {
     getNdmPageController,
     getElementController,
     extendSwitchportsListWithStatData,
+    getGroupedSwitchportsListOverload,
 } from '../lib/ndmUtils';
+
 import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
 import {SHOW_INTERFACE_STAT_PROPS, UI_EXTENSIONS_KEY} from '../lib/constants';
 import {sharedData} from '../lib/state';
@@ -14,6 +16,7 @@ const switchportsService = getAngularService('switchportsService');
 const utils = getAngularService('utils');
 
 const originalGetSwitchportsList = utils.getSwitchportsList;
+const originalGetGroupedSwitchportsList = switchportsService.getGroupedSwitchportsList;
 
 const SHOW_INTERFACE = 'show.interface';
 const SHOW_RC_INTERFACE = 'show.rc.interface';
@@ -55,6 +58,10 @@ switchportsService.processConfiguration = (responses) => {
 
 export const extendSystemSwitchportData = async () => {
     await getNdmPageController();
+
+    switchportsService.getGroupedSwitchportsList = getGroupedSwitchportsListOverload(
+        originalGetGroupedSwitchportsList,
+    );
 
     const switchportsController = await getElementController('.system__switchports-section');
 
@@ -105,4 +112,5 @@ export const extendSystemSwitchportData = async () => {
 
 export const revertExtendSystemSwitchportData = () => {
     utils.getSwitchportsList = originalGetSwitchportsList;
+    switchportsService.getGroupedSwitchportsList = originalGetGroupedSwitchportsList;
 };

@@ -3,18 +3,24 @@ import {
     extendSwitchportsListWithStatData,
     getAngularService,
     getDashboardController,
-    getElementController,
+    getElementController, getGroupedSwitchportsListOverload,
 } from '../lib/ndmUtils';
 import {sharedData} from '../lib/state';
 import {SHOW_INTERFACE_STAT_PROPS, UI_EXTENSIONS_KEY} from '../lib/constants';
 
 const dashboardDataService = getAngularService('dashboardDataService');
 const utils = getAngularService('utils');
+const switchportsService = getAngularService('switchportsService');
 
 const originalGetSwitchportsList = utils.getSwitchportsList;
+const originalGetGroupedSwitchportsList = switchportsService.getGroupedSwitchportsList;
 
 export const gatherStatForPorts = async () => {
     await getDashboardController();
+
+    switchportsService.getGroupedSwitchportsList = getGroupedSwitchportsListOverload(
+        originalGetGroupedSwitchportsList,
+    );
 
     const switchportsController = await getElementController('#card_switchports');
 
@@ -43,7 +49,7 @@ export const gatherStatForPorts = async () => {
                     ...existingStatData,
                 }
             });
-        }
+        };
 
         if (sharedData.get(UI_EXTENSIONS_KEY) === false) {
             return;
@@ -65,4 +71,5 @@ export const gatherStatForPorts = async () => {
 
 export const revertGatherStatForPortsChanges = () => {
     utils.getSwitchportsList = originalGetSwitchportsList;
+    switchportsService.getGroupedSwitchportsList = originalGetGroupedSwitchportsList;
 };

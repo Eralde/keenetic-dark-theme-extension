@@ -11,6 +11,8 @@ import {
 
 import {sharedData} from './state';
 
+const DEFAULT_GET_SERVICE_TAG_TIMEOUT = 5000;
+
 export const getAngularService = (serviceName) => {
     if (!window.angular) {
         return null;
@@ -106,8 +108,6 @@ export const isAuthenticated = () => {
 
     return deferred.promise;
 }
-
-const DEFAULT_GET_SERVICE_TAG_TIMEOUT = 5000;
 
 export const getServiceTag = (timeout = DEFAULT_GET_SERVICE_TAG_TIMEOUT) => {
     const deferred = $q.defer();
@@ -330,6 +330,32 @@ export const isSwitchportOverloadSupported = (ndwVersion) => {
 
     return !is3xBranchWithoutOverload;
 }
+
+export const getGroupedSwitchportsListOverload = (getGroupedSwitchportsList) => {
+    return (...args) => {
+        const returnValue = getGroupedSwitchportsList(...args);
+        const showInterfaceData = _.get(args, [1], {});
+
+        return returnValue.map(port => {
+            const showInterfaceItem = _.find(
+                showInterfaceData,
+                item => item.id === port.interfaceId || item['interafce-name'] === port.port,
+            );
+
+            const portIconLabel = port.type === 'dsl'
+                ? port.portId
+                : port.port;
+
+            const interfaceDescription = _.get(showInterfaceItem, 'description', '');
+
+            return {
+                ...port,
+                portIconLabel,
+                interfaceDescription,
+            };
+        });
+    };
+};
 
 export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, statDataList) => {
     const utils = getAngularService('utils');
