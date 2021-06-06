@@ -227,7 +227,7 @@ export const TEMPLATE_PROP_DATA = {
         previewValue: 'my desc.',
         className: 'ellipsis',
         valueProps: {
-            'style': 'max-width: 7ch;',
+            'style': 'max-width: 8ch;',
             'title': '{{port.interfaceDescription}}',
         },
     },
@@ -250,6 +250,7 @@ export const WIDE_SWITCHPORT_TEMPLATE_PROPS = [
     SWITCHPORT_TEMPLATE_PROP.RXBYTES,
     SWITCHPORT_TEMPLATE_PROP.TXERRORS,
     SWITCHPORT_TEMPLATE_PROP.RXERRORS,
+    SWITCHPORT_TEMPLATE_PROP.DESCRIPTION,
 ];
 
 export const __SHOW_INTERFACE_STAT_PROPS__ = [
