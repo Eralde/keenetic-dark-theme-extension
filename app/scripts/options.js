@@ -1,30 +1,36 @@
 import * as _ from 'lodash';
 import fp from 'lodash/fp';
-import * as beautify from 'js-beautify';
 import Sortable from 'sortablejs';
 
 import {Toast} from 'toaster-js';
 import 'toaster-js/default.scss';
 
 import {
-    REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
-    SWITCHPORT_TEMPLATE_PROP,
-    TEMPLATE_PROP_DATA,
     DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
-    SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
+    REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
     SWITCHPORT_TEMPLATE_DATA_KEY,
+    SWITCHPORT_TEMPLATE_PROP,
+    SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
     SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
+    TEMPLATE_PROP_DATA,
     WIDE_SWITCHPORT_TEMPLATE_PROPS,
 } from './lib/constants';
 
 import {
     addElementToUnorderedList,
-    removeAllChildNodes,
     createDocumentFragmentFromString,
-    getDocumentFragmentInnerHtml, wrapHtmlStringIntoDiv,
+    getDocumentFragmentInnerHtml,
+    removeAllChildNodes,
+    wrapHtmlStringIntoDiv,
 } from './lib/domUtils';
 
 import {logWarning} from './lib/log';
+import {
+    beautifyHtml,
+    getPropsTemplateChunk,
+    overrideSwitchportTemplatePortLabel,
+    toggleTagClassName,
+} from './lib/ngTemplate';
 
 const inputSelector = '#shortcut';
 const switchportTemplateSelector = '#template';
@@ -172,67 +178,6 @@ const processSwitchportTemplateData = async () => {
     };
 };
 
-const overrideSwitchportTemplatePortLabel = (templateStr) => {
-    const match = templateStr.match(/label="([^"]+?)\.([^"]+?)"/);
-
-    if (!match) {
-        return templateStr;
-    }
-
-    const wholeMatch = match[0];
-    const replacement = wholeMatch.replace(match[2], 'port');
-
-    return templateStr.replace(wholeMatch, replacement);
-};
-
-const toggleTagClassName = (templateStr, tagName, className, state) => {
-    const tagStartStr = '<' + tagName;
-    const tagStartIdx = templateStr.indexOf(tagStartStr);
-
-    if (tagStartIdx === -1) {
-        return templateStr;
-    }
-
-    const tagEnd = templateStr.indexOf('>', tagStartIdx);
-    const matchStr = templateStr.substr(tagStartIdx);
-    const regexp = /class="[^"]+?"/;
-    const startIdx = tagStartIdx;
-    const tagPropsStart = tagStartIdx + tagStartStr.length;
-
-    regexp.lastIndex = startIdx;
-
-    const match = matchStr.match(regexp);
-
-    if (!match || match.index > tagEnd) {
-        if (!state) {
-            return templateStr;
-        } else {
-            return [
-                templateStr.substr(0, tagPropsStart),
-                ` class="${className}" `,
-                templateStr.substr(tagPropsStart),
-            ].join('');
-        }
-    }
-
-    const wholeMatch = match[0];
-    const replacement = state
-        ? wholeMatch.substr(wholeMatch.length - 2) + ` ${className}"`
-        : wholeMatch.replace(className, '');
-
-    return templateStr.replace(wholeMatch, replacement);
-};
-
-const beautifyHtml = (htmlStr) => {
-    return beautify.html(
-        htmlStr,
-        {
-            indent_size: 2,
-            wrap_attributes: 'force-expand-multiline',
-        },
-    );
-};
-
 const getFinishedTemplateHtml = fp.compose(
     beautifyHtml,
     overrideSwitchportTemplatePortLabel,
@@ -314,11 +259,6 @@ async function updateUI() {
         }
     }
 
-    const {updateTemplate, resetTemplate} = await processSwitchportTemplateData();
-
-    document.querySelector('#saveTemplate').addEventListener('click', updateTemplate);
-    document.querySelector('#resetTemplate').addEventListener('click', resetTemplate);
-
     const data = await browser.storage.local.get();
     const replaceTextareaCursorEl = document.querySelector('#replaceTextareaCursor');
 
@@ -340,50 +280,6 @@ async function resetShortcut() {
     await browser.commands.reset(commandName);
     await updateUI();
 }
-
-const isWrappedInParentheses = (s) => s[0] === '(' && s[s.length - 1] === ')';
-
-const getPropsTemplateChunk = (propsList) => {
-    return propsList.reduce(
-        (acc, prop) => {
-            const data = TEMPLATE_PROP_DATA[prop];
-
-            const alternatives = [data.prop, data.alias, data.fallback]
-                .filter(Boolean)
-                .map(item => `port['${item}']`);
-
-            const shouldWrap = alternatives.length > 1;
-            const valueStr = alternatives.join(' || ');
-
-            let ngString = shouldWrap
-                ? `(${valueStr})`
-                : valueStr;
-
-            if (data.filter) {
-                ngString = `${ngString} | ${data.filter}`;
-            }
-
-            if (data.prefix) {
-                ngString = `("${data.prefix}" + ${ngString})`;
-            }
-
-            if (data.propToCheck) {
-                ngString = `(port['${data.propToCheck}'] ? ${ngString} : '&nbsp;')`;
-            } else if (isWrappedInParentheses(ngString)) {
-                ngString = `${ngString} || '&nbsp;'`;
-            } else {
-                ngString = `(${ngString}) || '&nbsp;'`;
-            }
-
-            const classStr = data.className
-                ? ` class="${data.className}" `
-                : '';
-
-            return `${acc}\n<div ${classStr}>{{ ${ngString} }}</div>`;
-        },
-        '',
-    );
-};
 
 const getDefaultTemplateProps = () => {
     return [
@@ -441,6 +337,11 @@ const clearStorage = async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await updateUI();
+
+    const {updateTemplate, resetTemplate} = await processSwitchportTemplateData();
+
+    document.querySelector('#saveTemplate').addEventListener('click', updateTemplate);
+    document.querySelector('#resetTemplate').addEventListener('click', resetTemplate);
 
     document.querySelector('#updateShortcut').addEventListener('click', updateShortcut);
     document.querySelector('#resetShortcut').addEventListener('click', resetShortcut);
