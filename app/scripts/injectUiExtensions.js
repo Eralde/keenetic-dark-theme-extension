@@ -1,65 +1,34 @@
 import * as _ from 'lodash';
 
 import * as CONSTANTS from './lib/constants';
+import {DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, SYSTEM_SWITCHPORTS_TEMPLATE_PATH} from './lib/constants';
 import * as ndmUtils from './lib/ndmUtils';
-
 import {flags, sharedData} from './lib/state';
-
-import {
-    interceptMouseover,
-} from './lib/domUtils';
+import {interceptMouseover,} from './lib/domUtils';
 
 import {extendMenu2x} from './uiExtension/extendMenu2x';
 import {extendMenu3x} from './uiExtension/extendMenu3x';
 import {addSaveLogButton} from './uiExtension/saveLogButton';
+import {fixPolicies,} from './uiExtension/policies';
+import {addDeviceListsFilters, cleanupDeviceListsFilters,} from './uiExtension/filterDeviceLists';
+import {addWifiClientsFilters, cleanupWifiClientsFilters,} from './uiExtension/filterWifiClients';
+import {modifyAppsService, revertAppsServiceModifications,} from './uiExtension/addVpnStatLinks';
+import {gatherStatForPorts, revertGatherStatForPortsChanges,} from './uiExtension/gatherStatForPorts';
 
 import {
-    addDeviceListsFilters,
-    cleanupDeviceListsFilters,
-} from './uiExtension/filterDeviceLists';
-
-import {
-    addWifiClientsFilters,
-    cleanupWifiClientsFilters,
-} from './uiExtension/filterWifiClients';
-
-import {
-    modifyAppsService,
-    revertAppsServiceModifications,
-} from './uiExtension/addVpnStatLinks';
-
-import {
-    fixPolicies,
-} from './uiExtension/policies';
-
-import {
-    gatherStatForPorts,
-    revertGatherStatForPortsChanges,
-} from './uiExtension/gatherStatForPorts';
-
-import {
+    cancelComponentsSectionsWatchers,
     overriderSandboxOptions,
     overrideSandboxesList,
-    cancelComponentsSectionsWatchers,
 } from './uiExtension/componentsListDelta';
 
-import {
-    extendDslStats,
-    revertDslStatsChanges,
-} from './uiExtension/extendDslStat';
+import {extendDslStats, revertDslStatsChanges,} from './uiExtension/extendDslStat';
 
-import {
-    addPointToPointTunnelSection,
-} from './uiExtension/pointToPointTunnelsSection';
-import {
-    PointToPointController,
-} from './uiExtension/pointToPointTunnels/point-to-point.controller';
-import {
-    PointToPointEditorController,
-} from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
-import {extendSystemSwitchportData} from './uiExtension/extendSystemSwitchportData';
-import {DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, SYSTEM_SWITCHPORTS_TEMPLATE_PATH} from './lib/constants';
+import {addPointToPointTunnelSection,} from './uiExtension/pointToPointTunnelsSection';
+import {PointToPointController,} from './uiExtension/pointToPointTunnels/point-to-point.controller';
+import {PointToPointEditorController,} from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
+import {extendSystemSwitchportData, revertExtendSystemSwitchportData} from './uiExtension/extendSystemSwitchportData';
 import {logWarning} from './lib/log';
+import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -80,8 +49,8 @@ export const injectUiExtensions = () => {
     $rootScope.PointToPointEditorController = PointToPointEditorController;
 
     // Should be done BEFORE authentication
-    const dashboardSwitchportsTemplate = ndmUtils.getSwitchportsTemplateChunks(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
-    const systemSwitchportsTemplate = ndmUtils.getSwitchportsTemplateChunks(SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
+    const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+    const systemSwitchportsTemplate = getSwitchportsTemplateChunks(SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
 
     if (!dashboardSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
@@ -272,7 +241,7 @@ export const injectUiExtensions = () => {
         ndmUtils.addUiExtension(
             CONSTANTS.CONTROL_SYSTEM_STATE,
             extendSystemSwitchportData,
-            revertGatherStatForPortsChanges,
+            revertExtendSystemSwitchportData,
         )
 
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
