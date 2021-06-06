@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {getAngularService, getElementController, getElementScope} from '../lib/ndmUtils';
 import {getL10n} from '../lib/l10nUtils';
+import {logWarning} from '../lib/log';
 
 const watchers = [];
 const DELTA_CHANNEL = 'delta';
@@ -78,7 +79,7 @@ export const overrideSandboxesList = () => {
     const componentsService = getAngularService('componentsService');
 
     if (!_.has(componentsService.constant, 'FW_CHANNEL')) {
-        console.log('Unable to change auto update channels list');
+        logWarning('Unable to change auto update channels list');
         return;
     }
 

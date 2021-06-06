@@ -331,27 +331,39 @@ export const isSwitchportOverloadSupported = (ndwVersion) => {
     return !is3xBranchWithoutOverload;
 }
 
+export const getPortInterfaceStatus = (showInterfaceData, port) => {
+    return _.find(
+        showInterfaceData,
+        item => item.id === port.interfaceId || item['interface-name'] === port.port,
+    );
+}
+
+export const getAdditionalSwitchportProps = (port, interfaceStatus) => {
+    const portIconLabel = port.type === 'dsl'
+        ? port.portId
+        : port.port;
+
+    // This does not work for Ethernet ports, but works for Dsl0 >_<
+    const interfaceDescription = _.get(interfaceStatus, 'description', '');
+
+    return {
+        portIconLabel,
+        interfaceDescription,
+    };
+}
+
 export const getGroupedSwitchportsListOverload = (getGroupedSwitchportsList) => {
     return (...args) => {
         const returnValue = getGroupedSwitchportsList(...args);
         const showInterfaceData = _.get(args, [1], {});
 
         return returnValue.map(port => {
-            const showInterfaceItem = _.find(
-                showInterfaceData,
-                item => item.id === port.interfaceId || item['interafce-name'] === port.port,
-            );
-
-            const portIconLabel = port.type === 'dsl'
-                ? port.portId
-                : port.port;
-
-            const interfaceDescription = _.get(showInterfaceItem, 'description', '');
+            const interfaceStatus = getPortInterfaceStatus(showInterfaceData, port);
+            const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
 
             return {
                 ...port,
-                portIconLabel,
-                interfaceDescription,
+                ...additionalProps,
             };
         });
     };

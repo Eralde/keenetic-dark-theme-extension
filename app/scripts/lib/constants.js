@@ -226,7 +226,10 @@ export const TEMPLATE_PROP_DATA = {
         fallback: 'name',
         previewValue: 'my desc.',
         className: 'ellipsis',
-        // valueProps: {'style': 'max-width: 7ch;'},
+        valueProps: {
+            'style': 'max-width: 7ch;',
+            'title': '{{port.interfaceDescription}}',
+        },
     },
     [SWITCHPORT_TEMPLATE_PROP.PORT_ID]: {
         label: 'Port #',

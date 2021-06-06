@@ -4,8 +4,9 @@ import {
     getAngularService,
     getNdmPageController,
     getElementController,
+    getPortInterfaceStatus,
+    getAdditionalSwitchportProps,
     extendSwitchportsListWithStatData,
-    getGroupedSwitchportsListOverload,
 } from '../lib/ndmUtils';
 
 import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
@@ -23,8 +24,6 @@ const switchportsService = getAngularService('switchportsService');
 const utils = getAngularService('utils');
 
 const originalGetSwitchportsList = utils.getSwitchportsList;
-const originalGetGroupedSwitchportsList = switchportsService.getGroupedSwitchportsList;
-
 const originalProcessConfiguration = switchportsService.processConfiguration;
 
 switchportsService.processConfiguration = (responses) => {
@@ -35,21 +34,20 @@ switchportsService.processConfiguration = (responses) => {
 
     retVal.groupedSwitchportsList = groupedSwitchportsList.map(item => {
         const {interfaceId, port} = item;
+
+        const interfaceStatus = getPortInterfaceStatus(showInterfaceData, port);
+        const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
+
         const interfaceConfiguration = _.get(showRcInterfaceData, interfaceId)
             || _.find(showRcInterfaceData, item => item.rename === port);
 
-        const interfaceStatus = _.find(
-            showInterfaceData,
-            item => item.id === interfaceId || item['interface-name'] === port,
-        );
-
         const description = _.get(interfaceConfiguration, 'description', port);
-
         const speed = formatPortLinkSpeed(interfaceStatus);
         const duplex = formatPortDuplex(interfaceStatus);
 
         return {
             ...item,
+            ...additionalProps,
             speed,
             duplex,
             description,
@@ -61,10 +59,6 @@ switchportsService.processConfiguration = (responses) => {
 
 export const extendSystemSwitchportData = async () => {
     await getNdmPageController();
-
-    switchportsService.getGroupedSwitchportsList = getGroupedSwitchportsListOverload(
-        originalGetGroupedSwitchportsList,
-    );
 
     const switchportsController = await getElementController('.system__switchports-section');
 
@@ -115,5 +109,4 @@ export const extendSystemSwitchportData = async () => {
 
 export const revertExtendSystemSwitchportData = () => {
     utils.getSwitchportsList = originalGetSwitchportsList;
-    switchportsService.getGroupedSwitchportsList = originalGetGroupedSwitchportsList;
 };
