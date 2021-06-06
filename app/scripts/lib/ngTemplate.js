@@ -1,8 +1,12 @@
 import * as beautify from 'js-beautify';
 import * as _ from 'lodash';
 
-import {wrapHtmlStringIntoDiv} from './domUtils';
 import {NDM_SWITCHPORT_CONTAINER_TAG, TEMPLATE_PROP_DATA} from './constants';
+import {
+    createDocumentFragmentFromString,
+    getDocumentFragmentInnerHtml,
+    wrapHtmlStringIntoDiv,
+} from './domUtils';
 import {getTemplate} from './ndmUtils';
 import {logWarning} from './log';
 
@@ -29,46 +33,31 @@ export const overrideSwitchportTemplatePortLabel = (templateStr) => {
 /**
  * @param {string} templateStr
  * @param {string} tagName
- * @param {string} className
+ * @param {string} classToToggle
  * @param {boolean} state
  * @returns {string}
  */
-export const toggleTagClassName = (templateStr, tagName, className, state) => {
-    const tagStartStr = '<' + tagName;
-    const tagStartIdx = templateStr.indexOf(tagStartStr);
+export const toggleTagClassName = (templateStr, tagName, classToToggle, state) => {
+    const fragment = createDocumentFragmentFromString(templateStr);
+    const element = fragment.querySelector(tagName);
 
-    if (tagStartIdx === -1) {
+    if (!element) {
         return templateStr;
     }
 
-    const tagEnd = templateStr.indexOf('>', tagStartIdx);
-    const matchStr = templateStr.substr(tagStartIdx);
-    const regexp = /class="[^"]+?"/;
-    const startIdx = tagStartIdx;
-    const tagPropsStart = tagStartIdx + tagStartStr.length;
+    const className = element.className;
 
-    regexp.lastIndex = startIdx;
-
-    const match = matchStr.match(regexp);
-
-    if (!match || match.index > tagEnd) {
-        if (!state) {
-            return templateStr;
-        } else {
-            return [
-                templateStr.substr(0, tagPropsStart),
-                ` class="${className}" `,
-                templateStr.substr(tagPropsStart),
-            ].join('');
-        }
+    if (state) {
+        element.className = className.includes(classToToggle)
+            ? className
+            : `${className} ${classToToggle}`.trim();
+    } else {
+        element.className = className.includes(classToToggle)
+            ? className.replace(classToToggle, '').trim()
+            : className;
     }
 
-    const wholeMatch = match[0];
-    const replacement = state
-        ? wholeMatch.substr(wholeMatch.length - 2) + ` ${className}"`
-        : wholeMatch.replace(className, '');
-
-    return templateStr.replace(wholeMatch, replacement);
+    return getDocumentFragmentInnerHtml(fragment);
 };
 
 /**
