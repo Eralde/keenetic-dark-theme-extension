@@ -221,14 +221,17 @@ export const TEMPLATE_PROP_DATA = {
     },
     [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: {
         label: 'Description',
-        prop: 'description',
-        alias: 'name',
-        fallback: 'port',
+        prop: 'interfaceDescription',
+        alias: 'description',
+        fallback: 'name',
         previewValue: 'my desc.',
+        className: 'ellipsis',
+        // valueProps: {'style': 'max-width: 7ch;'},
     },
     [SWITCHPORT_TEMPLATE_PROP.PORT_ID]: {
         label: 'Port #',
-        prop: 'port',
+        prop: 'portIconLabel',
+        fallback: 'port',
         previewValue: '0',
     },
     [SWITCHPORT_TEMPLATE_PROP.SEPARATOR]: {
