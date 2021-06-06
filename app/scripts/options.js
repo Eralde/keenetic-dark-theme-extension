@@ -188,7 +188,7 @@ const addClassToTheRootSwitchportElement = (originalTemplate, propsList) => {
     return toggleTagClassName(
         originalTemplate,
         'ndm-switchport',
-        'wide',
+        '{{ port.linkedPort ? \'wide--group\' : \'wide\'}}',
         propsList.some(item => WIDE_SWITCHPORT_TEMPLATE_PROPS.includes(item)),
     );
 };
@@ -212,9 +212,10 @@ const generateFullDashboardTemplate = (originalTemplate, propsList) => {
         return beautifyHtml(originalTemplate);
     }
 
-    stateDivs.forEach(div => {
-        div.innerHTML = templateStr;
-    });
+    stateDivs[0].innerHTML = templateStr;
+    stateDivs[1].innerHTML = templateStr
+        .replace(/port\./g, 'port.linkedPort.')
+        .replace(/port\[/g, 'port.linkedPort[');
 
     return getFinishedTemplateHtml(fragment);
 };

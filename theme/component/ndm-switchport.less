@@ -8,6 +8,21 @@ ndm-switchport {
         }
     }
 
+    &.wide--group {
+        .ndm-switchport.ndm-switchport--combo {
+            min-width: 150px;
+
+            .ndm-switchport__wrapper:not(.ndm-switchport__wrapper--sfp) {
+                padding: 0 12px 0 16px;
+                justify-content: space-between
+            }
+
+            .ndm-switchport__inner {
+                margin: 0;
+            }
+        }
+    }
+
     .ndm-switchport__label {
         color: @dt__blue-text;
     }

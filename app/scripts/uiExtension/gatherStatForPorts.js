@@ -37,12 +37,23 @@ export const gatherStatForPorts = async () => {
             const portsList = originalGetSwitchportsList();
 
             return portsList.map((port) => {
-                const controllerPort = _.find(
+                let existingDataSource;
+
+                existingDataSource = _.find(
                     switchportsController.switchports,
-                    item => item.interfaceId === port.interfaceId,
+                    item => item.interfaceId === port.interfaceId
                 );
 
-                const existingStatData = _.pick(controllerPort, __SHOW_INTERFACE_STAT_PROPS__);
+                if (!existingDataSource) {
+                    const linkGroupMaster = _.find(
+                        switchportsController.switchports,
+                        item => _.get(item, 'linkedPort.interfaceId', '') === port.interfaceId,
+                    );
+
+                    existingDataSource = _.get(linkGroupMaster, 'linkedPort');
+                }
+
+                const existingStatData = _.pick(existingDataSource, __SHOW_INTERFACE_STAT_PROPS__);
 
                 return {
                     ...port,

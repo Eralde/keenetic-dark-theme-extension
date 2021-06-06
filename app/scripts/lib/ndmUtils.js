@@ -369,21 +369,35 @@ export const getGroupedSwitchportsListOverload = (getGroupedSwitchportsList) => 
     };
 };
 
+const extendPortData = ({utils, port, portIdsList, statDataList}) => {
+    const {interfaceId} = port;
+
+    const index = _.findIndex(portIdsList, item => item === interfaceId);
+    const statData = _.get(statDataList, [index], {});
+    const rxShort = utils.format.size(statData.rxbytes, true);
+    const txShort = utils.format.size(statData.txbytes, true);
+
+    return {
+        ...port,
+        ...statData,
+        'rxbytes-formatted-short': rxShort,
+        'txbytes-formatted-short': txShort,
+    };
+}
+
 export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, statDataList) => {
     const utils = getAngularService('utils');
 
     return switchportsList.map(port => {
-        const {interfaceId} = port;
-        const index = _.findIndex(portIdsList, item => item === interfaceId);
-        const statData = _.get(statDataList, [index], {});
-        const rxShort = utils.format.size(statData.rxbytes, true);
-        const txShort = utils.format.size(statData.txbytes, true);
+        if (port.linkedPort) {
+            port.linkedPort = extendPortData({
+                utils,
+                portIdsList,
+                statDataList,
+                port: port.linkedPort,
+            });
+        }
 
-        return {
-            ...port,
-            ...statData,
-            'rxbytes-formatted-short': rxShort,
-            'txbytes-formatted-short': txShort,
-        };
+        return extendPortData({utils, port, portIdsList, statDataList});
     });
 }
