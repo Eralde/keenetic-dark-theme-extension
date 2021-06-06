@@ -7,6 +7,7 @@ import {
     getPortInterfaceStatus,
     getAdditionalSwitchportProps,
     extendSwitchportsListWithStatData,
+    extendGroupedSwitchportsListItem,
 } from '../lib/ndmUtils';
 
 import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
@@ -35,8 +36,16 @@ switchportsService.processConfiguration = (responses) => {
     retVal.groupedSwitchportsList = groupedSwitchportsList.map(item => {
         const {interfaceId, port} = item;
 
-        const interfaceStatus = getPortInterfaceStatus(showInterfaceData, port);
-        const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
+        const interfaceStatus = getPortInterfaceStatus(item, showInterfaceData);
+        const additionalProps = getAdditionalSwitchportProps(item, interfaceStatus);
+
+        if (item.linkedPort) {
+            item.linkedPort = extendGroupedSwitchportsListItem(item.linkedPort, showInterfaceData);
+
+            // workaround to show proper label inside the port icon & proper description below
+            item.linkedPort.description = item.linkedPort.name
+            item.linkedPort.name = item.linkedPort.portIconLabel;
+        }
 
         const interfaceConfiguration = _.get(showRcInterfaceData, interfaceId)
             || _.find(showRcInterfaceData, item => item.rename === port);

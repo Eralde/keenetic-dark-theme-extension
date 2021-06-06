@@ -250,6 +250,7 @@ const generateFullSystemTemplate = (originalTemplate, propsList) => {
     const elToAttachTo = controlsDiv.parentNode;
 
     wrapper.appendChild(wrapHtmlStringIntoDiv(elToAttachTo.innerHTML));
+    wrapper.style.width = '100%';
 
     const innerWrapper = document.createElement('DIV');
 

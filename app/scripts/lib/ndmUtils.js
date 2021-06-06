@@ -331,7 +331,7 @@ export const isSwitchportOverloadSupported = (ndwVersion) => {
     return !is3xBranchWithoutOverload;
 }
 
-export const getPortInterfaceStatus = (showInterfaceData, port) => {
+export const getPortInterfaceStatus = (port, showInterfaceData) => {
     return _.find(
         showInterfaceData,
         item => item.id === port.interfaceId || item['interface-name'] === port.port,
@@ -352,19 +352,31 @@ export const getAdditionalSwitchportProps = (port, interfaceStatus) => {
     };
 }
 
+export const extendGroupedSwitchportsListItem = (port, showInterfaceData) => {
+    const interfaceStatus = getPortInterfaceStatus(showInterfaceData, port);
+    const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
+
+    return {
+        ...port,
+        ...additionalProps,
+    };
+};
+
 export const getGroupedSwitchportsListOverload = (getGroupedSwitchportsList) => {
     return (...args) => {
         const returnValue = getGroupedSwitchportsList(...args);
         const showInterfaceData = _.get(args, [1], {});
 
         return returnValue.map(port => {
-            const interfaceStatus = getPortInterfaceStatus(showInterfaceData, port);
-            const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
+            if (port.linkedPort) {
+                port.linkedPort = extendGroupedSwitchportsListItem(port.linkedPort, showInterfaceData);
 
-            return {
-                ...port,
-                ...additionalProps,
-            };
+                // workaround to show proper label inside the port icon & proper description below
+                port.linkedPort.description = port.linkedPort.name
+                port.linkedPort.name = port.linkedPort.portIconLabel;
+            }
+
+            return extendGroupedSwitchportsListItem(port, showInterfaceData);
         });
     };
 };
