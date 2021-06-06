@@ -353,7 +353,7 @@ export const getAdditionalSwitchportProps = (port, interfaceStatus) => {
 }
 
 export const extendGroupedSwitchportsListItem = (port, showInterfaceData) => {
-    const interfaceStatus = getPortInterfaceStatus(showInterfaceData, port);
+    const interfaceStatus = getPortInterfaceStatus(port, showInterfaceData);
     const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
 
     return {
