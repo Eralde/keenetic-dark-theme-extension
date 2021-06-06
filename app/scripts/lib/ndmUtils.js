@@ -1,14 +1,12 @@
 import * as _ from 'lodash';
 
 import {
-    DASHBOARD_SWITCHPORTS_TEMPLATE_PATH,
     FW2X_BRANCHES,
     FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
     LOGIN_STATE,
-    NDM_SWITCHPORT_CONTAINER_TAG,
     NDM_TEXTAREA_TEMPLATE_PATH,
     NO_TAG,
-    OLD_FW3X_BRANCHES, SYSTEM_SWITCHPORTS_TEMPLATE_PATH,
+    OLD_FW3X_BRANCHES,
 } from './constants.js';
 
 import {sharedData} from './state';
@@ -227,32 +225,6 @@ export const getTemplate = (path) => {
     const $templateCache = getAngularService('$templateCache');
 
     return _.cloneDeep($templateCache.get(path));
-};
-
-export const getSwitchportsTemplateChunks = (fullTemplatePath) => {
-    const wholeTemplate = getTemplate(fullTemplatePath);
-
-    if (!_.isString(wholeTemplate)) {
-        return false;
-    }
-
-    const chunks = wholeTemplate.split(NDM_SWITCHPORT_CONTAINER_TAG);
-
-    if (chunks.length !== 3) {
-        return false;
-    }
-
-    const middleChunk = chunks[1];
-
-    const template = middleChunk.substr(1, middleChunk.length - 3);
-    const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTAINER_TAG}>`;
-    const suffix = `</${NDM_SWITCHPORT_CONTAINER_TAG}${chunks[2]}`;
-
-    return {
-        template,
-        prefix,
-        suffix,
-    };
 };
 
 export const replaceSwitchportsTemplate = (templateData, path) => {

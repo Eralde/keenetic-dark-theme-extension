@@ -1,6 +1,10 @@
 import * as beautify from 'js-beautify';
-import {TEMPLATE_PROP_DATA} from './constants';
+import * as _ from 'lodash';
+
 import {wrapHtmlStringIntoDiv} from './domUtils';
+import {NDM_SWITCHPORT_CONTAINER_TAG, TEMPLATE_PROP_DATA} from './constants';
+import {getTemplate} from './ndmUtils';
+import {logWarning} from './log';
 
 /**
  * Replace  `label="<obj_name>.<some_prop>"`
@@ -134,4 +138,43 @@ export const getPropsTemplateChunk = (propsList) => {
         },
         '',
     );
+};
+
+/**
+ * @param {string} fullTemplatePath
+ * @returns {{template: string, prefix: string, suffix: string}|boolean}
+ */
+export const getSwitchportsTemplateChunks = (fullTemplatePath) => {
+    const wholeTemplate = getTemplate(fullTemplatePath);
+
+    if (!_.isString(wholeTemplate)) {
+        logWarning(`Failed to get [${fullTemplatePath}] template`);
+
+        return false;
+    }
+
+    const chunks = wholeTemplate.split(NDM_SWITCHPORT_CONTAINER_TAG);
+
+    if (chunks.length !== 3) {
+        const msg = [
+            `Template @ [${fullTemplatePath}] contains`,
+            `invalid number of <${NDM_SWITCHPORT_CONTAINER_TAG}> tags`,
+        ].join(' ');
+
+        logWarning(msg);
+
+        return false;
+    }
+
+    const middleChunk = chunks[1];
+
+    const template = middleChunk.substr(1, middleChunk.length - 3);
+    const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTAINER_TAG}>`;
+    const suffix = `</${NDM_SWITCHPORT_CONTAINER_TAG}${chunks[2]}`;
+
+    return {
+        template,
+        prefix,
+        suffix,
+    };
 };
