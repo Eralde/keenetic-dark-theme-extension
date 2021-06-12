@@ -238,18 +238,18 @@ export const injectUiExtensions = () => {
             cancelComponentsSectionsWatchers,
         )
 
-        ndmUtils.addUiExtension(
-            CONSTANTS.CONTROL_SYSTEM_STATE,
-            extendSystemSwitchportData,
-            revertExtendSystemSwitchportData,
-        )
-
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DASHBOARD_STATE,
                 gatherStatForPorts,
                 revertGatherStatForPortsChanges,
             );
+
+            ndmUtils.addUiExtension(
+                CONSTANTS.CONTROL_SYSTEM_STATE,
+                extendSystemSwitchportData,
+                revertExtendSystemSwitchportData,
+            )
         }
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');
