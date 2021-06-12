@@ -71,6 +71,10 @@ export const extendSystemSwitchportData = async () => {
 
     const switchportsController = await getElementController('.system__switchports-section');
 
+    const getSwitchportsList = () => {
+        return switchportsController.groupedSwitchportsList || switchportsController.ports;
+    };
+
     const portIds = _
         .chain(window.NDM)
         .get('PORTS_MAP')
@@ -89,7 +93,7 @@ export const extendSystemSwitchportData = async () => {
             const statArray = responses.map(item => _.get(item, SHOW_INTERFACE_STAT, {}));
 
             switchportsController.groupedSwitchportsList = extendSwitchportsListWithStatData(
-                switchportsController.groupedSwitchportsList,
+                getSwitchportsList(),
                 portIds,
                 statArray,
             );
@@ -102,7 +106,7 @@ export const extendSystemSwitchportData = async () => {
 
         return portsList.map((port) => {
             const controllerPort = _.find(
-                switchportsController.groupedSwitchportsList,
+                getSwitchportsList(),
                 item => item.interfaceId === port.interfaceId,
             );
 
