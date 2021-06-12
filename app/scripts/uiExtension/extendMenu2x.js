@@ -134,7 +134,13 @@ export const extendMenu2x = () => {
 
     link.addEventListener(
         'click',
-        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE, false),
+        getSpecialMenuItemClickListener({
+            callback: clickOnTheRebootButton,
+            stateName: CONTROL_SYSTEM_STATE,
+            menuAction: ($rootScope) => {
+                $rootScope.menuIsOpen = false;
+            },
+        }),
     );
 
     logoutSection.prepend(rebootNode);

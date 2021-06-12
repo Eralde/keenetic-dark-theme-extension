@@ -179,9 +179,17 @@ export const extendMenu3x = () => {
         link.innerText = getNgL10n(REBOOT_LINK_TITLE);
     });
 
+    const closeOverlayMenu = ($rootScope) => {
+        $rootScope.menuIsOpenOverlayed = false;
+    };
+
     link.addEventListener(
         'click',
-        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE, true),
+        getSpecialMenuItemClickListener({
+            callback: clickOnTheRebootButton,
+            stateName: CONTROL_SYSTEM_STATE,
+            menuAction: closeOverlayMenu,
+        }),
     );
 
     logoutSection.prepend(link);
@@ -190,7 +198,11 @@ export const extendMenu3x = () => {
         dslDiagnosticsElement.classList.add(DSL_DIAGNOSTICS_LINK_CLASS);
         dslDiagnosticsElement.addEventListener(
             'click',
-            getSpecialMenuItemClickListener(goToDslTab, DIAGNOSTICS_STATE),
+            getSpecialMenuItemClickListener({
+                callback: goToDslTab,
+                stateName: DIAGNOSTICS_STATE,
+                menuAction: closeOverlayMenu,
+            }),
         );
     }
 
