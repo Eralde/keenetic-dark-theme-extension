@@ -128,6 +128,11 @@ export const injectUiExtensions = () => {
                         state: replaceTextareaCursorValue,
                     })
 
+                    if (ndmUtils.is2xVersion(ndwBranch)) {
+                        return;
+                    }
+
+                    // Show warning for 3.1.x / 3.2.x / 3.3.x firmware
                     if (!ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
                         console.warn('Switchports template can be overloaded in web UI versions >= 3.4');
 
