@@ -134,7 +134,7 @@ export const extendMenu2x = () => {
 
     link.addEventListener(
         'click',
-        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE),
+        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE, false),
     );
 
     logoutSection.prepend(rebootNode);

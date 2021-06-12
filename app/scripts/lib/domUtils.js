@@ -352,13 +352,19 @@ export const isPointInsideElement = (point, el) => {
     return (rect.left <= x && rect.right >= x) && (rect.top <= y && rect.bottom >= y);
 }
 
-export const getSpecialMenuItemClickListener = (callback, stateName) => {
+/**
+ * @param {function} callback
+ * @param {string} stateName
+ * @param {boolean} checkIfMenuIsOpen
+ * @returns {function(*): Q.Promise<*>}
+ */
+export const getSpecialMenuItemClickListener = (callback, stateName, checkIfMenuIsOpen) => {
     const $rootScope = getAngularService('$rootScope');
     const $state = getAngularService('$state');
     const $q = getAngularService('$q');
 
     return ($event) => {
-        if (!$rootScope.menuIsOpen) {
+        if (checkIfMenuIsOpen && !$rootScope.menuIsOpen) {
             return;
         }
 

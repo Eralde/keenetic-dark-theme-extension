@@ -181,7 +181,7 @@ export const extendMenu3x = () => {
 
     link.addEventListener(
         'click',
-        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE),
+        getSpecialMenuItemClickListener(clickOnTheRebootButton, CONTROL_SYSTEM_STATE, true),
     );
 
     logoutSection.prepend(link);
