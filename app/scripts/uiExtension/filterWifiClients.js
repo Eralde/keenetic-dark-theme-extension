@@ -4,7 +4,6 @@ import {
     FILTERS_TOGGLE_CLASS,
     FLAGS,
     HIDE_CLASS,
-    NDM_PAGE_SELECTOR,
     REG_DEVICES_FLAGS,
     UNREG_DEVICES_FLAGS,
 } from '../lib/constants';
@@ -12,6 +11,7 @@ import {
 import {
     callOnPageLoad,
     getAngularService,
+    getNdmPageController,
 } from '../lib/ndmUtils';
 
 import {
@@ -138,7 +138,7 @@ const addWifiClientsFilters = () => {
     };
 
     callOnPageLoad(() => {
-        $timeout(() => {
+        $timeout(async () => {
             const pollerElements = [...document.querySelectorAll('.ndm-page__content > [ng-transclude]')];
             const pollerEl = pollerElements[pollerElements.length - 1];
 
@@ -147,7 +147,7 @@ const addWifiClientsFilters = () => {
                 return;
             }
 
-            const ctrl = angular.element(document.querySelector(NDM_PAGE_SELECTOR)).controller();
+            const ctrl = await getNdmPageController();
 
             __VARS.ctrlName = 'WifiClientsController';
             window[__VARS.ctrlName] = ctrl;

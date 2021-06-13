@@ -4,6 +4,7 @@ import {
     FW2X_BRANCHES,
     FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
     LOGIN_STATE,
+    NDM_PAGE_SELECTOR,
     NDM_TEXTAREA_TEMPLATE_PATH,
     NO_TAG,
     OLD_FW3X_BRANCHES,
@@ -322,7 +323,11 @@ export const getDashboardController = () => {
 };
 
 export const getNdmPageController = () => {
-    return getElementController('.ndm-page');
+    return getElementController(NDM_PAGE_SELECTOR);
+};
+
+export const getNdmPageScope = () => {
+    return getElementScope(NDM_PAGE_SELECTOR);
 };
 
 export const is2xVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));

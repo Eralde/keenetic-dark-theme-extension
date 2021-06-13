@@ -8,7 +8,6 @@ import {
     REG_DEVICES_FLAGS,
     UNREG_DEVICES_FLAGS,
     FILTERS_TOGGLE_CLASS,
-    NDM_PAGE_SELECTOR,
     HIDDEN_TABLE_ROW_CLASS,
 } from '../lib/constants';
 
@@ -18,6 +17,8 @@ import {
     getPathIndexInRequest,
     forceScopeDigest,
     callOnPageLoad,
+    getNdmPageController,
+    getNdmPageScope,
 } from '../lib/ndmUtils';
 
 import {
@@ -213,7 +214,7 @@ const addDeviceListsFilters = () => {
     };
 
     callOnPageLoad(() => {
-        $timeout(() => {
+        $timeout(async () => {
             const tables = [...document.querySelectorAll('.ndm-title [ng-transclude]')];
             const regTableEl = tables[1];
             const unregTableEl = tables[0];
@@ -228,9 +229,8 @@ const addDeviceListsFilters = () => {
                 return;
             }
 
-            const $pageEl = angular.element(document.querySelector(NDM_PAGE_SELECTOR));
-            const ctrl = $pageEl.controller();
-            const $scope = $pageEl.scope();
+            const ctrl = await getNdmPageController();
+            const $scope = await getNdmPageScope();
 
             $scope.$watch('DevicesList.registeredDevices', () => {
                 const ipCells = [
