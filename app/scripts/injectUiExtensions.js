@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 
 import * as CONSTANTS from './lib/constants';
-import {DASHBOARD_SWITCHPORTS_TEMPLATE_PATH, SYSTEM_SWITCHPORTS_TEMPLATE_PATH} from './lib/constants';
 import * as ndmUtils from './lib/ndmUtils';
 import {flags, sharedData} from './lib/state';
 import {interceptMouseover,} from './lib/domUtils';
@@ -49,8 +48,8 @@ export const injectUiExtensions = () => {
     $rootScope.PointToPointEditorController = PointToPointEditorController;
 
     // Should be done BEFORE authentication
-    const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
-    const systemSwitchportsTemplate = getSwitchportsTemplateChunks(SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
+    const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+    const systemSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
 
     if (!dashboardSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
@@ -141,11 +140,11 @@ export const injectUiExtensions = () => {
 
                     const dashboardSwitchportsTemplate = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, 'dashboard']);
 
-                    ndmUtils.replaceSwitchportsTemplate(dashboardSwitchportsTemplate, DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+                    ndmUtils.replaceSwitchportsTemplate(dashboardSwitchportsTemplate, CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
 
                     const systemSwitchportTemplate = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, 'system']);
 
-                    ndmUtils.replaceSwitchportsTemplate(systemSwitchportTemplate, SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
+                    ndmUtils.replaceSwitchportsTemplate(systemSwitchportTemplate, CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
 
                     break;
             }
