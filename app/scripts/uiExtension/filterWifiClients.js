@@ -10,6 +10,7 @@ import {
 } from '../lib/constants';
 
 import {
+    callOnPageLoad,
     getAngularService,
 } from '../lib/ndmUtils';
 
@@ -33,7 +34,6 @@ import {logWarning} from '../lib/log';
  * This UI extension adds filters to the 'Wi-Fi clients' page
  */
 
-const $rootScope = getAngularService('$rootScope');
 const $timeout = getAngularService('$timeout');
 const $q = getAngularService('$q');
 
@@ -41,9 +41,6 @@ const wifiClients = getAngularService('wifiClients');
 const wirelessAcl = getAngularService('wirelessAcl');
 
 const origWifiClientsGetData = _.get(wifiClients, 'getData');
-
-const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
 const NDM_TABLE_SHIFTED_CLASS = 'ndm-table--shifted';
 
@@ -140,9 +137,7 @@ const addWifiClientsFilters = () => {
 
     };
 
-    const unbinder = $rootScope.$on(PAGE_LOADED, () => {
-        unbinder();
-
+    callOnPageLoad(() => {
         $timeout(() => {
             const pollerElements = [...document.querySelectorAll('.ndm-page__content > [ng-transclude]')];
             const pollerEl = pollerElements[pollerElements.length - 1];

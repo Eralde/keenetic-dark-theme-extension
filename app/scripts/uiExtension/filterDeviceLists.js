@@ -17,6 +17,7 @@ import {
     requestContainsPath,
     getPathIndexInRequest,
     forceScopeDigest,
+    callOnPageLoad,
 } from '../lib/ndmUtils';
 
 import {
@@ -42,15 +43,11 @@ import {logWarning} from '../lib/log';
  * This UI extension adds filters to device lists on the 'Device lists' page
  */
 
-const $rootScope = getAngularService('$rootScope');
 const $timeout = getAngularService('$timeout');
 const $q = getAngularService('$q');
 
 const router = getAngularService('router');
 const wirelessAcl = getAngularService('wirelessAcl');
-
-const CONSTANT = getAngularService('CONSTANT');
-const PAGE_LOADED = _.get(CONSTANT, 'events.PAGE_LOADED');
 
 const origPost = _.get(router, 'post');
 const origPostToRciRoot = _.get(router, 'postToRciRoot');
@@ -215,9 +212,7 @@ const addDeviceListsFilters = () => {
 
     };
 
-    const unbinder = $rootScope.$on(PAGE_LOADED, () => {
-        unbinder();
-
+    callOnPageLoad(() => {
         $timeout(() => {
             const tables = [...document.querySelectorAll('.ndm-title [ng-transclude]')];
             const regTableEl = tables[1];
@@ -272,7 +267,7 @@ const cleanupDeviceListsFilters = () => {
     router.postToRciRoot = origPostToRciRoot;
 };
 
-export const deviceListFilters = {
+    export const deviceListFilters = {
     onLoad: addDeviceListsFilters,
     onDestroy: cleanupDeviceListsFilters,
 };
