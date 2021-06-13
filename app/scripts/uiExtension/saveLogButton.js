@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 
 import {
+    callOnPageLoad,
     getAngularService,
 } from '../lib/ndmUtils';
 
@@ -27,9 +28,7 @@ export const addSaveLogButton = () => {
     const $rootScope = getAngularService('$rootScope');
     const $timeout = getAngularService('$timeout');
 
-    const pageUnbinder = $rootScope.$on(EVENTS.PAGE_LOADED, () => {
-        pageUnbinder();
-
+    callOnPageLoad(() => {
         $timeout(() => {
             const logPopupEls = [...document.querySelectorAll('.diagnostics-log-popup [init-scroll]')];
             const logPopupEl = logPopupEls[0];
@@ -57,6 +56,7 @@ export const addSaveLogButton = () => {
                 `<button class="btn" onclick="downloadLog();">${btnTitle}</button>`,
                 SAVE_LOG_BTN_CLASS,
             );
+
             panelEl.append(saveLogBtn);
         });
     });
