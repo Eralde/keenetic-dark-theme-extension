@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
 
 import {FW2X_BRANCHES, POLICIES_STATE} from '../lib/constants';
-import {getAngularService} from '../lib/ndmUtils';
+import {getAngularService, getElementScope} from '../lib/ndmUtils';
 
 import {isPointInsideElement} from '../lib/domUtils';
+import {logWarning} from '../lib/log';
 
 /*
  * This UI extension fixes a glitch on the 'Connection priorities' page.
@@ -20,6 +21,7 @@ const SELECTBOX_TOGGLE_CLOSE = _.get(CONSTANT, 'events.SELECTBOX_TOGGLE_CLOSE');
 
 const Z_INDEX_FIX_CLASS = 'policy-consumers-list__consumer--z-null';
 const MOVE_CONSUMERS_SELECTBOX_UL_SELECTOR = '.move-consumers-form__policy-dropdown ul';
+const EDITOR_HEADER_SELECTOR = '[ng-controller="PoliciesEditorHeaderController as vm"]';
 
 const PRE_3_6_BRANCHES = [
     ...FW2X_BRANCHES,
@@ -36,7 +38,7 @@ const getMoveConsumersFormParentScope = async ($pageRootScope) => {
     const version = _.get(window, 'NDM.version', '');
 
     if (!version) {
-        console.warn('Empty ndw version!');
+        logWarning('Empty ndw version!');
     }
 
     if (PRE_3_6_BRANCHES.some(prefix => version.startsWith(prefix))) { // Version < 3.6
@@ -51,28 +53,30 @@ const getMoveConsumersFormParentScope = async ($pageRootScope) => {
         }
 
         setTimeout(() => {
-            const headerElement = angular.element(document.querySelector('[ng-controller="PoliciesEditorHeaderController as vm"]'));
+            const headerElement = angular.element(document.querySelector(EDITOR_HEADER_SELECTOR));
 
             deferred.resolve(headerElement.scope());
         });
     });
 
     return deferred.promise;
-}
+};
 
 export const fixPolicies = async () => {
-    const pageElement = angular.element(document.querySelector('ndm-page'));
-    const $relevantScope = await getMoveConsumersFormParentScope(pageElement.scope());
+    const $pageScope = await getElementScope('ndm-page');
+    const $relevantScope = await getMoveConsumersFormParentScope($pageScope);
 
     let moveConsumersSelectboxUid = '';
 
-    const getSelectedConsumers = () => [...document.querySelectorAll('.policy-consumers-list__consumer--selected')];
+    const getSelectedConsumers = () => {
+        return [...document.querySelectorAll('.policy-consumers-list__consumer--selected')];
+    };
 
     const resetSelectedConsumersClasslist = () => {
         getSelectedConsumers().forEach(consumer => {
             consumer.classList.remove(Z_INDEX_FIX_CLASS);
         });
-    }
+    };
 
     const clearOnSelectboxOpenListener = $rootScope.$on(SELECTBOX_TOGGLE_OPEN, ($event, uid) => {
         if (uid !== moveConsumersSelectboxUid) {
@@ -137,4 +141,4 @@ export const fixPolicies = async () => {
             clearOnSelectboxCloseListener();
         }
     );
-}
+};
