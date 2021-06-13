@@ -199,7 +199,7 @@ const revertDslStatsChanges = () => {
     diagnosticsDsl.getData = originalGetData;
 }
 
-export const extendedDslStats = {
+export const extendedDslStat = {
     onLoad: extendDslStats,
     onDestroy: revertDslStatsChanges,
 };

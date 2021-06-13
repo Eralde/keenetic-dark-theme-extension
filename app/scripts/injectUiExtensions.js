@@ -16,7 +16,7 @@ import {addVpnStatLinks} from './uiExtension/addVpnStatLinks';
 import {extendedDashboardSwitchportsData} from './uiExtension/gatherStatForPorts';
 import {extendedSystemSwitchportsData} from './uiExtension/extendSystemSwitchportData';
 import {addDeltaSandbox, overrideSandboxesList} from './uiExtension/componentsListDelta';
-import {extendedDslStats} from './uiExtension/extendDslStat';
+import {extendedDslStat} from './uiExtension/extendDslStat';
 
 import {injectPointToPointSectionTemplate,} from './uiExtension/pointToPointTunnelsSection';
 import {PointToPointController} from './uiExtension/pointToPointTunnels/point-to-point.controller';
@@ -223,8 +223,8 @@ export const injectUiExtensions = () => {
         if (ndmUtils.is3xVersion(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DIAGNOSTICS_STATE,
-                extendedDslStats.onLoad,
-                extendedDslStats.onDestroy,
+                extendedDslStat.onLoad,
+                extendedDslStat.onDestroy,
             );
         }
 
