@@ -188,7 +188,7 @@ export const extendMenu3x = () => {
         getSpecialMenuItemClickListener({
             callback: clickOnTheRebootButton,
             stateName: CONTROL_SYSTEM_STATE,
-            menuAction: closeOverlayMenu,
+            menuActionOnStateChange: closeOverlayMenu,
         }),
     );
 
@@ -201,7 +201,7 @@ export const extendMenu3x = () => {
             getSpecialMenuItemClickListener({
                 callback: goToDslTab,
                 stateName: DIAGNOSTICS_STATE,
-                menuAction: closeOverlayMenu,
+                menuActionOnStateChange: closeOverlayMenu,
             }),
         );
     }

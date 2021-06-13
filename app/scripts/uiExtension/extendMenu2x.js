@@ -137,7 +137,7 @@ export const extendMenu2x = () => {
         getSpecialMenuItemClickListener({
             callback: clickOnTheRebootButton,
             stateName: CONTROL_SYSTEM_STATE,
-            menuAction: ($rootScope) => {
+            menuActionOnStateChange: ($rootScope) => {
                 $rootScope.menuIsOpen = false;
             },
         }),

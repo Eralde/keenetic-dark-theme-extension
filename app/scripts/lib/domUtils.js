@@ -355,14 +355,14 @@ export const isPointInsideElement = (point, el) => {
 /**
  * @param {function} callback
  * @param {string} stateName
- * @param {function} menuAction
+ * @param {function} menuActionOnStateChange
  * @param {boolean} checkIfMenuIsOpen
  * @returns {function(*): Q.Promise<*>}
  */
 export const getSpecialMenuItemClickListener = ({
     callback,
     stateName,
-    menuAction = _.noop,
+    menuActionOnStateChange = _.noop,
     checkIfMenuIsOpen = true,
 }) => {
     const $rootScope = getAngularService('$rootScope');
@@ -370,6 +370,7 @@ export const getSpecialMenuItemClickListener = ({
     const $q = getAngularService('$q');
 
     return ($event) => {
+        // 3.1 <= {fw version} <= 3.6
         if (checkIfMenuIsOpen && !$rootScope.menuIsOpen) {
             return;
         }
@@ -385,7 +386,7 @@ export const getSpecialMenuItemClickListener = ({
         return promise
             .then(() => {
                 if ($rootScope) {
-                    menuAction($rootScope);
+                    menuActionOnStateChange($rootScope);
                 }
 
                 if (currentState === stateName) {
