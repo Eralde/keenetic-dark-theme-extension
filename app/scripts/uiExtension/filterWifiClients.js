@@ -27,6 +27,7 @@ import {
 import {
     flags,
 } from '../lib/state';
+import {logWarning} from '../lib/log';
 
 /*
  * This UI extension adds filters to the 'Wi-Fi clients' page
@@ -74,7 +75,7 @@ const modifyWifiClientsService = (globalFlags, __VARS) => {
     };
 };
 
-export const addWifiClientsFilters = () => {
+const addWifiClientsFilters = () => {
     let __VARS = {};
 
     const getRowsToHide = (elToAppendTo, pageHeaderEl, tableEl) => {
@@ -147,7 +148,7 @@ export const addWifiClientsFilters = () => {
             const pollerEl = pollerElements[pollerElements.length - 1];
 
             if (!pollerEl) {
-                console.warn('Failed to get Wi-Fi clients devices table DOM element');
+                logWarning('Failed to get Wi-Fi clients devices table DOM element');
                 return;
             }
 
@@ -164,6 +165,11 @@ export const addWifiClientsFilters = () => {
     });
 };
 
-export const cleanupWifiClientsFilters = () => {
+const cleanupWifiClientsFilters = () => {
     wifiClients.getData = origWifiClientsGetData;
+};
+
+export const wifiClientsFilters = {
+    onLoad: addWifiClientsFilters,
+    onDestroy: cleanupWifiClientsFilters,
 };

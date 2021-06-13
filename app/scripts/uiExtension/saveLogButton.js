@@ -24,7 +24,7 @@ const router = getAngularService('router');
 
 window.downloadLog = () => window.location.assign(router.constants.CI_URL + '/log.txt');
 
-export const addSaveLogButton = () => {
+const addSaveLogButton = () => {
     const $rootScope = getAngularService('$rootScope');
     const $timeout = getAngularService('$timeout');
 
@@ -60,4 +60,8 @@ export const addSaveLogButton = () => {
             panelEl.append(saveLogBtn);
         });
     });
+};
+
+export const saveLogButton = {
+    onLoad: addSaveLogButton,
 };

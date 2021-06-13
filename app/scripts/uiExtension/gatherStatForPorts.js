@@ -6,7 +6,11 @@ import {
     getElementController, getGroupedSwitchportsListOverload,
 } from '../lib/ndmUtils';
 import {sharedData} from '../lib/state';
-import {__SHOW_INTERFACE_STAT_PROPS__, UI_EXTENSIONS_KEY} from '../lib/constants';
+import {
+    __SHOW_INTERFACE_STAT_PROPS__,
+    SHOW_INTERFACE_STAT,
+    UI_EXTENSIONS_KEY,
+} from '../lib/constants';
 
 const dashboardDataService = getAngularService('dashboardDataService');
 const utils = getAngularService('utils');
@@ -15,7 +19,7 @@ const switchportsService = getAngularService('switchportsService');
 const originalGetSwitchportsList = utils.getSwitchportsList;
 const originalGetGroupedSwitchportsList = switchportsService.getGroupedSwitchportsList;
 
-export const gatherStatForPorts = async () => {
+const gatherStatForPorts = async () => {
     await getDashboardController();
 
     switchportsService.getGroupedSwitchportsList = getGroupedSwitchportsListOverload(
@@ -68,7 +72,7 @@ export const gatherStatForPorts = async () => {
 
         setTimeout(() => {
             dashboardDataService.getInterfaceStatistics(portIds).then((responseData) => {
-                const statArray = _.get(responseData[1], 'show.interface.stat', []);
+                const statArray = _.get(responseData[1], SHOW_INTERFACE_STAT, []);
 
                 switchportsController.switchports = extendSwitchportsListWithStatData(
                     _.map(switchportsController.switchports),
@@ -80,7 +84,12 @@ export const gatherStatForPorts = async () => {
     });
 }
 
-export const revertGatherStatForPortsChanges = () => {
+const revertGatherStatForPortsChanges = () => {
     utils.getSwitchportsList = originalGetSwitchportsList;
     switchportsService.getGroupedSwitchportsList = originalGetGroupedSwitchportsList;
+};
+
+export const extendedDashboardSwitchportsData = {
+    onLoad: gatherStatForPorts,
+    onDestroy: revertGatherStatForPortsChanges,
 };

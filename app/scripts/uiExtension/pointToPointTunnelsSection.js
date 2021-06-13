@@ -6,7 +6,7 @@ import {logWarning} from '../lib/log';
 
 const EDITOR_INJECTION_POINT = '<!-- EDITOR -->';
 
-export const addPointToPointTunnelSection = () => {
+export const injectPointToPointSectionTemplate = () => {
     const $templateCache = getAngularService('$templateCache');
     const otherConnectionsTemplate = getTemplate(OTHER_CONNECTIONS_TEMPLATE_PATH);
 

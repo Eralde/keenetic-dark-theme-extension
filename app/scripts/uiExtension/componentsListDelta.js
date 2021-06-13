@@ -34,7 +34,7 @@ const modifyDeltaOption = (optionsList) => {
     };
 }
 
-export const overriderSandboxOptions = async () => {
+const overrideSandboxOptions = async () => {
     if (!isSuitableDevice()) {
         return;
     }
@@ -67,9 +67,14 @@ export const overriderSandboxOptions = async () => {
     watchers.push(languageChangeWatcher);
 };
 
-export const cancelComponentsSectionsWatchers = () => {
+const cancelComponentsSectionsWatchers = () => {
     watchers.forEach(item => item());
 }
+
+export const addDeltaSandbox = {
+    onLoad: overrideSandboxOptions,
+    onDestroy: cancelComponentsSectionsWatchers,
+};
 
 export const overrideSandboxesList = () => {
     if (!isSuitableDevice()) {

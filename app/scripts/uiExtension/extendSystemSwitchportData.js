@@ -66,7 +66,7 @@ switchportsService.processConfiguration = (responses) => {
     return retVal;
 };
 
-export const extendSystemSwitchportData = async () => {
+const extendSystemSwitchportData = async () => {
     await getNdmPageController();
 
     const switchportsController = await getElementController('.system__switchports-section');
@@ -120,6 +120,11 @@ export const extendSystemSwitchportData = async () => {
     }
 };
 
-export const revertExtendSystemSwitchportData = () => {
+const revertExtendSystemSwitchportData = () => {
     utils.getSwitchportsList = originalGetSwitchportsList;
+};
+
+export const extendedSystemSwitchportsData = {
+    onLoad: extendSystemSwitchportData,
+    onDestroy: revertExtendSystemSwitchportData,
 };

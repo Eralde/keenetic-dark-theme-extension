@@ -97,3 +97,8 @@ export const revertAppsServiceModifications = () => {
 
     $timeout.cancel(_updateLinksStylesTimeout);
 };
+
+export const addVpnStatLinks = {
+    onLoad: modifyAppsService,
+    onDestroy: revertAppsServiceModifications,
+};

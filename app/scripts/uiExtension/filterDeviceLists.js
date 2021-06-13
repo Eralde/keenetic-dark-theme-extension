@@ -32,11 +32,11 @@ import {
     createDiv,
     getPageHeaderEl,
     toggleCssClass,
+    isElementVisible,
 } from '../lib/domUtils';
 
-import {
-    flags,
-} from '../lib/state';
+import {flags} from '../lib/state';
+import {logWarning} from '../lib/log';
 
 /*
  * This UI extension adds filters to device lists on the 'Device lists' page
@@ -73,7 +73,7 @@ const modifyShowIpHotspotData = (globalFlags, __VARS, routerService) => {
 
     const getHosts = (hosts) => {
         const hideUnregisteredHosts = globalFlags.get(FLAGS.HIDE_UNREGISTERED_HOSTS);
-        const areFiltersVisible = getComputedStyle(__VARS.filtersToggleCheckbox).display !== 'none';
+        const areFiltersVisible = isElementVisible(__VARS.filtersToggleCheckbox); //.display !== 'none';
         const applyFilters = globalFlags.get(FLAGS.SHOW_FILTERS) && areFiltersVisible;
 
         if (!applyFilters) {
@@ -145,7 +145,7 @@ const modifyShowIpHotspotData = (globalFlags, __VARS, routerService) => {
     }
 };
 
-export const addDeviceListsFilters = () => {
+const addDeviceListsFilters = () => {
     let __VARS = {};
 
     const getRowsToHide = (regTableHeader, unregTableHeader, pageHeaderEl) => {
@@ -224,12 +224,12 @@ export const addDeviceListsFilters = () => {
             const unregTableEl = tables[0];
 
             if (!regTableEl) {
-                console.warn('Failed to get registered devices table DOM element');
+                logWarning('Failed to get registered devices table DOM element');
                 return;
             }
 
             if (!unregTableEl) {
-                console.warn('Failed to get unregistered devices table DOM element');
+                logWarning('Failed to get unregistered devices table DOM element');
                 return;
             }
 
@@ -265,9 +265,14 @@ export const addDeviceListsFilters = () => {
     });
 };
 
-export const cleanupDeviceListsFilters = () => {
+const cleanupDeviceListsFilters = () => {
     _MACS_TO_HIDE = [];
 
     router.post = origPost;
     router.postToRciRoot = origPostToRciRoot;
+};
+
+export const deviceListFilters = {
+    onLoad: addDeviceListsFilters,
+    onDestroy: cleanupDeviceListsFilters,
 };

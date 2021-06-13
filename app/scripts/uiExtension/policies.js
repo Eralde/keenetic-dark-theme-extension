@@ -62,7 +62,7 @@ const getMoveConsumersFormParentScope = async ($pageRootScope) => {
     return deferred.promise;
 };
 
-export const fixPolicies = async () => {
+const fixPolicies = async () => {
     const $pageScope = await getElementScope('ndm-page');
     const $relevantScope = await getMoveConsumersFormParentScope($pageScope);
 
@@ -141,4 +141,8 @@ export const fixPolicies = async () => {
             clearOnSelectboxCloseListener();
         }
     );
+};
+
+export const fixedPolicyEditorHeader = {
+    onLoad: fixPolicies,
 };

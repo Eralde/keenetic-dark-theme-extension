@@ -7,25 +7,21 @@ import {interceptMouseover,} from './lib/domUtils';
 
 import {extendMenu2x} from './uiExtension/extendMenu2x';
 import {extendMenu3x} from './uiExtension/extendMenu3x';
-import {addSaveLogButton} from './uiExtension/saveLogButton';
-import {fixPolicies,} from './uiExtension/policies';
-import {addDeviceListsFilters, cleanupDeviceListsFilters,} from './uiExtension/filterDeviceLists';
-import {addWifiClientsFilters, cleanupWifiClientsFilters,} from './uiExtension/filterWifiClients';
-import {modifyAppsService, revertAppsServiceModifications,} from './uiExtension/addVpnStatLinks';
-import {gatherStatForPorts, revertGatherStatForPortsChanges,} from './uiExtension/gatherStatForPorts';
 
-import {
-    cancelComponentsSectionsWatchers,
-    overriderSandboxOptions,
-    overrideSandboxesList,
-} from './uiExtension/componentsListDelta';
+import {saveLogButton} from './uiExtension/saveLogButton';
+import {fixedPolicyEditorHeader} from './uiExtension/policies';
+import {deviceListFilters} from './uiExtension/filterDeviceLists';
+import {wifiClientsFilters} from './uiExtension/filterWifiClients';
+import {addVpnStatLinks} from './uiExtension/addVpnStatLinks';
+import {extendedDashboardSwitchportsData} from './uiExtension/gatherStatForPorts';
+import {extendedSystemSwitchportsData} from './uiExtension/extendSystemSwitchportData';
+import {addDeltaSandbox, overrideSandboxesList} from './uiExtension/componentsListDelta';
+import {extendedDslStats} from './uiExtension/extendDslStat';
 
-import {extendDslStats, revertDslStatsChanges,} from './uiExtension/extendDslStat';
+import {injectPointToPointSectionTemplate,} from './uiExtension/pointToPointTunnelsSection';
+import {PointToPointController} from './uiExtension/pointToPointTunnels/point-to-point.controller';
+import {PointToPointEditorController} from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
 
-import {addPointToPointTunnelSection,} from './uiExtension/pointToPointTunnelsSection';
-import {PointToPointController,} from './uiExtension/pointToPointTunnels/point-to-point.controller';
-import {PointToPointEditorController,} from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
-import {extendSystemSwitchportData, revertExtendSystemSwitchportData} from './uiExtension/extendSystemSwitchportData';
 import {logWarning} from './lib/log';
 import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
 
@@ -190,69 +186,77 @@ export const injectUiExtensions = () => {
 
         setTimeout(extendMenuFunction, 500);
 
+        /* Adds 'Connection statistics' links to the VPN server apps (Dashboard) */
         ndmUtils.addUiExtension(
             CONSTANTS.DASHBOARD_STATE,
-            modifyAppsService,
-            revertAppsServiceModifications,
+            addVpnStatLinks.onLoad,
+            addVpnStatLinks.onDestroy,
         );
 
+        /* Adds filters to the 'Device lists' page (main mode) */
         ndmUtils.addUiExtension(
             CONSTANTS.DEVICES_LIST_STATE,
-            addDeviceListsFilters,
-            cleanupDeviceListsFilters,
+            deviceListFilters.onLoad,
+            deviceListFilters.onDestroy,
         );
 
+        /* Adds filters to the 'Wi-Fi clients' page (non-routing modes) */
         ndmUtils.addUiExtension(
             CONSTANTS.WIFI_CLIENTS_STATE,
-            addWifiClientsFilters,
-            cleanupWifiClientsFilters,
+            wifiClientsFilters.onLoad,
+            wifiClientsFilters.onDestroy,
         );
 
+        /* Adds 'Save to computer' button to the 'System log' popup */
         ndmUtils.addUiExtension(
             CONSTANTS.DIAGNOSTICS_LOG_STATE,
-            addSaveLogButton,
+            saveLogButton.onLoad,
         );
 
+        /* Fixes 'Select policy' (to assign consumers to) dropdown menu */
         ndmUtils.addUiExtension(
             CONSTANTS.POLICIES_STATE,
-            fixPolicies,
+            fixedPolicyEditorHeader.onLoad,
         );
 
+        /* Additional data in the DSL connection statistics ('Diagnostics' -> 'DSL') */
         if (ndmUtils.is3xVersion(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DIAGNOSTICS_STATE,
-                extendDslStats,
-                revertDslStatsChanges,
+                extendedDslStats.onLoad,
+                extendedDslStats.onDestroy,
             );
         }
 
-        overrideSandboxesList();
-
-        if (ndmUtils.is3xVersion(ndwBranch)) {
-            const components = _.get(window, 'NDM.profile.components', {});
-
-            if (components.eoip || components.gre || components.ipip) {
-                addPointToPointTunnelSection();
-            }
+        /* EoIP / IPIP / GRE section ('Other connections') */
+        if (
+            ndmUtils.is3xVersion(ndwBranch)
+            && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
+        ) {
+            injectPointToPointSectionTemplate();
         }
+
+        /* 'delta' sandbox option for older models */
+        overrideSandboxesList();
 
         ndmUtils.addUiExtension(
             CONSTANTS.CONTROL_SYSTEM_STATE,
-            overriderSandboxOptions,
-            cancelComponentsSectionsWatchers,
+            addDeltaSandbox.onLoad,
+            addDeltaSandbox.onDestroy,
         )
 
+        /* switchports template overload (dashboard, 'General settings') */
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DASHBOARD_STATE,
-                gatherStatForPorts,
-                revertGatherStatForPortsChanges,
+                extendedDashboardSwitchportsData.onLoad,
+                extendedDashboardSwitchportsData.onDestroy,
             );
 
             ndmUtils.addUiExtension(
                 CONSTANTS.CONTROL_SYSTEM_STATE,
-                extendSystemSwitchportData,
-                revertExtendSystemSwitchportData,
+                extendedSystemSwitchportsData.onLoad,
+                extendedSystemSwitchportsData.onDestroy,
             )
         }
 

@@ -171,7 +171,7 @@ const getAdditionalDslStatProps = (dslStatsFileLines) => {
     );
 }
 
-export const extendDslStats = () => {
+const extendDslStats = () => {
     callOnPageLoad(() => {
         diagnosticsDsl.getData = () => {
             return originalGetData()
@@ -195,6 +195,11 @@ export const extendDslStats = () => {
     });
 }
 
-export const revertDslStatsChanges = () => {
+const revertDslStatsChanges = () => {
     diagnosticsDsl.getData = originalGetData;
 }
+
+export const extendedDslStats = {
+    onLoad: extendDslStats,
+    onDestroy: revertDslStatsChanges,
+};
