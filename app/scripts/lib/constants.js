@@ -174,6 +174,7 @@ export const SWITCHPORT_TEMPLATE_PROP = {
     TXERRORS: 'txerrors',
     RXERRORS: 'rxerrors',
     SEPARATOR: 'separator',
+    MULTILINE_DESCRIPTION: 'multiline_description',
 }
 
 export const TEMPLATE_PROP_DATA = {
@@ -220,12 +221,23 @@ export const TEMPLATE_PROP_DATA = {
         className: 'kdte-small-row',
     },
     [SWITCHPORT_TEMPLATE_PROP.DESCRIPTION]: {
-        label: 'Description',
+        label: 'Description (8 chars max)',
         prop: 'interfaceDescription',
         alias: 'description',
         fallback: 'name',
-        previewValue: 'my desc.',
+        previewValue: 'my desc…',
         className: 'ellipsis',
+        valueProps: {
+            'style': 'max-width: 8ch;',
+            'title': '{{port.interfaceDescription}}',
+        },
+    },
+    [SWITCHPORT_TEMPLATE_PROP.MULTILINE_DESCRIPTION]: {
+        label: 'Description (8 chars per line)',
+        prop: 'interfaceDescription',
+        alias: 'description',
+        fallback: 'name',
+        previewValue: 'my long \ndescription',
         valueProps: {
             'style': 'max-width: 8ch;',
             'title': '{{port.interfaceDescription}}',
