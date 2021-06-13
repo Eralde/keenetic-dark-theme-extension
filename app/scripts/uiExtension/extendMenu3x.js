@@ -174,8 +174,18 @@ export const extendMenu3x = () => {
         link.innerText = getNgL10n(REBOOT_LINK_TITLE);
     });
 
-    const closeOverlayMenu = ($rootScope) => {
-        $rootScope.menuIsOpenOverlayed = false;
+    const closeOverlayMenu = ($rootScope, menuScope, isSameState) => {
+        if (!isSameState) {
+            $rootScope.menuIsOpenOverlayed = false;
+
+            return;
+        }
+
+        if (_.has(menuScope, 'vm.onOverlayClick')) {
+            _.invoke(menuScope, 'vm.onOverlayClick');
+        } else {
+            $rootScope.menuIsOpenOverlayed = false;
+        }
     };
 
     link.addEventListener(
@@ -184,6 +194,7 @@ export const extendMenu3x = () => {
             callback: clickOnTheRebootButton,
             stateName: CONTROL_SYSTEM_STATE,
             menuActionOnStateChange: closeOverlayMenu,
+            menuScope: $scope,
         }),
     );
 
@@ -197,6 +208,7 @@ export const extendMenu3x = () => {
                 callback: goToDslTab,
                 stateName: DIAGNOSTICS_STATE,
                 menuActionOnStateChange: closeOverlayMenu,
+                menuScope: $scope,
             }),
         );
     }

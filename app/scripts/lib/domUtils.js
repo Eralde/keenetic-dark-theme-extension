@@ -355,6 +355,7 @@ export const isPointInsideElement = (point, el) => {
 /**
  * @param {function} callback
  * @param {string} stateName
+ * @param {object} menuScope,
  * @param {function} menuActionOnStateChange
  * @param {boolean} checkIfMenuIsOpen
  * @returns {function(*): Q.Promise<*>}
@@ -362,6 +363,7 @@ export const isPointInsideElement = (point, el) => {
 export const getSpecialMenuItemClickListener = ({
     callback,
     stateName,
+    menuScope,
     menuActionOnStateChange = _.noop,
     checkIfMenuIsOpen = true,
 }) => {
@@ -386,7 +388,7 @@ export const getSpecialMenuItemClickListener = ({
         return promise
             .then(() => {
                 if ($rootScope) {
-                    menuActionOnStateChange($rootScope);
+                    menuActionOnStateChange($rootScope, menuScope, currentState === stateName);
                 }
 
                 if (currentState === stateName) {
