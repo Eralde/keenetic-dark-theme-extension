@@ -1,25 +1,5 @@
 import * as _ from 'lodash';
-
-import {
-    THEME_IS_ENABLED_KEY,
-    MENU_ANIMATIONS_KEY,
-    UI_EXTENSIONS_KEY,
-    TOGGLE_DEFAULT_VALUES,
-    LEGACY_STYLES,
-    STYLES_2X,
-    STYLES_3X,
-    NDM_LAYOUT_THEME_CLASS,
-    TOGGLE_UI_EXTENSIONS_EVENT,
-    TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT,
-    BACKGROUND_PAGE_INITIALIZED_EVENT,
-    ORIGINAL_SWITCHPORTS_TEMPLATE,
-    RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS,
-    INJECTED_JS_INITIALIZED,
-    INITIAL_STORAGE_DATA,
-    DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
-    SWITCHPORT_TEMPLATE_DATA_KEY,
-    SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
-} from './lib/constants';
+import * as CONSTANTS from './lib/constants';
 
 import {
     is2xVersion,
@@ -221,7 +201,7 @@ const sendUiExtensionsState = (state, awaitResponse = false) => {
     let responseReceived = false;
 
     const sendMessage = () => {
-        window.postMessage({action: TOGGLE_UI_EXTENSIONS_EVENT, payload: state}, '*');
+        window.postMessage({action: CONSTANTS.TOGGLE_UI_EXTENSIONS_EVENT, payload: state}, '*');
 
         if (awaitResponse && !responseReceived) {
             setTimeout(sendMessage, 500);
@@ -231,7 +211,7 @@ const sendUiExtensionsState = (state, awaitResponse = false) => {
     const listener = (event) => {
         const action = _.get(event, 'data.action', '');
 
-        if (action !== TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT) {
+        if (action !== CONSTANTS.TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT) {
             return;
         }
 
@@ -265,7 +245,7 @@ const toggleLayoutClass = (state, className) => {
 };
 
 const onThemeToggle = (state) => {
-    toggleLayoutClass(state, NDM_LAYOUT_THEME_CLASS);
+    toggleLayoutClass(state, CONSTANTS.NDM_LAYOUT_THEME_CLASS);
 
     return toggleThemeCss(state);
 };
@@ -282,11 +262,11 @@ const processNdmVerMessage = (event) => {
     ndmVersion = version;
 
     if (version.startsWith('0')) {
-        stylesToInject = stylesObjectToArray(LEGACY_STYLES);
+        stylesToInject = stylesObjectToArray(CONSTANTS.LEGACY_STYLES);
     } else if (is3xVersion(version)) {
-        stylesToInject = stylesObjectToArray(STYLES_3X);
+        stylesToInject = stylesObjectToArray(CONSTANTS.STYLES_3X);
     } else if (is2xVersion(version)) {
-        stylesToInject = stylesObjectToArray(STYLES_2X);
+        stylesToInject = stylesObjectToArray(CONSTANTS.STYLES_2X);
     } else {
         console.warn(`Unsupported ndw version: ${version}`);
 
@@ -307,7 +287,7 @@ const processNdmVerMessage = (event) => {
     const initCallbackId = registerCallback((request) => {
         const keys = Object.keys(request);
 
-        if (!keys.includes(BACKGROUND_PAGE_INITIALIZED_EVENT)) {
+        if (!keys.includes(CONSTANTS.BACKGROUND_PAGE_INITIALIZED_EVENT)) {
             return;
         }
 
@@ -315,7 +295,8 @@ const processNdmVerMessage = (event) => {
 
         setTimeout(() => {
             browser.storage.local.get().then(data => {
-                const state = _.get(data, UI_EXTENSIONS_KEY, TOGGLE_DEFAULT_VALUES[UI_EXTENSIONS_KEY]);
+                const defaultValue = CONSTANTS.TOGGLE_DEFAULT_VALUES[CONSTANTS.UI_EXTENSIONS_KEY];
+                const state = _.get(data, CONSTANTS.UI_EXTENSIONS_KEY, defaultValue);
 
                 sendUiExtensionsState(state, true);
             });
@@ -325,24 +306,24 @@ const processNdmVerMessage = (event) => {
     createStateController({
         portObj: bgConnect,
         sendMsgFn: sendMsg,
-        queryMsg: THEME_IS_ENABLED_KEY,
-        keyInResponse: THEME_IS_ENABLED_KEY,
+        queryMsg: CONSTANTS.THEME_IS_ENABLED_KEY,
+        keyInResponse: CONSTANTS.THEME_IS_ENABLED_KEY,
         onStateChange: onThemeToggle,
     });
 
     createStateController({
         portObj: bgConnect,
         sendMsgFn: sendMsg,
-        queryMsg: MENU_ANIMATIONS_KEY,
-        keyInResponse: MENU_ANIMATIONS_KEY,
+        queryMsg: CONSTANTS.MENU_ANIMATIONS_KEY,
+        keyInResponse: CONSTANTS.MENU_ANIMATIONS_KEY,
         onStateChange: toggleAnimationsCss,
     });
 
     createStateController({
         portObj: bgConnect,
         sendMsgFn: sendMsg,
-        queryMsg: UI_EXTENSIONS_KEY,
-        keyInResponse: UI_EXTENSIONS_KEY,
+        queryMsg:CONSTANTS.UI_EXTENSIONS_KEY,
+        keyInResponse: CONSTANTS.UI_EXTENSIONS_KEY,
         onStateChange: hideUiExtensions,
     });
 
@@ -358,11 +339,11 @@ const processSwitchportsTemplateMessage = async (event) => {
     const storageData = {};
 
     if (!_.isEmpty(dashboardData)) {
-        storageData[DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = dashboardData;
+        storageData[CONSTANTS.DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = dashboardData;
     }
 
     if (!_.isEmpty(systemData)) {
-        storageData[SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = systemData;
+        storageData[CONSTANTS.SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = systemData;
     }
 
     await browser.storage.local.set(storageData);
@@ -374,7 +355,7 @@ const sendStorageUntilJsInitialized = () => {
             browser.storage.local.get().then((data) => {
                 window.postMessage(
                     {
-                        action: INITIAL_STORAGE_DATA,
+                        action: CONSTANTS.INITIAL_STORAGE_DATA,
                         payload: data,
                     },
                     {
@@ -404,11 +385,11 @@ window.addEventListener(
                 processNdmVerMessage(event);
                 break;
 
-            case ORIGINAL_SWITCHPORTS_TEMPLATE:
+            case CONSTANTS.ORIGINAL_SWITCHPORTS_TEMPLATE:
                 await processSwitchportsTemplateMessage(event);
                 break;
 
-            case INJECTED_JS_INITIALIZED:
+            case CONSTANTS.INJECTED_JS_INITIALIZED:
                 injectedJsInitialized = true;
                 break;
         }
@@ -421,13 +402,13 @@ browser.storage.onChanged.addListener((changes, area) => {
         return;
     }
 
-    if (!_.has(changes, SWITCHPORT_TEMPLATE_DATA_KEY)) {
+    if (!_.has(changes, CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY)) {
         return;
     }
 
     window.postMessage(
         {
-            action: RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS,
+            action: CONSTANTS.RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS,
             payload: true,
         },
         {
