@@ -70,7 +70,7 @@ const updateVpnStatLinksStyles = () => {
     _updateLinksStylesTimeout = $timeout(updateVpnStatLinksStyles, 1000);
 };
 
-export const modifyAppsService = () => {
+const modifyAppsService = () => {
     appsService.getAppsStates = (...args) => {
         const appStates = _getAppsStates(...args);
 
@@ -92,7 +92,7 @@ export const modifyAppsService = () => {
     });
 };
 
-export const revertAppsServiceModifications = () => {
+const revertAppsServiceModifications = () => {
     appsService.getAppsStates = _getAppsStates;
 
     $timeout.cancel(_updateLinksStylesTimeout);
