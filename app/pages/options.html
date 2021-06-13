@@ -57,10 +57,17 @@
         </label>
     </form>
 
-    <hr />
+    <br/>
+    <br/>
 
     <div class="switchports-template">
         <h3>Switchport template editor (FW >= 3.4 only)</h3>
+
+        <p class="switchports-template__info-notice">
+            MT7628-based devices with built-in switch have no port statistics,
+            therefore the 'Transmitted bytes', 'Received bytes', 'TX errors' & 'RX errors' properties
+            will always be empty for these devices.
+        </p>
 
         <div class="switchports-template-editor">
             <div class="switchports-template-editor__available">
