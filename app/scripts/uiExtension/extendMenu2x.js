@@ -131,6 +131,7 @@ export const extendMenu2x = () => {
             callback: clickOnTheRebootButton,
             stateName: CONTROL_SYSTEM_STATE,
             menuScope: $scope,
+            checkIfMenuIsOpen: false,
             menuActionOnStateChange: ($rootScope) => {
                 $rootScope.menuIsOpen = false;
             },
