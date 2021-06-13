@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import {
     DIAGNOSTICS_LOG_STATE,
     LOG_LINK_CLASS,
@@ -14,6 +12,7 @@ import {
     getNgL10n,
     onLanguageChange,
     addLinkToMenuSection,
+    forceScopeDigest,
 } from '../lib/ndmUtils';
 
 import {
@@ -31,12 +30,6 @@ const $state = getAngularService('$state');
 
 const FIRST_MENU_GROUP = 'menu.dashboard';
 const SYSTEM_MENU_GROUP = 'menu.control';
-
-const forceScopeDigest = ($scope) => {
-    if (!['$apply', '$digest'].includes(_.get($scope, '$root.$$phase'))) {
-        $scope.$apply();
-    }
-};
 
 let watcherIsSet = false,
     extendMenuTimeout = null;

@@ -8,13 +8,15 @@ import {
     REG_DEVICES_FLAGS,
     UNREG_DEVICES_FLAGS,
     FILTERS_TOGGLE_CLASS,
-    NDM_PAGE_SELECTOR, HIDDEN_TABLE_ROW_CLASS,
+    NDM_PAGE_SELECTOR,
+    HIDDEN_TABLE_ROW_CLASS,
 } from '../lib/constants';
 
 import {
     getAngularService,
     requestContainsPath,
     getPathIndexInRequest,
+    forceScopeDigest,
 } from '../lib/ndmUtils';
 
 import {
@@ -252,9 +254,7 @@ export const addDeviceListsFilters = () => {
                 const rowsToShow = toShow.map(el => el[0].closest('tr'));
                 toggleCssClass(rowsToShow, HIDDEN_TABLE_ROW_CLASS, false);
 
-                if ($scope.$root.$$phase !== '$apply' && $scope.$root.$$phase !== '$digest') {
-                    $scope.$apply();
-                }
+                forceScopeDigest($scope);
             });
 
             __VARS.ctrlName = 'DevicesListController';

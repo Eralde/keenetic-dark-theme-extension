@@ -19,6 +19,7 @@ import {
     getNgL10n,
     onLanguageChange,
     addLinkToMenuSection,
+    forceScopeDigest,
 } from '../lib/ndmUtils';
 
 import {
@@ -54,12 +55,6 @@ const setExtendMenuTimeout = () => {
 
 const clearExtendMenuTimeout = () => {
     extendMenuTimeout = null
-};
-
-const forceScopeDigest = ($scope) => {
-    if (!['$apply', '$digest'].includes(_.get($scope, '$root.$$phase'))) {
-        $scope.$apply();
-    }
 };
 
 const getDslDiagnosticsLinkTitle = () => {

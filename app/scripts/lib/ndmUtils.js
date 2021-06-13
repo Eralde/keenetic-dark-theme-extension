@@ -157,6 +157,11 @@ export const onLanguageChange = (callback) => {
         .$on('$translateChangeSuccess', () => setTimeout(callback));
 };
 
+export const forceScopeDigest = ($scope) => {
+    if (!['$apply', '$digest'].includes(_.get($scope, '$root.$$phase'))) {
+        $scope.$apply();
+    }
+};
 
 const _getRequestData = (requestObj) => {
     return angular.isDefined(requestObj.url)
