@@ -1,4 +1,4 @@
-import {getAngularService} from '../../lib/ndmUtils';
+import {getAngularService, isComponentInstalled} from '../../lib/ndmUtils';
 import * as _ from 'lodash';
 import {SHOW_INTERFACE, SHOW_RC_INTERFACE, SHOW_INTERFACE_STAT} from '../../lib/constants';
 
@@ -54,9 +54,8 @@ export const pointToPointService = (function() {
         [TUNNEL_TYPE.IPIP]: 'ipip',
         [TUNNEL_TYPE.GRE]: 'gre',
         [TUNNEL_TYPE.EOIP]: 'eoip',
-    }
+    };
 
-    const EMPTY_VAL_HTML = '&mdash;';
     const IS_IPSEC_AVAILABLE = _.has(window, 'NDM.profile.components.ipsec');
 
     const EVENTS = {
@@ -117,9 +116,7 @@ export const pointToPointService = (function() {
     const getTunnelTypeOptions = () => {
         return _
             .chain(TUNNEL_TYPE)
-            .pickBy(type => {
-                return _.has(window, ['NDM', 'profile', 'components', COMPONENT_DEPENDENCIES[type]]);
-            })
+            .pickBy(type => isComponentInstalled(COMPONENT_DEPENDENCIES[type]))
             .map(item => ({id: item, label: item}))
             .value();
     };
@@ -263,7 +260,7 @@ export const pointToPointService = (function() {
             ipsecIkev2Query,
             ipsecIgnoreQuery,
         ];
-    }
+    };
 
     const saveTunnel = (model) => {
         const id$ = model.isNew
@@ -304,7 +301,7 @@ export const pointToPointService = (function() {
 
             return router.postAndSave(queries.filter(item => !_.isEmpty(item)));
         });
-    }
+    };
 
     const determineTunnelStatus = (
         showInterfaceData,
@@ -389,7 +386,7 @@ export const pointToPointService = (function() {
         );
 
         return usedSubnets.map(subnet => ({...subnet, label: labelByIfaceId[subnet.ifaceId]}));
-    }
+    };
 
     const getTunnelsList = ({showInterface, showRcInterface}) => {
         const matchingShowInterfaceObjects = _.pickBy(showInterface, isPointToPoint);

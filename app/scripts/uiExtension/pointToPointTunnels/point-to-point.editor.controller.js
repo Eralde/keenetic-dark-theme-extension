@@ -1,18 +1,18 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
-import {pointToPointService} from './point-to-point.service';
 import {getL10n} from '../../lib/l10nUtils';
+import {logWarning} from '../../lib/log';
+import {pointToPointService} from './point-to-point.service';
 
 const ROOT_ELEMENT_SELECTOR = '.point-to-point-editor';
 
 // Do not reference any services as the 'controller' parameters -- this will result in an injector error
 export function PointToPointEditorController() {
     const vm = this;
-
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));
 
     if (!element) {
-        console.warn(`Failed to get section root element (${ROOT_ELEMENT_SELECTOR})`);
+        logWarning(`Failed to get section root element (${ROOT_ELEMENT_SELECTOR})`);
 
         return;
     }
@@ -52,7 +52,7 @@ export function PointToPointEditorController() {
             ipsecIsEnabled: getL10n('PointToPointEditorIpsecEnabled'),
             ipsecIsServer: getL10n('PointToPointEditorIpsecIsServer'),
             ipsecTunnelSourceIsInterface: getL10n('PointToPointEditorIpsecTunnelSourceIsInterface'),
-        }
+        };
     };
 
     const getDataFromParentController = (idToExclude) => {
@@ -75,14 +75,15 @@ export function PointToPointEditorController() {
         requester.stopPolling();
 
         vm.isVisible = true;
-    }
+    };
 
     vm.closeEditor = () => {
         vm.isVisible = false;
         vm.isLocked = false;
         vm.model = {};
+
         requester.startPolling();
-    }
+    };
 
     vm.saveTunnel = () => {
         if (vm.isLocked) {
@@ -94,7 +95,7 @@ export function PointToPointEditorController() {
         return pointToPointService.saveTunnel(vm.model).finally(() => {
             vm.closeEditor();
         });
-    }
+    };
 
     vm.deleteTunnel = () => {
         return modal.confirm().then(() => {
