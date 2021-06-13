@@ -239,7 +239,7 @@ export const TEMPLATE_PROP_DATA = {
         fallback: 'name',
         previewValue: 'my long \ndescription',
         valueProps: {
-            'style': 'max-width: 8ch;',
+            'style': 'max-width: 7ch; word-break: break-all;',
             'title': '{{port.interfaceDescription}}',
         },
     },
