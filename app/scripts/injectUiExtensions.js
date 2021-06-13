@@ -17,6 +17,7 @@ import {extendedDashboardSwitchportsData} from './uiExtension/gatherStatForPorts
 import {extendedSystemSwitchportsData} from './uiExtension/extendSystemSwitchportData';
 import {addDeltaSandbox, overrideSandboxesList} from './uiExtension/componentsListDelta';
 import {extendedDslStat} from './uiExtension/extendDslStat';
+import {additionalWolButton} from './uiExtension/additionalWolButton';
 
 import {injectPointToPointSectionTemplate,} from './uiExtension/pointToPointTunnelsSection';
 import {PointToPointController} from './uiExtension/pointToPointTunnels/point-to-point.controller';
@@ -259,6 +260,12 @@ export const injectUiExtensions = () => {
                 extendedSystemSwitchportsData.onDestroy,
             )
         }
+
+        /* Adds 'WoL' button next to an offline registered host name */
+        ndmUtils.addUiExtension(
+            CONSTANTS.DEVICES_LIST_STATE,
+            additionalWolButton.onLoad,
+        );
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');
     });
