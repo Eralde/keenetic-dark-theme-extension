@@ -163,6 +163,16 @@ export const forceScopeDigest = ($scope) => {
     }
 };
 
+export const isComponentInstalled = (componentName) => {
+    const components = _.get(window, 'NDM.profile.components', {});
+
+    return _.has(components, componentName);
+};
+
+export const isAnyComponentInstalled = (componentNames) => {
+    return _.some(componentNames, name => isComponentInstalled(name));
+};
+
 const _getRequestData = (requestObj) => {
     return angular.isDefined(requestObj.url)
         ? requestObj.data
