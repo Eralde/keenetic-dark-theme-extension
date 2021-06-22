@@ -2,10 +2,7 @@
     class="routes-ip-lookup"
     ng-controller="$root.IpLookupController as vm"
 >
-  <form
-      name="vm.nslookupForm"
-      class="ip-lookup"
-  >
+  <div class="ip-lookup">
     <div class="ip-lookup__label">
       {{vm.l10n.nslookupLabel}}
     </div>
@@ -37,7 +34,7 @@
       >
       </ndm-button>
     </div>
-  </form>
+  </div>
 
   <div
       ng-if="vm.subnetsList.length > 0 || vm.isLookupResultEmpty"
