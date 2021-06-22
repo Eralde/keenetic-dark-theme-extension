@@ -89,5 +89,77 @@
   },
   "PointToPointEditorIpsecTunnelSourceIsInterface": {
     "message": "Использовать интерфейс в качестве источника"
+  },
+  "RoutesToolbarExportSelectedBtnLabel": {
+    "message": "Экспортировать выбранные"
+  },
+  "RoutesToolbarDeleteSelectedBtnLabel": {
+    "message": "Удалить выбранные"
+  },
+  "RoutesToolbarImportBtnLabel": {
+    "message": "Импорт из файла"
+  },
+  "RoutesToolbarImportReaderFailure": {
+    "message": "Не удалось прочитать файл: \"{{file}}\""
+  },
+  "RoutesToolbarImportJsonParseFailure": {
+    "message": "Не удалось разобрать содержимое файла: \"{{file}}\""
+  },
+  "RoutesToolbarNslookupLabel": {
+    "message": "Поиск IP-адресов"
+  },
+  "RoutesToolbarNslookupDomainPlaceholder": {
+    "message": "Доменное имя"
+  },
+  "RoutesToolbarNslookupQueryIpBtnLabel": {
+    "message": "Искать"
+  },
+  "RoutesToolbarNslookupClearBtnLabel": {
+    "message": "Очистить"
+  },
+  "RoutesToolbarNslookupResultsLabel": {
+    "message": "Результаты поиска"
+  },
+  "RoutesToolbarNslookupResultsAreEmpty": {
+    "message": "Ничего не найдено"
+  },
+  "RoutesToolbarNslookupCreateRouteLabel": {
+    "message": "Создать маршрут(ы) через интерфейс"
+  },
+  "RoutesToolbarNslookupCreateRouteBtnLabel": {
+    "message": "Создать"
+  },
+  "RoutesToolbarNslookupQueryTimeoutNotification": {
+    "message": "Запрос выполнялся слишком долго"
+  },
+  "RoutesToolbarNslookupQueryEmptyResultNotification": {
+    "message": "Запрос не вернул ничего"
+  },
+  "RoutesImportPopupHeader": {
+    "message": "Импортируемые маршруты"
+  },
+  "RoutesImportPopupDestinationHeader": {
+    "message": "Назначение"
+  },
+  "RoutesImportPopupAutoHeader": {
+    "message": "Авто"
+  },
+  "RoutesImportPopupImportStatusHeader": {
+    "message": "Статус импорта"
+  },
+  "RoutesImportPopupImportStatusReady": {
+    "message": "Готов"
+  },
+  "RoutesImportPopupImportStatusSelectInterface": {
+    "message": "Выберите интерфейс"
+  },
+  "RoutesImportPopupImportStatusExists": {
+    "message": "Уже существует"
+  },
+  "RoutesImportPopupImportBtnLabel": {
+    "message": "Импортировать"
+  },
+  "RoutesImportPopupReplaceInterfaceWith": {
+    "message": "Замените отсутствующий интерфейс \"{{interfaceLabel}}\" ({{interfaceId}}) на"
   }
 }

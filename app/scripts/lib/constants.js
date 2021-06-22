@@ -106,6 +106,7 @@ export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
 export const SYSTEM_SWITCHPORTS_TEMPLATE_PATH = 'app/page/controlPanel/control/system/switchports/switchports.html';
 export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
+export const STATIC_ROUTES_TEMPLATE_PATH = 'app/page/controlPanel/networkRules/staticRoutes/staticRoutes.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
 export const DSL_STATS_FILENAME = 'proc:/driver/ensoc_dsl/dsl_stats';
@@ -289,3 +290,6 @@ export const __SHOW_INTERFACE_STAT_PROPS__ = [
 export const SHOW_INTERFACE = 'show.interface';
 export const SHOW_RC_INTERFACE = 'show.rc.interface';
 export const SHOW_INTERFACE_STAT = 'show.interface.stat';
+
+export const IP_ROUTE = 'ip.route';
+export const SHOW_RC_IP_ROUTE = 'show.rc.ip.route';
