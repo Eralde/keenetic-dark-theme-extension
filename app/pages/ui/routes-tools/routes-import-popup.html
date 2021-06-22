@@ -1,0 +1,107 @@
+<div
+    class="routes-import-popup"
+    ng-controller="$root.RoutesImportPopupController as vm"
+>
+    <ndm-popup
+        is-visible="true"
+        ng-if="vm.isVisible"
+        class="routes-import-popup__popup"
+        close="vm.close"
+        header-title="{{ vm.l10n.popupHeader }}"
+    >
+        <table class="routes-import-popup__table ndm-table">
+            <thead>
+            <tr>
+                <th class="table__header table__col-0">
+                    <span data-translate>{{ vm.l10n.header.destination }}</span>
+                </th>
+                <th class="table__header table__col-1">
+                    <span data-translate>staticRoutes.route-properties.gateway</span>
+                </th>
+                <th class="table__header table__col-2">
+                    <span data-translate>staticRoutes.route-properties.interface</span>
+                </th>
+                <th class="table__header table__col-3">
+                    <span data-translate>{{ vm.l10n.header.auto }}</span>
+                </th>
+                <th class="table__header table__col-4">
+                    <span data-translate>staticRoutes.route-properties.description</span>
+                </th>
+                <th class="table__header table__col-5">
+                    <span data-translate>{{ vm.l10n.header.importStatus }}</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                ng-repeat="route in vm.routesList track by $index"
+                ng-form="vm.staticDnsForm__{{$index}}"
+            >
+                <td class="table__col-0">
+                    <div class="td-content-wrapper">
+                        {{route.view.destination}}
+                    </div>
+                </td>
+                <td class="table__col-1">
+                    <div class="td-content-wrapper">
+                        {{route.view.gateway}}
+                    </div>
+                </td>
+
+                <td class="table__col-2">
+                    {{route.view.interface}}
+                </td>
+                <td class="table__col-3">
+                    <div class="td-content-wrapper">
+                        {{route.view.auto}}
+                    </div>
+                </td>
+
+                <td class="table__col-4">
+                    <div class="td-content-wrapper">
+                        {{route.view.comment}}
+                    </div>
+                </td>
+
+                <td class="table__col-5">
+                    <div class="td-content-wrapper {{route.view.importStatus.className}}">
+                        {{route.view.importStatus.text}}
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div
+            ng-if="vm.missingInterfaceList.length > 0"
+            class="routes-import-popup__interface-replacements"
+        >
+            <div
+                ng-repeat="missingInterface in vm.missingInterfaceList track by $index"
+                class="routes-import-popup__interface-replacement-row interface-replacement-row"
+            >
+                <div class="interface-replacement-row__label">
+                    {{ vm.l10n.replaceMissingInterfaceWith | translate:missingInterface }}
+                </div>
+                <ndm-selectbox
+                    value="missingInterface.replacementId"
+                    name="replacement__for__{{$index}}"
+                    disabled="false"
+                    options="vm.interfaceOptions"
+                    on-value-change="vm.onReplacementSelected"
+                >
+                </ndm-selectbox>
+            </div>
+        </div>
+
+        <ndm-control-footer
+            prefix="routesImportPopup"
+            is-visible="true"
+            save="vm.importRoutes"
+            cancel="vm.close"
+            save-label="{{ vm.l10n.importBtnLabel }}"
+        >
+        </ndm-control-footer>
+
+    </ndm-popup>
+</div>

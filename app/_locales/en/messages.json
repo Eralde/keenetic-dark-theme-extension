@@ -89,5 +89,77 @@
   },
   "PointToPointEditorIpsecTunnelSourceIsInterface": {
     "message": "Tunnel source is interface"
+  },
+  "RoutesToolbarExportSelectedBtnLabel": {
+    "message": "Export selected"
+  },
+  "RoutesToolbarDeleteSelectedBtnLabel": {
+    "message": "Delete selected"
+  },
+  "RoutesToolbarImportBtnLabel": {
+    "message": "Import"
+  },
+  "RoutesToolbarImportReaderFailure": {
+    "message": "Failed to read \"{{file}}\" file as a text file"
+  },
+  "RoutesToolbarImportJsonParseFailure": {
+    "message": "Failed to parse \"{{file}}\" contents"
+  },
+  "RoutesToolbarNslookupLabel": {
+    "message": "IP lookup"
+  },
+  "RoutesToolbarNslookupDomainPlaceholder": {
+    "message": "Domain to look up"
+  },
+  "RoutesToolbarNslookupQueryIpBtnLabel": {
+    "message": "Look up"
+  },
+  "RoutesToolbarNslookupClearBtnLabel": {
+    "message": "Clear"
+  },
+  "RoutesToolbarNslookupResultsLabel": {
+    "message": "Lookup results"
+  },
+  "RoutesToolbarNslookupResultsAreEmpty": {
+    "message": "No results found"
+  },
+  "RoutesToolbarNslookupCreateRouteLabel": {
+    "message": "Create route(s) via"
+  },
+  "RoutesToolbarNslookupCreateRouteBtnLabel": {
+    "message": "Create"
+  },
+  "RoutesToolbarNslookupQueryTimeoutNotification": {
+    "message": "Lookup query took to long"
+  },
+  "RoutesToolbarNslookupQueryEmptyResultNotification": {
+    "message": "Lookup query returned no data"
+  },
+  "RoutesImportPopupHeader": {
+    "message": "Routes to import"
+  },
+  "RoutesImportPopupDestinationHeader": {
+    "message": "Destination"
+  },
+  "RoutesImportPopupAutoHeader": {
+    "message": "Auto"
+  },
+  "RoutesImportPopupImportStatusHeader": {
+    "message": "Import status"
+  },
+  "RoutesImportPopupImportStatusReady": {
+    "message": "Ready"
+  },
+  "RoutesImportPopupImportStatusSelectInterface": {
+    "message": "Select replacement interface"
+  },
+  "RoutesImportPopupImportStatusExists": {
+    "message": "Already exists"
+  },
+  "RoutesImportPopupImportBtnLabel": {
+    "message": "Import"
+  },
+  "RoutesImportPopupReplaceInterfaceWith": {
+    "message": "Replace missing interface \"{{interfaceLabel}}\" ({{interfaceId}}) with"
   }
 }

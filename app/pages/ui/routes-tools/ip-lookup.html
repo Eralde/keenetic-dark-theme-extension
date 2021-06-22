@@ -1,0 +1,90 @@
+<div
+    class="routes-ip-lookup"
+    ng-controller="$root.IpLookupController as vm"
+>
+  <form
+      name="vm.nslookupForm"
+      class="ip-lookup"
+  >
+    <div class="ip-lookup__label">
+      {{vm.l10n.nslookupLabel}}
+    </div>
+
+    <ndm-input
+        name="routesToolbarDomain"
+        model="vm.domain"
+        validation="domain"
+        placeholder="{{vm.l10n.nslookupDomainPlaceholder}}"
+        on-change="vm.clearLookupResults"
+        on-validation-end="vm.onDomainValidationEnd"
+    >
+    </ndm-input>
+
+    <div class="ip-lookup__buttons">
+      <ndm-button
+          class="buttons-row__item"
+          on-click="vm.queryIp"
+          is-disabled="!vm.domain || !vm.isDomainValid || vm.uiIsLocked"
+          label="{{vm.l10n.nslookupQueryIpBtnLabel}}"
+      >
+      </ndm-button>
+
+      <ndm-button
+          class="buttons-row__item"
+          on-click="vm.reset"
+          is-disabled="vm.isUiLocked || (!vm.domain && vm.subnetsList.length === 0)"
+          label="{{vm.l10n.nslookupClearBtnLabel}}"
+      >
+      </ndm-button>
+    </div>
+  </form>
+
+  <div
+      ng-if="vm.subnetsList.length > 0 || vm.isLookupResultEmpty"
+      class="routes-ip-lookup__results"
+  >
+    <div class="ip-lookup__results-header">
+      {{ vm.l10n.nslookupResultsHeader }}
+    </div>
+
+    <div class="ip-lookup__results-subnets">
+      <div ng-if="vm.isLookupResultEmpty">
+        {{ vm.l10n.nslookupEmptyResults }}
+      </div>
+
+      <div
+          ng-if="!vm.isLookupResultEmpty"
+          ng-repeat="subnetData in vm.subnetsList"
+          class="ip-lookup__results-subnet"
+      >
+        <pre style="width: 20ch">{{ subnetData.length > 1 ? subnetData.subnet : subnetData.ipList[0] }}</pre>
+        <pre ng-if="subnetData.length > 1">[{{ subnetData.ipList.join(', ') }}]</pre>
+      </div>
+    </div>
+
+    <div
+        ng-if="vm.subnetsList.length > 0"
+        class="ip-lookup__toolbar"
+    >
+      <div class="ip-lookup__toolbar-label">
+        {{ vm.l10n.nslookupCreateRouteLabel }}
+      </div>
+
+      <ndm-selectbox
+          value="vm.interfaceId"
+          name="dohRoutesInterface"
+          disabled="false"
+          options="vm.interfaceOptions"
+      >
+      </ndm-selectbox>
+
+      <ndm-button
+          class="buttons-row__item"
+          on-click="vm.createRoutes"
+          is-disabled="!vm.interfaceId || vm.uiIsLocked"
+          label="{{vm.l10n.nslookupCreateRouteBtnLabel}}"
+      >
+      </ndm-button>
+    </div>
+  </div>
+</div>

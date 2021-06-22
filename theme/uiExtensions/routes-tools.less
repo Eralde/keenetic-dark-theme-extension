@@ -1,0 +1,84 @@
+@import (reference) "../__ndwVars__";
+@import (reference) "../uiExtensions-general";
+
+.page-static-routes {
+    ._static-routes {
+        th.table__col--checkbox {
+            .icon.icon--indicator-sortIcon {
+                display: none;
+            }
+        }
+    }
+}
+
+.routes-toolbar {
+    margin: @new-gap-sm auto;
+
+    ndm-button, .btn--file-upload {
+        &:not(:first-child) {
+            margin: 0 0 0 @new-unit;
+        }
+    }
+}
+
+.routes-ip-lookup {
+    padding-top: @new-gap-sm;
+}
+
+.ip-lookup {
+    .__flex-row();
+
+    &__label {
+        margin-right: @new-gap-sm;
+    }
+
+    &__buttons {
+        .__flex-row();
+    }
+
+    &__results {
+        &-subnets {
+            margin: @new-gap-sm 0;
+        }
+
+        &-subnet {
+            .__flex-row();
+
+            pre {
+                margin: 0;
+            }
+        }
+    }
+
+    &__toolbar {
+        .__flex-row();
+
+        &-label {
+            margin-right: @new-gap-sm;
+        }
+    }
+}
+
+.routes-import-popup {
+    &__table {
+        .table__col-1 {
+            width: 23ch;
+        }
+
+        .table__col-2 {
+            width: 20ch;
+        }
+    }
+
+    &__interface-replacements {
+        margin-top: @new-gap-md;
+
+        .interface-replacement-row {
+            .__flex-row();
+
+            &__label {
+                margin-right: @new-gap-sm;
+            }
+        }
+    }
+}

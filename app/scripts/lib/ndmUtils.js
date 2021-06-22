@@ -433,3 +433,28 @@ export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, 
         return extendPortData({utils, port, portIdsList, statDataList});
     });
 }
+
+export const getAncestorScopeProperty = ($scope, propName) => {
+    let _$scope = $scope;
+
+    while (_$scope.$parent) {
+        if (_.has(_$scope, propName)) {
+            return _$scope[propName];
+        }
+
+        _$scope = _$scope.$parent;
+    }
+
+    return null;
+}
+
+export const getDebouncedCallback = (callback, leading = true) => {
+    return _.debounce(
+        callback,
+        150,
+        {
+            leading,
+            maxWait: 400,
+        },
+    );
+};

@@ -25,6 +25,10 @@ import {PointToPointEditorController} from './uiExtension/pointToPointTunnels/po
 
 import {logWarning} from './lib/log';
 import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
+import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
+import {injectRoutesToolbarSectionTemplate} from './uiExtension/routesToolbar';
+import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
+import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controller';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -43,6 +47,9 @@ export const injectUiExtensions = () => {
     // otherwise it won't be available on page load
     $rootScope.PointToPointController = PointToPointController;
     $rootScope.PointToPointEditorController = PointToPointEditorController;
+    $rootScope.RoutesToolbarController = RoutesToolbarController;
+    $rootScope.RoutesImportPopupController = RoutesImportPopupController;
+    $rootScope.IpLookupController = IpLookupController;
 
     // Should be done BEFORE authentication
     const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
@@ -65,6 +72,16 @@ export const injectUiExtensions = () => {
 
     const ndmVersion = _.get(window, 'NDM.version', '');
     const ndwBranch = ndmVersion.substr(0, 3);
+
+    /* EoIP / IPIP / GRE section ('Other connections') */
+    if (
+        ndmUtils.is3xVersion(ndwBranch)
+        && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
+    ) {
+        injectPointToPointSectionTemplate();
+    }
+
+    injectRoutesToolbarSectionTemplate();
 
     let __TAG = '';
 
@@ -227,14 +244,6 @@ export const injectUiExtensions = () => {
                 extendedDslStat.onLoad,
                 extendedDslStat.onDestroy,
             );
-        }
-
-        /* EoIP / IPIP / GRE section ('Other connections') */
-        if (
-            ndmUtils.is3xVersion(ndwBranch)
-            && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
-        ) {
-            injectPointToPointSectionTemplate();
         }
 
         /* 'delta' sandbox option for older models */

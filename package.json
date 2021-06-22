@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@simonwep/pickr": "^1.6.0",
+    "dateformat": "^4.5.1",
     "js-beautify": "^1.13.0",
     "lodash": "^4.17.15",
     "sortablejs": "^1.13.0",

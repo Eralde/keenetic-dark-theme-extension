@@ -1,0 +1,36 @@
+<div
+    class="routes-toolbar"
+    ng-controller="$root.RoutesToolbarController as vm"
+>
+    <hr class="hr-light-blue"/>
+
+    <div class="buttons-row">
+        <ndm-button
+            class="buttons-row__item"
+            on-click="vm.exportSelectedRoutes"
+            is-disabled="SRC.routesTable.selectedRowsCount === 0"
+            label="{{vm.l10n.exportSelectedBtnLabel}}"
+        >
+        </ndm-button>
+
+        <ndm-button
+            class="buttons-row__item"
+            btn-class="btn--warning"
+            on-click="vm.deleteSelectedRoutes"
+            is-disabled="SRC.routesTable.selectedRowsCount === 0"
+            label="{{vm.l10n.deleteSelectedBtnLabel}}"
+        >
+        </ndm-button>
+
+        <ndm-input-file
+            class="btn--file-upload"
+            upload-file="vm.importFileObject"
+            on-upload-file="vm.importRoutes"
+            btn-title="{{vm.l10n.importBtnLabel}}"
+            btn-title-if-file-selected="{{vm.l10n.importBtnLabel}}"
+        >
+        </ndm-input-file>
+
+        <!-- IMPORT POPUP -->
+    </div>
+</div>
