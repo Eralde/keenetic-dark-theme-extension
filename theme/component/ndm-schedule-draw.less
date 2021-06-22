@@ -1,4 +1,5 @@
 @import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
 
 .ndm-schedule-draw {
 
@@ -11,6 +12,21 @@
 
         &--background {
             transform: translate(0px, 1px);
+        }
+
+        &--pattern {
+            stroke: @blue-medium;
+            fill: darken(@blue-light, 5%);
+        }
+
+        &--time-label {
+            fill: @dt__black2;
+        }
+
+        &--overlay {
+            &__add {
+                fill: @blue-medium;
+            }
         }
     }
 }
