@@ -18,7 +18,11 @@ export const injectPointToPointSectionTemplate = () => {
         return;
     }
 
-    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('ipsec.section.html');
+    if (otherConnectionsTemplate.includes('point-to-point.section.html')) { // Section is already present in the web UI
+        return;
+    }
+
+    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('ppp.section.html');
 
     if (previousSectionIncludeIndex === -1) {
         logWarning(errMsg);
