@@ -1,0 +1,50 @@
+@import (reference) "../__ndwVars__";
+@import (reference) "../__vars__";
+
+.page-point-to-point {
+    &__table {
+        td.table__col-0 {
+            width: 40% !important;
+
+            .td-content-wrapper {
+                overflow: auto;
+            }
+
+            .ndm-toggle {
+                .toggle-text {
+                    display: inline-block !important;
+                    height: @line-height * 2;
+                    overflow-y: initial;
+                }
+            }
+        }
+    }
+}
+
+.point-to-point-section {
+    &__create-btn {
+        margin-top: @new-gap-xl;
+    }
+}
+
+.point-to-point-editor {
+    &__description {
+        color: @dt__white-text;
+        margin-bottom: @new-gap-md;
+    }
+
+    &__source-warning {
+        padding-top: @new-unit;
+        color: @new-red;
+    }
+
+    &__delete-panel {
+        padding-bottom: 150px;
+    }
+
+    .invalid-field {
+        .ndm-selectbox2__toggle {
+            border-color: @new-red;
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {getAngularService, onLanguageChange} from '../../lib/ndmUtils';
+import {getAngularService, getNgL10n, onLanguageChange} from '../../lib/ndmUtils';
 import {getL10n} from '../../lib/l10nUtils';
 import {formatBytesColumn, formatIpData, formatUptime} from '../../lib/formatUtils';
 import {logWarning} from '../../lib/log';
@@ -19,10 +19,43 @@ export function PointToPointController() {
         return;
     }
 
+    const {IPSEC_SUFFIX, TYPE_L10N_ID} = pointToPointService;
+
     const $scope = element.scope();
 
+    vm.l10n = {};
+
+    const updateL10n = () => {
+        vm.l10n = {
+            header: getL10n('otherConnections_pointToPoint_header'),
+            description: getL10n('otherConnections_pointToPoint_description'),
+            table_any: getL10n('otherConnections_pointToPoint_table_any'),
+            table_column_connection: getL10n('otherConnections_pointToPoint_table_column_connection'),
+            table_column_type: getL10n('otherConnections_pointToPoint_table_column_type'),
+            table_column_source: getL10n('otherConnections_pointToPoint_table_column_source'),
+            table_column_destination: getL10n('otherConnections_pointToPoint_table_column_destination'),
+            table_column_sent: getL10n('otherConnections_pointToPoint_table_column_sent'),
+            table_column_received: getL10n('otherConnections_pointToPoint_table_column_received'),
+            table_column_uptime: getL10n('otherConnections_pointToPoint_table_column_uptime'),
+
+            TUNNEL_TYPE: TYPE_L10N_ID,
+        };
+    };
+
+    updateL10n();
+
     const otherConnectionsService = getAngularService('otherConnectionsService');
-    const requester = otherConnectionsService.requester;
+    const interfaces = getAngularService('interfaces');
+
+    const {
+        ANY_PPP_INSTALLED,
+        WIREGUARD_INSTALLED,
+    } = otherConnectionsService;
+
+    vm.HR_IS_VISIBLE = ANY_PPP_INSTALLED || WIREGUARD_INSTALLED;
+
+    vm.requester = otherConnectionsService.requester;
+    vm.rowsToPreserveToggleState = {};
 
     vm.progress = 0;
     vm.isReady = false;
@@ -30,7 +63,7 @@ export function PointToPointController() {
     vm.table = {
         columns: {
             'description': {
-                title: 'otherConnections.ppp.connection',
+                title: vm.l10n.table_column_connection,
                 width: 180,
                 directive: {
                     name: 'ndm-toggle',
@@ -45,26 +78,31 @@ export function PointToPointController() {
                 },
             },
             type: {
-                title: 'otherConnections.ppp.type',
+                title: vm.l10n.table_column_type,
+                modify: (type, row) => {
+                    const suffix = row.isIpsecEnabled ? IPSEC_SUFFIX : '';
+
+                    return `${vm.l10n.TUNNEL_TYPE[type]}${suffix}`;
+                },
             },
             source: {
-                title: getL10n('PointToPointSource'),
+                title: vm.l10n.table_column_source,
                 modify: formatIpData,
             },
             destination: {
-                title: getL10n('PointToPointDestination'),
+                title: vm.l10n.table_column_destination,
                 modify: formatIpData,
             },
             txbytes: {
-                title: 'otherConnections.ppp.transmitted',
+                title: vm.l10n.table_column_sent,
                 modify: formatBytesColumn,
             },
             rxbytes: {
-                title: 'otherConnections.ppp.received',
+                title: vm.l10n.table_column_received,
                 modify: formatBytesColumn,
             },
             uptime: {
-                title: 'otherConnections.ppp.connected',
+                title: vm.l10n.table_column_uptime,
                 modify: formatUptime,
             },
         },
@@ -73,67 +111,72 @@ export function PointToPointController() {
     };
 
     onLanguageChange(() => {
-        vm.table.columns.source.title = getL10n('PointToPointSource');
-        vm.table.columns.destination.title = getL10n('PointToPointDestination');
+        updateL10n();
+
+        vm.table.columns.description.title = vm.l10n.table_column_connection;
+        vm.table.columns.type.title = vm.l10n.table_column_type;
+        vm.table.columns.source.title = vm.l10n.table_column_source;
+        vm.table.columns.destination.title = vm.l10n.table_column_destination;
+        vm.table.columns.txbytes.title = vm.l10n.table_column_sent;
+        vm.table.columns.rxbytes.title = vm.l10n.table_column_received;
+        vm.table.columns.uptime.title = vm.l10n.table_column_uptime;
     });
 
     vm.editTunnel = (row) => {
         $scope.$broadcast(pointToPointService.EVENTS.OPEN_EDITOR, row);
     };
 
-    let rowsToPreserveToggleState = {};
+    const getOnToggleCallback = (row) => {
+        return (val) => {
+            const {id} = row;
 
-    // No need to dynamically check if UI extensions are enabled:
-    // if any other section is visible on the 'Other connections' page,
-    // `rci/show/interface` & `rci/interface` data will be polled regardless of UI extensions.
-    requester.registerCallback(
-        pointToPointService.getTableDateQueries(),
-        (responses) => {
-            const pollData = pointToPointService.destructureTableDataResponses(responses);
-            const list = pointToPointService.getTunnelsList(pollData);
-            const idList = _.map(list, 'id');
+            vm.requester.stopPolling();
 
-            const {showInterface} = pollData;
+            vm.rowsToPreserveToggleState[id] = val;
 
-            vm.interfaceOptionsList = pointToPointService.getInterfaceOptionsList(showInterface);
-            vm.defaultInterfaceId = pointToPointService.getDefaultInterfaceId(showInterface);
-            vm.restrictedSubnetsList = pointToPointService.getRestrictedSubnetsList(pollData);
+            return interfaces.toggleState(id, val)
+                .finally(() => {
+                    if (!val) {
+                        row.status = interfaces.determineInterfaceState({state: 'down'});
+                    }
+
+                    vm.requester.startPolling();
+                });
+        };
+    };
+
+    pointToPointService.registerPollRequest(
+        vm.requester,
+        pollData => {
+            vm.showSchedule = pollData.showSchedule;
+            vm.usedSubnets = pollData.usedSubnets;
+            vm.interfaceOptions = pollData.interfaceOptions;
+            vm.interfaceIdToLabelMap = pollData.interfaceIdToLabelMap;
+
+            const idList = _.map(pollData.tableData, 'id');
 
             return pointToPointService.getInterfaceStatByIdData(idList).then(statDataById => {
-                vm.table.data = list.map(row => {
+                vm.table.data = pollData.tableData.map(row => {
                     const {id} = row;
+                    let {isEnabled} = row;
 
-                    if (rowsToPreserveToggleState[id]) {
-                        row.isEnabled = rowsToPreserveToggleState[id];
-                        rowsToPreserveToggleState = _.omit(rowsToPreserveToggleState, [id]);
+                    if (_.has(vm.rowsToPreserveToggleState, id)) {
+                        isEnabled = vm.rowsToPreserveToggleState[id];
+                        vm.rowsToPreserveToggleState = _.omit(vm.rowsToPreserveToggleState, [id]);
                     }
 
                     const statData = _.pick(statDataById[id], ['rxbytes', 'txbytes']);
-                    const status = pointToPointService.determineTunnelStatus(row.rawData.showInterfaceItem);
-
-                    const onToggle = (state) => {
-                        rowsToPreserveToggleState[id] = state;
-                        requester.stopPolling();
-
-                        return pointToPointService.toggleTunnelState(id, state)
-                            .finally(() => {
-                                requester.startPolling();
-                            });
-                    };
 
                     return {
                         ...row,
                         ...statData,
-                        status,
-                        onToggle,
+                        isEnabled,
+                        onToggle: getOnToggleCallback(row),
                     };
                 });
 
                 vm.table.dataIsLoaded = true;
-
-                vm.progress = 100;
-                vm.isReady = true;
             });
         },
-    );
+    )
 }

@@ -66,30 +66,6 @@
   "HECErrorsInterleaved": {
     "message": "Ошибки HEC"
   },
-  "PointToPointSource": {
-    "message": "Источник"
-  },
-  "PointToPointDestination": {
-    "message": "Назначение"
-  },
-  "PointToPointTunnelSource": {
-    "message": "Источник"
-  },
-  "PointToPointTunnelDestination": {
-    "message": "Назначение"
-  },
-  "PointToPointEditorTitle": {
-    "message": "Редактор конфигурации туннеля"
-  },
-  "PointToPointEditorIpsecEnabled": {
-    "message": "Использовать IPSec"
-  },
-  "PointToPointEditorIpsecIsServer": {
-    "message": "Это устройство &mdash; сервер"
-  },
-  "PointToPointEditorIpsecTunnelSourceIsInterface": {
-    "message": "Использовать интерфейс в качестве источника"
-  },
   "RoutesToolbarExportSelectedBtnLabel": {
     "message": "Экспортировать выбранные"
   },
@@ -161,5 +137,116 @@
   },
   "RoutesImportPopupReplaceInterfaceWith": {
     "message": "Замените отсутствующий интерфейс \"{{interfaceLabel}}\" ({{interfaceId}}) на"
+  },
+  "otherConnections_pointToPoint_header": {
+    "message": "IP туннели"
+  },
+  "otherConnections_pointToPoint_description": {
+    "message": "Маршрутизируемые соединения с использованием протоколов IPIP, GRE и EoIP."
+  },
+  "otherConnections_pointToPoint_table_any": {
+    "message": "Любой"
+  },
+  "otherConnections_pointToPoint_table_column_connection": {
+    "message": "Подключение"
+  },
+  "otherConnections_pointToPoint_table_column_type": {
+    "message": "Тип VPN"
+  },
+  "otherConnections_pointToPoint_table_column_source": {
+    "message": "Источник"
+  },
+  "otherConnections_pointToPoint_table_column_destination": {
+    "message": "Назначение"
+  },
+  "otherConnections_pointToPoint_table_column_sent": {
+    "message": "Отправлено"
+  },
+  "otherConnections_pointToPoint_table_column_received": {
+    "message": "Получено"
+  },
+  "otherConnections_pointToPoint_table_column_uptime": {
+    "message": "В сети"
+  },
+  "otherConnections_pointToPoint_createConnectionBtn": {
+    "message": "Добавить подключение"
+  },
+  "otherConnections_pointToPoint_editor_header": {
+    "message": "Настройки туннеля"
+  },
+  "otherConnections_pointToPoint_editor_description": {
+    "message": "Укажите требуемые параметры конфигурации подключения."
+  },
+  "otherConnections_pointToPoint_editor_deleteConnectionBtn": {
+    "message": "Удалить"
+  },
+  "otherConnections_pointToPoint_editor_field_description": {
+    "message": "Название"
+  },
+  "otherConnections_pointToPoint_editor_field_isGlobal_label": {
+    "message": "Использовать для выхода в Интернет"
+  },
+  "otherConnections_pointToPoint_editor_field_isGlobal_hint": {
+    "message": "Если эта опция отключена, настройте маршрутизацию через туннель вручную."
+  },
+  "otherConnections_pointToPoint_editor_field_type_label": {
+    "message": "Тип (протокол)"
+  },
+  "otherConnections_pointToPoint_editor_field_type_option_ipip": {
+    "message": "IPIP"
+  },
+  "otherConnections_pointToPoint_editor_field_type_option_gre": {
+    "message": "GRE"
+  },
+  "otherConnections_pointToPoint_editor_field_type_option_eoip": {
+    "message": "EoIP"
+  },
+  "otherConnections_pointToPoint_editor_field_eoipId_label": {
+    "message": "EoIP ID"
+  },
+  "otherConnections_pointToPoint_editor_field_eoipId_hint": {
+    "message": "Только партнер с таким же ID сможет установить туннель."
+  },
+  "otherConnections_pointToPoint_editor_field_ipAddress": {
+    "message": "IP-адрес"
+  },
+  "otherConnections_pointToPoint_editor_field_mask": {
+    "message": "Маска подсети"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIsEnabled_label": {
+    "message": "Включить IPsec"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIsEnabled_hint": {
+    "message": "Использование IPsec добавляет контроль состояния соединения, вместе с тем выполняя функции защиты данных в туннеле и автоматического преодоления NAT."
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecPsk": {
+    "message": "Разделяемый ключ"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIkev2": {
+    "message": "IKEv2"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_label": {
+    "message": "Ждать подключения удаленного пира"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_hint": {
+    "message": "Включает пассивный режим (режим сервера)."
+  },
+  "otherConnections_pointToPoint_editor_field_remote": {
+    "message": "Удаленная сторона"
+  },
+  "otherConnections_pointToPoint_editor_field_source_label": {
+    "message": "Локальная сторона"
+  },
+  "otherConnections_pointToPoint_editor_field_source_requiredHint": {
+    "message": "Введите IP-адрес или укажите интерфейс для приема и отправки трафика туннеля."
+  },
+  "otherConnections_pointToPoint_editor_field_source_option_manual": {
+    "message": "Ввести вручную"
+  },
+  "otherConnections_pointToPoint_editor_field_source_option_auto": {
+    "message": "Определять автоматически"
+  },
+  "otherConnections_pointToPoint_editor_field_sourceIpAddress": {
+    "message": "IP-адрес"
   }
 }

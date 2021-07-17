@@ -7,7 +7,7 @@
         is-disabled="vm.isLocked"
         btn-class="btn--long"
         on-click="vm.addNewTunnel"
-        label="otherConnections.ppp.add-button"
+        label="{{ vm.l10n.createConnectionBtn }}"
     >
     </ndm-button>
 
@@ -16,28 +16,42 @@
         ng-if="vm.isVisible"
         class="point-to-point-editor__popup"
         close="vm.closeEditor"
-        header-title="{{vm.l10n.title}}"
+        header-title="{{ vm.l10n.header }}"
     >
-        <br/><br/>
+        <div
+            class="point-to-point-editor__description"
+            data-translate
+        >
+            {{ vm.l10n.description }}
+        </div>
 
         <form
+            class="point-to-point-editor__form"
             name="vm.form"
             novalidate
         >
             <ndm-fieldset is-disabled="vm.isLocked">
 
                 <ndm-input
-                    label="otherConnections.ppp.editor.connection-name"
+                    label="{{ vm.l10n.field_description }}"
                     model="vm.model.description"
-                    name="description"
+                    name="PointToPointEditor__description"
                     validation="required"
                 >
                 </ndm-input>
 
+                <ndm-checkbox
+                    label="{{ vm.l10n.field_isGlobal_label }}"
+                    model="vm.model.isGlobal"
+                    name="PointToPointEditor__isGlobal"
+                    hint="{{ vm.l10n.field_isGlobal_hint }}"
+                >
+                </ndm-checkbox>
+
                 <ndm-selectbox
-                    disabled="vm.isLocked || !vm.model.isNew"
-                    label="otherConnections.ppp.ppp-type"
-                    name="tunnelType"
+                    disabled="vm.ui.isLocked || !vm.model.isNew"
+                    label="{{ vm.l10n.field_type_label }}"
+                    name="PointToPointEditor__type"
                     options="vm.options.type"
                     value="vm.model.type"
                 >
@@ -45,123 +59,121 @@
 
                 <div
                     ng-if="vm.model.type === vm.TUNNEL_TYPE.EOIP"
-                    ng-form="vm.form.eoipSubform"
+                    ng-form="vm.form.eoipIdSubform"
                 >
                     <ndm-input
-                        name="eoipId"
-                        label="EoIP ID"
+                        label="{{ vm.l10n.field_eoipId_label }}"
+                        hint="{{ vm.l10n.field_eoipId_hint }}"
                         model="vm.model.eoipId"
-                        validation="required,integer"
+                        name="PointToPointEditor__eoipId"
+                        validation="required,integer,range[0..65535]"
                     >
                     </ndm-input>
                 </div>
 
-                <!-- IP ADDRESS -->
                 <ndm-input
-                    label="iface-ip.address"
+                    name="PointToPointEditor__address"
                     model="vm.model.address"
-                    name="address"
+                    label="{{ vm.l10n.field_ipAddress }}"
                     validation-data="{nets: vm.restrictedSubnetsList, mask: vm.model.mask}"
                     validation="required,ip,isHost[{{vm.model.mask}}],notInNets[mask,nets]"
                 >
                 </ndm-input>
 
-                <!-- MASK -->
                 <ndm-selectbox
-                    disabled="vm.isLocked"
-                    label="iface-ip.mask"
+                    disabled="vm.ui.isLocked"
+                    label="{{ vm.l10n.field_mask }}"
                     value="vm.model.mask"
-                    name="mask"
+                    name="PointToPointEditor__mask"
                     options="vm.options.mask"
                 >
                 </ndm-selectbox>
 
-                <div
-                    ng-if="!vm.model.ipsec.isEnabled"
-                    ng-form="vm.form.noIpsecSubform"
+                <ndm-checkbox
+                    ng-if="vm.IS_IPSEC_AVAILABLE"
+                    label="{{ vm.l10n.field_ipsecIsEnabled_label }}"
+                    model="vm.model.ipsec.isEnabled"
+                    name="PointToPointEditor__isIpsecEnabled"
+                    hint="{{ vm.l10n.field_ipsecIsEnabled_hint }}"
+                    on-value-change="vm.onIpsecToggle"
+                >
+                </ndm-checkbox>
+
+                <!-- IPsec settings -->
+                <ndm-sub-form
+                    ng-if="vm.model.ipsec.isEnabled"
+                    ng-form="vm.form.ipsecSubform"
+                    class="form--sub"
                 >
                     <ndm-input
-                        name="destinationAddress"
-                        label="{{vm.l10n.tunnelDestination}}"
-                        model="vm.model.destinationAddress"
-                        validation="required,ipOrDomain"
+                        name="PointToPointEditor__ipsecPsk"
+                        password="true"
+                        model="vm.model.ipsec.psk"
+                        label="{{ vm.l10n.field_ipsecPsk }}"
+                        validation="required,ipsecPsk"
                     >
                     </ndm-input>
-                </div>
 
-                <div ng-if="vm.IS_IPSEC_AVAILABLE">
                     <ndm-checkbox
-                        name="isIpsecEnabled"
-                        label="{{vm.l10n.ipsecIsEnabled}}"
-                        model="vm.model.ipsec.isEnabled"
+                        disabled=""
+                        label="{{ vm.l10n.field_ipsecIkev2 }}"
+                        model="vm.model.ipsec.ikev2Enabled"
+                        name="PointToPointEditor__ipsecIkev2"
                     >
                     </ndm-checkbox>
 
-                    <div
-                        ng-if="vm.model.ipsec.isEnabled"
-                        ng-form="vm.form.ipsecSubform"
+                    <ndm-checkbox
+                        label="{{ vm.l10n.field_ipsecWaitForRemote_label }}"
+                        model="vm.model.ipsec.isServer"
+                        name="PointToPointEditor__ipsecIsServer"
+                        hint="{{ vm.l10n.field_ipsecWaitForRemote_hint }}"
+                        on-value-change="vm.onIsServerToggle"
                     >
-                        <ndm-input
-                            name="ipsecPresharedKey"
-                            label="otherConnections.wireguard.peer.preshared-key.label"
-                            model="vm.model.ipsec.presharedKey"
-                            validation="required,length[3..64]"
-                        >
-                        </ndm-input>
+                    </ndm-checkbox>
+                </ndm-sub-form>
 
-                        <ndm-checkbox
-                            name="isServer"
-                            label="{{vm.l10n.ipsecIsServer}}"
-                            model="vm.model.ipsec.isServer"
-                        >
-                        </ndm-checkbox>
+                <ndm-input
+                    disabled="vm.isServerModeEnabled"
+                    name="PointToPointEditor__destination"
+                    model="vm.model.destination"
+                    label="{{ vm.l10n.field_remote }}"
+                    validation="ipOrDomain,required"
+                    custom-formatter="vm.destinationFormatter"
+                >
+                </ndm-input>
 
-                        <div
-                            ng-if="vm.model.ipsec.isServer"
-                            ng-form="vm.form.tunnelSourceSubform"
-                        >
-                            <ndm-checkbox
-                                name="tunnelSourceIsInterface"
-                                label="{{vm.l10n.ipsecTunnelSourceIsInterface}}"
-                                model="vm.model.ipsec.tunnelSourceIsInterface"
-                            >
-                            </ndm-checkbox>
-
-                            <ndm-selectbox
-                                name="tunnelSourceInterfaceId"
-                                disabled="vm.isLocked || !vm.model.ipsec.tunnelSourceIsInterface"
-                                label="staticRoutes.route-properties.interface"
-                                value="vm.model.ipsec.tunnelSourceInterfaceId"
-                                options="vm.options.interface"
-                            >
-                            </ndm-selectbox>
-
-                            <ndm-input
-                                name="tunnelSourceAddress"
-                                disabled="vm.model.ipsec.tunnelSourceIsInterface"
-                                label="otherConnections.wireguard.table.address"
-                                model="vm.model.ipsec.tunnelSourceAddress"
-                                validation="required,ipOrDomain"
-                            >
-                            </ndm-input>
-                        </div>
-
-                        <div
-                            ng-if="!vm.model.ipsec.isServer"
-                            ng-form="vm.form.tunnelDestinationSubform"
-                        >
-                            <ndm-input
-                                name="tunnelSourceAddress"
-                                label="{{vm.l10n.tunnelDestination}}"
-                                model="vm.model.ipsec.tunnelDestination"
-                                validation="required,ipOrDomain"
-                            >
-                            </ndm-input>
-                        </div>
-
+                <ndm-selectbox
+                    ng-class="{
+                        'invalid-field': !vm.isSourceValid
+                    }"
+                    is-disabled="vm.ui.isLocked"
+                    label="{{ vm.l10n.field_source_label }}"
+                    value="vm.model.source"
+                    name="PointToPointEditor__source"
+                    on-change="vm.onSourceChange"
+                    options="vm.options.source"
+                >
+                    <div
+                        ng-show="!vm.isSourceValid"
+                        class="point-to-point-editor__source-warning"
+                        data-translate
+                    >
+                        {{ vm.sourceHint }}
                     </div>
-                </div>
+                </ndm-selectbox>
 
+                <ndm-sub-form
+                    ng-if="vm.model.source === vm.LOCAL_SOURCE.MANUAL"
+                    ng-form="vm.form.sourceSubform"
+                >
+                    <ndm-input
+                        label="{{ vm.l10n.field_sourceIpAddress }}"
+                        model="vm.model.sourceIp"
+                        name="PointToPointEditor__sourceIp"
+                        validation="required,ip"
+                    >
+                    </ndm-input>
+                </ndm-sub-form>
 
                 <div
                     ng-if="!vm.model.isNew"

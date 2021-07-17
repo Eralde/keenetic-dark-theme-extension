@@ -3,8 +3,9 @@
     ng-controller="$root.PointToPointController as vm"
 >
     <ndm-form-header
-        hr="hr-light-blue"
-        label="IPIP, GRE, EoIP"
+        hr="{{ vm.HR_IS_VISIBLE ? 'hr-light-blue' : ''}}}"
+        label="{{ vm.l10n.header }}"
+        sub-title="{{ vm.l10n.description }}"
     >
     </ndm-form-header>
 

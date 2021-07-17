@@ -290,6 +290,7 @@ export const __SHOW_INTERFACE_STAT_PROPS__ = [
 export const SHOW_INTERFACE = 'show.interface';
 export const SHOW_RC_INTERFACE = 'show.rc.interface';
 export const SHOW_INTERFACE_STAT = 'show.interface.stat';
+export const SHOW_SCHEDULE = 'show.schedule';
 
 export const IP_ROUTE = 'ip.route';
 export const SHOW_RC_IP_ROUTE = 'show.rc.ip.route';

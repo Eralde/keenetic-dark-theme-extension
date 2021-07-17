@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {getAngularService} from '../../lib/ndmUtils';
+import {getAngularService, onLanguageChange} from '../../lib/ndmUtils';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
 import {pointToPointService} from './point-to-point.service';
@@ -27,7 +27,8 @@ export function PointToPointEditorController() {
 
     const {
         TUNNEL_TYPE,
-        IS_IPSEC_AVAILABLE
+        IS_IPSEC_AVAILABLE,
+        LOCAL_SOURCE,
     } = pointToPointService;
 
     vm.TUNNEL_TYPE = TUNNEL_TYPE;
@@ -38,37 +39,148 @@ export function PointToPointEditorController() {
 
     vm.l10n = {};
     vm.model = {};
+    vm.interfaceOptions = [];
+    vm.interfaceIdToLabelMap = {};
     vm.options = {
-        interface: [],
         mask: ifaceIpModel.getMasksSelectOptions(),
         type: pointToPointService.getTunnelTypeOptions(),
+        source: [],
     };
 
     const updateL10n = () => {
         vm.l10n = {
-            tunnelSource: getL10n('PointToPointTunnelSource'),
-            tunnelDestination: getL10n('PointToPointTunnelDestination'),
-            title: getL10n('PointToPointEditorTitle'),
-            ipsecIsEnabled: getL10n('PointToPointEditorIpsecEnabled'),
-            ipsecIsServer: getL10n('PointToPointEditorIpsecIsServer'),
-            ipsecTunnelSourceIsInterface: getL10n('PointToPointEditorIpsecTunnelSourceIsInterface'),
+            createConnectionBtn: getL10n('otherConnections_pointToPoint_createConnectionBtn'),
+
+            header: getL10n('otherConnections_pointToPoint_editor_header'),
+            description: getL10n('otherConnections_pointToPoint_editor_description'),
+            deleteConnectionBtn: getL10n('otherConnections_pointToPoint_editor_deleteConnectionBtn'),
+            field_description: getL10n('otherConnections_pointToPoint_editor_field_description'),
+            field_isGlobal_label: getL10n('otherConnections_pointToPoint_editor_field_isGlobal_label'),
+            field_isGlobal_hint: getL10n('otherConnections_pointToPoint_editor_field_isGlobal_hint'),
+            field_type_label: getL10n('otherConnections_pointToPoint_editor_field_type_label'),
+            field_type_option_ipip: getL10n('otherConnections_pointToPoint_editor_field_type_option_ipip'),
+            field_type_option_gre: getL10n('otherConnections_pointToPoint_editor_field_type_option_gre'),
+            field_type_option_eoip: getL10n('otherConnections_pointToPoint_editor_field_type_option_eoip'),
+            field_eoipId_label: getL10n('otherConnections_pointToPoint_editor_field_eoipId_label'),
+            field_eoipId_hint: getL10n('otherConnections_pointToPoint_editor_field_eoipId_hint'),
+            field_ipAddress: getL10n('otherConnections_pointToPoint_editor_field_ipAddress'),
+            field_mask: getL10n('otherConnections_pointToPoint_editor_field_mask'),
+            field_ipsecIsEnabled_label: getL10n('otherConnections_pointToPoint_editor_field_ipsecIsEnabled_label'),
+            field_ipsecIsEnabled_hint: getL10n('otherConnections_pointToPoint_editor_field_ipsecIsEnabled_hint'),
+            field_ipsecPsk: getL10n('otherConnections_pointToPoint_editor_field_ipsecPsk'),
+            field_ipsecIkev2: getL10n('otherConnections_pointToPoint_editor_field_ipsecIkev2'),
+            field_ipsecWaitForRemote_label: getL10n('otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_label'),
+            field_ipsecWaitForRemote_hint: getL10n('otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_hint'),
+            field_remote: getL10n('otherConnections_pointToPoint_editor_field_remote'),
+            field_source_label: getL10n('otherConnections_pointToPoint_editor_field_source_label'),
+            field_source_requiredHint: getL10n('otherConnections_pointToPoint_editor_field_source_requiredHint'),
+            field_source_option_manual: getL10n('otherConnections_pointToPoint_editor_field_source_option_manual'),
+            field_source_option_auto: getL10n('otherConnections_pointToPoint_editor_field_source_option_auto'),
+            field_sourceIpAddress: getL10n('otherConnections_pointToPoint_editor_field_sourceIpAddress'),
         };
     };
 
-    const getDataFromParentController = (idToExclude) => {
-        vm.options.interface = _.cloneDeep(parentController.interfaceOptionsList);
-        vm.defaultInterfaceId = parentController.defaultInterfaceId;
+    updateL10n();
 
-        vm.restrictedSubnetsList = _.cloneDeep(parentController.restrictedSubnetsList)
-            .filter(item => item.ifaceId !== idToExclude);
+    onLanguageChange(() => updateL10n());
+
+    vm.LOCAL_SOURCE = LOCAL_SOURCE;
+    vm.TUNNEL_TYPE = TUNNEL_TYPE;
+    vm.IS_IPSEC_AVAILABLE = IS_IPSEC_AVAILABLE;
+
+    vm.isVisible = false;
+    vm.model = {};
+    vm.interfaceIdToLabelMap = {};
+    vm.restrictedSubnetsList = [];
+    vm.deferred = null;
+
+    vm.options = {
+        type: pointToPointService.getTunnelTypeOptions(),
+        mask: ifaceIpModel.getMasksSelectOptions(),
+        source: [],
+    };
+
+    vm.sourceHint = '';
+    vm.isSourceValid = true;
+    vm.isServerModeEnabled = false;
+
+    vm.ui = {
+        isLocked: false,
+
+        lock: () => {
+            vm.ui.isLocked = true;
+
+            return $q.when(true);
+        },
+
+        unlock: () => {
+            vm.ui.isLocked = false;
+
+            return $q.when(true);
+        },
+    };
+
+    vm.isPristine = (fieldName) => _.get(vm, `form.${fieldName}.$pristine`, false);
+    vm.isValid = (fieldName) => _.get(vm, `form.${fieldName}.$valid`, false);
+    vm.revalidate = (fieldName) => _.invoke(vm, `form.${fieldName}.revalidate`);
+    vm.setPristine = (fieldName) => _.invoke(vm, `form.${fieldName}.$setPristine`);
+    vm.setFormPristine = () => _.invoke(vm, 'form.$setPristine');
+
+    vm.onIpsecToggle = (isEnabled) => {
+        if (isEnabled) {
+            vm.onIsServerToggle(vm.model.ipsec.isServer);
+        } else {
+            vm.onIsServerToggle(false);
+        }
+    };
+
+    vm.onIsServerToggle = (isEnabled) => {
+        vm.sourceHint = isEnabled
+            ? getL10n('otherConnections_pointToPoint_editor_field_source_requiredHint')
+            : '';
+
+        vm.isServerModeEnabled = isEnabled;
+        vm.isSourceValid = !isEnabled || vm.model.source !== LOCAL_SOURCE.AUTO;
+    };
+
+    vm.onSourceChange = (value) => {
+        if (!vm.model.ipsec.isEnabled || !vm.model.ipsec.isServer) {
+            return;
+        }
+
+        vm.isSourceValid = value !== LOCAL_SOURCE.AUTO;
+    };
+
+    const getDataFromParentController = (idToExclude) => {
+        vm.interfaceIdToLabelMap = parentController.interfaceIdToLabelMap;
+        vm.interfaceOptions = parentController.interfaceOptions;
+
+        vm.options.source = [
+            {
+                id: LOCAL_SOURCE.AUTO,
+                label: vm.l10n.field_source_option_auto,
+            },
+            {
+                id: LOCAL_SOURCE.MANUAL,
+                label: vm.l10n.field_source_option_manual,
+            },
+            ..._.cloneDeep(parentController.interfaceOptions),
+        ];
+
+        vm.restrictedSubnetsList = _.cloneDeep(parentController.usedSubnets)
+            .filter(item => item.ifaceId !== idToExclude)
+            .map(item => {
+                return {
+                    ...item,
+                    label: _.get(vm.interfaceIdToLabelMap, item.ifaceId, ''),
+                };
+            });
     };
 
     vm.openEditor = (connectionModel) => {
         if (vm.isVisible) {
             return;
         }
-
-        updateL10n();
 
         vm.model = connectionModel;
 
@@ -112,26 +224,19 @@ export function PointToPointEditorController() {
     };
 
     vm.addNewTunnel = () => {
-        getDataFromParentController('idToExclude');
+        getDataFromParentController('');
 
-        const model = pointToPointService.getDefaultTunnelModel(vm.defaultInterfaceId);
+        const model = pointToPointService.getNewTunnelModel();
 
         return vm.openEditor(model);
     };
 
     $scope.$on(pointToPointService.EVENTS.OPEN_EDITOR, ($event, row) => {
-        const {
-            showInterfaceItem,
-            interfaceConfiguration,
-        } = row.rawData;
-
         getDataFromParentController(row.id);
 
-        const model = pointToPointService.getTunnelEditorModel({
-            interfaceConfiguration,
-            showInterfaceItem,
-            interfaceOptionsList: vm.options.interface,
-            defaultInterfaceId: vm.defaultInterfaceId,
+        const model = pointToPointService.getTunnelModel({
+            ...row.rawData,
+            interfaceOptionsList: vm.interfaceOptions,
         });
 
         vm.openEditor(model);

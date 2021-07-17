@@ -66,30 +66,6 @@
   "HECErrorsInterleaved": {
     "message": "HEC errors"
   },
-  "PointToPointSource": {
-    "message": "Source"
-  },
-  "PointToPointDestination": {
-    "message": "Destination"
-  },
-  "PointToPointTunnelSource": {
-    "message": "Tunnel source"
-  },
-  "PointToPointTunnelDestination": {
-    "message": "Tunnel destination"
-  },
-  "PointToPointEditorTitle": {
-    "message": "Tunnel configuration editor"
-  },
-  "PointToPointEditorIpsecEnabled": {
-    "message": "Enable IPsec"
-  },
-  "PointToPointEditorIpsecIsServer": {
-    "message": "Is server"
-  },
-  "PointToPointEditorIpsecTunnelSourceIsInterface": {
-    "message": "Tunnel source is interface"
-  },
   "RoutesToolbarExportSelectedBtnLabel": {
     "message": "Export selected"
   },
@@ -161,5 +137,116 @@
   },
   "RoutesImportPopupReplaceInterfaceWith": {
     "message": "Replace missing interface \"{{interfaceLabel}}\" ({{interfaceId}}) with"
+  },
+  "otherConnections_pointToPoint_header": {
+    "message": "IP encapsulated tunnels"
+  },
+  "otherConnections_pointToPoint_description": {
+    "message": "Configure routable connections, using the IPIP, GRE and EoIP protocols."
+  },
+  "otherConnections_pointToPoint_table_any": {
+    "message": "Any"
+  },
+  "otherConnections_pointToPoint_table_column_connection": {
+    "message": "Connection"
+  },
+  "otherConnections_pointToPoint_table_column_type": {
+    "message": "VPN type"
+  },
+  "otherConnections_pointToPoint_table_column_source": {
+    "message": "Source"
+  },
+  "otherConnections_pointToPoint_table_column_destination": {
+    "message": "Destination"
+  },
+  "otherConnections_pointToPoint_table_column_sent": {
+    "message": "Sent"
+  },
+  "otherConnections_pointToPoint_table_column_received": {
+    "message": "Received"
+  },
+  "otherConnections_pointToPoint_table_column_uptime": {
+    "message": "Connected"
+  },
+  "otherConnections_pointToPoint_createConnectionBtn": {
+    "message": "Create connection"
+  },
+  "otherConnections_pointToPoint_editor_header": {
+    "message": "Tunnel settings"
+  },
+  "otherConnections_pointToPoint_editor_description": {
+    "message": "Specify the tunnel configuration parameters."
+  },
+  "otherConnections_pointToPoint_editor_deleteConnectionBtn": {
+    "message": "Delete"
+  },
+  "otherConnections_pointToPoint_editor_field_description": {
+    "message": "Name"
+  },
+  "otherConnections_pointToPoint_editor_field_isGlobal_label": {
+    "message": "Use for accessing the Internet"
+  },
+  "otherConnections_pointToPoint_editor_field_isGlobal_hint": {
+    "message": "Unless enabled, you need to set up routing via the tunnel manually."
+  },
+  "otherConnections_pointToPoint_editor_field_type_label": {
+    "message": "Type (protocol)"
+  },
+  "otherConnections_pointToPoint_editor_field_type_option_ipip": {
+    "message": "IPIP"
+  },
+  "otherConnections_pointToPoint_editor_field_type_option_gre": {
+    "message": "GRE"
+  },
+  "otherConnections_pointToPoint_editor_field_type_option_eoip": {
+    "message": "EoIP"
+  },
+  "otherConnections_pointToPoint_editor_field_eoipId_label": {
+    "message": "EoIP ID"
+  },
+  "otherConnections_pointToPoint_editor_field_eoipId_hint": {
+    "message": "Only a peer with the same ID will be able to establish a tunnel."
+  },
+  "otherConnections_pointToPoint_editor_field_ipAddress": {
+    "message": "IP address"
+  },
+  "otherConnections_pointToPoint_editor_field_mask": {
+    "message": "Subnet mask"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIsEnabled_label": {
+    "message": "Enable IPsec"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIsEnabled_hint": {
+    "message": "IPsec layer adds connection state awareness, and also helps to protect tunnel payload and automatically traverse NAT."
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecPsk": {
+    "message": "Preshared key"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIkev2": {
+    "message": "IKEv2"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_label": {
+    "message": "Wait for a connection from a remote peer"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_hint": {
+    "message": "Activates passive (or server) mode."
+  },
+  "otherConnections_pointToPoint_editor_field_remote": {
+    "message": "Remote destination"
+  },
+  "otherConnections_pointToPoint_editor_field_source_label": {
+    "message": "Local source"
+  },
+  "otherConnections_pointToPoint_editor_field_source_requiredHint": {
+    "message": "Please specify the IP address or choose an interface to accept connections"
+  },
+  "otherConnections_pointToPoint_editor_field_source_option_manual": {
+    "message": "Enter manually"
+  },
+  "otherConnections_pointToPoint_editor_field_source_option_auto": {
+    "message": "Detect automatically"
+  },
+  "otherConnections_pointToPoint_editor_field_sourceIpAddress": {
+    "message": "IP address"
   }
 }
