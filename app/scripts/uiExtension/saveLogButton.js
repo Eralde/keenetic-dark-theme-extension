@@ -51,6 +51,13 @@ const addSaveLogButton = () => {
                 return;
             }
 
+            const buttons = [...panelEl.querySelectorAll('button')];
+
+            if (buttons.length > 1) { // 'Save to computer' button already present in the web UID
+                return;
+            }
+
+
             const btnTitle = getAngularService('$translate').instant('diagnostics.log.popup-log.save-local');
             const saveLogBtn = createElement(
                 `<button class="btn" onclick="downloadLog();">${btnTitle}</button>`,
