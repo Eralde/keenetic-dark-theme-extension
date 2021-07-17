@@ -22,7 +22,7 @@ export const injectPointToPointSectionTemplate = () => {
         return;
     }
 
-    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('wireguard.section.html');
+    const previousSectionIncludeIndex = otherConnectionsTemplate.indexOf('ppp.section.html');
 
     if (previousSectionIncludeIndex === -1) {
         logWarning(errMsg);
