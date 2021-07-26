@@ -76,12 +76,23 @@ export const extendMenu3x = () => {
         return;
     }
 
+    const $stateRegistry = getAngularService('$stateRegistry');
+    const logState = _.get($stateRegistry, ['states', DIAGNOSTICS_STATE], {});
+
+    // 'tab' parameter is added since 3.7B2
+    const hasTabParam = !_.isEmpty(logState.params);
+
     $scope.$watch('vm.menuHierarchy', (newVal) => {
+        const logLinkParams = hasTabParam
+            ? {tab: utils.getTranslation('diagnostics.tabs.main')}
+            : {};
+
         addLinkToMenuSection({
             menu: newVal,
             menuSectionId: FIRST_MENU_GROUP,
             linkTitle: LOG_LINK_TITLE,
             linkSref: DIAGNOSTICS_LOG_STATE,
+            srefParams: logLinkParams,
         });
 
         addLinkToMenuSection({

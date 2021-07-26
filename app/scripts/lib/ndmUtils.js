@@ -200,7 +200,7 @@ export const getPathIndexInRequest = (requestObj, path) => {
     return index === -1 ? '' : `[${index}]`;
 };
 
-export const addLinkToMenuSection = ({menu, menuSectionId, linkTitle, linkSref}) => {
+export const addLinkToMenuSection = ({menu, menuSectionId, linkTitle, linkSref, srefParams}) => {
     if (!_.get(menu, [menuSectionId, 'points'])) {
         return;
     }
@@ -214,6 +214,7 @@ export const addLinkToMenuSection = ({menu, menuSectionId, linkTitle, linkSref})
     sectionPoints[linkSref] = {
         menuTitle: linkTitle,
         sref: linkSref,
+        srefParams: srefParams || {},
     };
 };
 
