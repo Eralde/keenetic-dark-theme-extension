@@ -46,6 +46,21 @@
         .no-firmware-updates {
             color: @dt__white-text;
         }
+
+        .components-section__auto-update-settings {
+            div.system__components-section__auto-update-description,
+            .body-text[data-translate] {
+                color: @dt__gray-text;
+
+                a {
+                    color: lighten(@dt__blue-text, 10%) !important;
+
+                    &:focus {
+                        .__mixin__box-shadow-on-focus();
+                    }
+                }
+            }
+        }
     }
 
     .system__components-popup {
