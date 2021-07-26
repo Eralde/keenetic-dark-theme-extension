@@ -104,12 +104,16 @@ export const extendMenu3x = () => {
 
         if (isDslDevice) {
             const title = getDslDiagnosticsLinkTitle();
+            const dslSrefParams = hasTabParam
+                ? {tab: utils.getTranslation('diagnostics.tabs.dsl')}
+                : {};
 
             addLinkToMenuSection({
                 menu: newVal,
                 menuSectionId: FIRST_MENU_GROUP,
                 linkTitle: title,
                 linkSref: DIAGNOSTICS_STATE,
+                srefParams: dslSrefParams,
             });
         }
 
@@ -142,7 +146,6 @@ export const extendMenu3x = () => {
             {
                 itemSelector: '.ndm-menu__item',
                 classToAdd: LOG_LINK_CLASS,
-                activeItemClass: 'foo', // ndm-menu__item--active',
             }
         );
 
@@ -213,15 +216,18 @@ export const extendMenu3x = () => {
 
     if (dslDiagnosticsElement) {
         dslDiagnosticsElement.classList.add(DSL_DIAGNOSTICS_LINK_CLASS);
-        dslDiagnosticsElement.addEventListener(
-            'click',
-            getSpecialMenuItemClickListener({
-                callback: goToDslTab,
-                stateName: DIAGNOSTICS_STATE,
-                menuActionOnStateChange: closeOverlayMenu,
-                menuScope: $scope,
-            }),
-        );
+
+        if (!hasTabParam) {
+            dslDiagnosticsElement.addEventListener(
+                'click',
+                getSpecialMenuItemClickListener({
+                    callback: goToDslTab,
+                    stateName: DIAGNOSTICS_STATE,
+                    menuActionOnStateChange: closeOverlayMenu,
+                    menuScope: $scope,
+                }),
+            );
+        }
     }
 
     setExtendMenuTimeout();
