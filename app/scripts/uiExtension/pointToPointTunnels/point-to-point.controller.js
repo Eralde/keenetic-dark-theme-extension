@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {getAngularService, getNgL10n, onLanguageChange} from '../../lib/ndmUtils';
+import {getAngularService, onLanguageChange} from '../../lib/ndmUtils';
 import {getL10n} from '../../lib/l10nUtils';
 import {formatBytesColumn, formatIpData, formatUptime} from '../../lib/formatUtils';
 import {logWarning} from '../../lib/log';
@@ -152,10 +152,9 @@ export function PointToPointController() {
             vm.usedSubnets = pollData.usedSubnets;
             vm.interfaceOptions = pollData.interfaceOptions;
             vm.interfaceIdToLabelMap = pollData.interfaceIdToLabelMap;
+            vm.usedInterfaceIdList = _.map(pollData.tableData, 'id');
 
-            const idList = _.map(pollData.tableData, 'id');
-
-            return pointToPointService.getInterfaceStatByIdData(idList).then(statDataById => {
+            return pointToPointService.getInterfaceStatByIdData(vm.usedInterfaceIdList).then(statDataById => {
                 vm.table.data = pollData.tableData.map(row => {
                     const {id} = row;
                     let {isEnabled} = row;

@@ -16,6 +16,7 @@
         ng-if="vm.isVisible"
         class="point-to-point-editor__popup"
         close="vm.closeEditor"
+        save="vm.saveTunnel"
         header-title="{{ vm.l10n.header }}"
     >
         <div
@@ -36,17 +37,9 @@
                     label="{{ vm.l10n.field_description }}"
                     model="vm.model.description"
                     name="PointToPointEditor__description"
-                    validation="required"
+                    validation="required,maxLengthInBytes[256]"
                 >
                 </ndm-input>
-
-                <ndm-checkbox
-                    label="{{ vm.l10n.field_isGlobal_label }}"
-                    model="vm.model.isGlobal"
-                    name="PointToPointEditor__isGlobal"
-                    hint="{{ vm.l10n.field_isGlobal_hint }}"
-                >
-                </ndm-checkbox>
 
                 <ndm-selectbox
                     disabled="vm.ui.isLocked || !vm.model.isNew"
@@ -54,9 +47,25 @@
                     name="PointToPointEditor__type"
                     options="vm.options.type"
                     value="vm.model.type"
+                    on-value-change="vm.onTypeChange"
                 >
                 </ndm-selectbox>
 
+                <!-- IP GLOBAL -->
+                <div
+                    ng-if="vm.model.type !== vm.TUNNEL_TYPE.EOIP"
+                    ng-form="vm.form.isGlobalSubform"
+                >
+                    <ndm-checkbox
+                        label="{{ vm.l10n.field_isGlobal_label }}"
+                        model="vm.model.isGlobal"
+                        name="PointToPointEditor__isGlobal"
+                        hint="{{ vm.l10n.field_isGlobal_hint }}"
+                    >
+                    </ndm-checkbox>
+                </div>
+
+                <!-- EoIP ID -->
                 <div
                     ng-if="vm.model.type === vm.TUNNEL_TYPE.EOIP"
                     ng-form="vm.form.eoipIdSubform"
@@ -103,7 +112,6 @@
                 <ndm-sub-form
                     ng-if="vm.model.ipsec.isEnabled"
                     ng-form="vm.form.ipsecSubform"
-                    class="form--sub"
                 >
                     <ndm-input
                         name="PointToPointEditor__ipsecPsk"
@@ -115,12 +123,35 @@
                     </ndm-input>
 
                     <ndm-checkbox
+                        label="{{ vm.l10n.field_ipsecForceEncaps_label }}"
+                        hint="{{ vm.l10n.field_ipsecForceEncaps_hint }}"
+                        model="vm.model.ipsec.forceEncaps"
+                        name="PointToPointEditor__ipsecForceEncaps"
+                    >
+                    </ndm-checkbox>
+
+                    <ndm-checkbox
                         disabled=""
-                        label="{{ vm.l10n.field_ipsecIkev2 }}"
+                        label="{{ vm.l10n.field_ipsecIkev2_label }}"
+                        hint="{{ vm.l10n.field_ipsecIkev2_hint }}"
                         model="vm.model.ipsec.ikev2Enabled"
                         name="PointToPointEditor__ipsecIkev2"
                     >
                     </ndm-checkbox>
+
+                    <div
+                        ng-if="vm.model.ipsec.ikev2Enabled"
+                        ng-form="vm.form.interfaceIdSubform"
+                    >
+                        <ndm-input
+                            label="{{ vm.l10n.field_interfaceId_label }}"
+                            model="vm.model.interfaceId"
+                            name="PointToPointEditor__interfaceId"
+                            extra-validator="vm.interfaceIdValidator"
+                            validation="required,integer,range[0..127]"
+                        >
+                        </ndm-input>
+                    </div>
 
                     <ndm-checkbox
                         label="{{ vm.l10n.field_ipsecWaitForRemote_label }}"
@@ -150,7 +181,7 @@
                     label="{{ vm.l10n.field_source_label }}"
                     value="vm.model.source"
                     name="PointToPointEditor__source"
-                    on-change="vm.onSourceChange"
+                    on-value-change="vm.onSourceChange"
                     options="vm.options.source"
                 >
                     <div
@@ -183,9 +214,9 @@
 
                     <ndm-button
                         is-disabled="vm.isLocked"
-                        btn-class="btn--long"
+                        btn-class="btn--warning"
                         on-click="vm.deleteTunnel"
-                        label="otherConnections.delete-connection"
+                        label="{{ vm.l10n.deleteConnectionBtn }}"
                     >
                     </ndm-button>
                 </div>
@@ -196,7 +227,7 @@
                 prefix="pointToPoint"
                 is-visible="vm.form.modified || vm.model.isNew"
                 is-popup="true"
-                is-save-disabled="vm.form.$invalid || vm.isLocked"
+                is-save-disabled="vm.form.$invalid || vm.isLocked || !vm.isSourceValid"
                 save="vm.saveTunnel()"
                 cancel="vm.closeEditor()"
             >

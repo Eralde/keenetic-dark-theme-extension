@@ -248,5 +248,23 @@
   },
   "otherConnections_pointToPoint_editor_field_sourceIpAddress": {
     "message": "IP-адрес"
+  },
+  "otherConnections_pointToPoint_editor_field_interfaceId_label": {
+    "message": "ID интерфейса"
+  },
+  "otherConnections_pointToPoint_editor_field_interfaceId_numberIsUsedError": {
+    "message": "Этот номер используется, пожалуйста, укажите другой ID интерфейса."
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecForceEncaps_label": {
+    "message": "Форсировать UDP"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecForceEncaps_hint": {
+    "message": "Безусловная инкапсуляция ESP-пакетов в UDP. В некоторых случаях требуется для преодоления NAT. Убедитесь, что настройка включена и на ответной стороне туннеля."
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIkev2_label": {
+    "message": "IKEv2"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIkev2_hint": {
+    "message": "Использование IKEv2 помогает уменьшить задержки и повысить стабильность соединения. Необходимо использовать одинаковый идентификатор (ID) интерфейса с обеих сторон туннеля. Обратите внимание, что не все реализации могут поддерживать этот режим."
   }
 }

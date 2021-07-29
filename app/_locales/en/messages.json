@@ -139,7 +139,7 @@
     "message": "Replace missing interface \"{{interfaceLabel}}\" ({{interfaceId}}) with"
   },
   "otherConnections_pointToPoint_header": {
-    "message": "IP encapsulated tunnels"
+    "message": "IP-encapsulated tunnels"
   },
   "otherConnections_pointToPoint_description": {
     "message": "Configure routable connections, using the IPIP, GRE and EoIP protocols."
@@ -217,10 +217,10 @@
     "message": "Enable IPsec"
   },
   "otherConnections_pointToPoint_editor_field_ipsecIsEnabled_hint": {
-    "message": "IPsec layer adds connection state awareness, and also helps to protect tunnel payload and automatically traverse NAT."
+    "message": "IPsec layer adds connection state awareness, and also helps to protect tunnel payload, and automatically traverse NAT."
   },
   "otherConnections_pointToPoint_editor_field_ipsecPsk": {
-    "message": "Preshared key"
+    "message": "Pre-shared key"
   },
   "otherConnections_pointToPoint_editor_field_ipsecIkev2": {
     "message": "IKEv2"
@@ -238,7 +238,7 @@
     "message": "Local source"
   },
   "otherConnections_pointToPoint_editor_field_source_requiredHint": {
-    "message": "Please specify the IP address or choose an interface to accept connections"
+    "message": "Please specify the IP address or choose an interface for receiving and sending tunnel traffic."
   },
   "otherConnections_pointToPoint_editor_field_source_option_manual": {
     "message": "Enter manually"
@@ -248,5 +248,23 @@
   },
   "otherConnections_pointToPoint_editor_field_sourceIpAddress": {
     "message": "IP address"
+  },
+  "otherConnections_pointToPoint_editor_field_interfaceId_label": {
+    "message": "Interface ID"
+  },
+  "otherConnections_pointToPoint_editor_field_interfaceId_numberIsUsedError": {
+    "message": "This number is in use, please choose a different ID number."
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecForceEncaps_label": {
+    "message": "Force UDP"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecForceEncaps_hint": {
+    "message": "Forces ESP packet encapsulation with UDP header, to help connect through some types of NAT devices. Please note this setting should be made on both sides."
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIkev2_label": {
+    "message": "IKEv2"
+  },
+  "otherConnections_pointToPoint_editor_field_ipsecIkev2_hint": {
+    "message": "Use IKEv2 for lower latency and better stability. It is vital to set the same ID on both connecting sides. Note that not every tunnel implementation supports this mode."
   }
 }

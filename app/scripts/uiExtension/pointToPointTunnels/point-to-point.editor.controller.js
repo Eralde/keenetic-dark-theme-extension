@@ -22,6 +22,7 @@ export function PointToPointEditorController() {
 
     const ifaceIpModel = getAngularService('ifaceIpModel');
     const modal = getAngularService('modal');
+    const $timeout = getAngularService('$timeout');
     const otherConnectionsService = getAngularService('otherConnectionsService');
     const requester = otherConnectionsService.requester;
 
@@ -50,7 +51,6 @@ export function PointToPointEditorController() {
     const updateL10n = () => {
         vm.l10n = {
             createConnectionBtn: getL10n('otherConnections_pointToPoint_createConnectionBtn'),
-
             header: getL10n('otherConnections_pointToPoint_editor_header'),
             description: getL10n('otherConnections_pointToPoint_editor_description'),
             deleteConnectionBtn: getL10n('otherConnections_pointToPoint_editor_deleteConnectionBtn'),
@@ -65,10 +65,15 @@ export function PointToPointEditorController() {
             field_eoipId_hint: getL10n('otherConnections_pointToPoint_editor_field_eoipId_hint'),
             field_ipAddress: getL10n('otherConnections_pointToPoint_editor_field_ipAddress'),
             field_mask: getL10n('otherConnections_pointToPoint_editor_field_mask'),
+            field_interfaceId_label: getL10n('otherConnections_pointToPoint_editor_field_interfaceId_label'),
+            field_interfaceId_numberIsUsedError: getL10n('otherConnections_pointToPoint_editor_field_interfaceId_numberIsUsedError'),
             field_ipsecIsEnabled_label: getL10n('otherConnections_pointToPoint_editor_field_ipsecIsEnabled_label'),
             field_ipsecIsEnabled_hint: getL10n('otherConnections_pointToPoint_editor_field_ipsecIsEnabled_hint'),
+            field_ipsecForceEncaps_label: getL10n('otherConnections_pointToPoint_editor_field_ipsecForceEncaps_label'),
+            field_ipsecForceEncaps_hint: getL10n('otherConnections_pointToPoint_editor_field_ipsecForceEncaps_hint'),
             field_ipsecPsk: getL10n('otherConnections_pointToPoint_editor_field_ipsecPsk'),
-            field_ipsecIkev2: getL10n('otherConnections_pointToPoint_editor_field_ipsecIkev2'),
+            field_ipsecIkev2_label: getL10n('otherConnections_pointToPoint_editor_field_ipsecIkev2_label'),
+            field_ipsecIkev2_hint: getL10n('otherConnections_pointToPoint_editor_field_ipsecIkev2_hint'),
             field_ipsecWaitForRemote_label: getL10n('otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_label'),
             field_ipsecWaitForRemote_hint: getL10n('otherConnections_pointToPoint_editor_field_ipsecWaitForRemote_hint'),
             field_remote: getL10n('otherConnections_pointToPoint_editor_field_remote'),
@@ -91,8 +96,10 @@ export function PointToPointEditorController() {
     vm.isVisible = false;
     vm.model = {};
     vm.interfaceIdToLabelMap = {};
+
+    // validation data
+    vm.usedInterfaceIdList = [];
     vm.restrictedSubnetsList = [];
-    vm.deferred = null;
 
     vm.options = {
         type: pointToPointService.getTunnelTypeOptions(),
@@ -103,6 +110,21 @@ export function PointToPointEditorController() {
     vm.sourceHint = '';
     vm.isSourceValid = true;
     vm.isServerModeEnabled = false;
+
+    vm.onTypeChange = () => {
+        _.invoke(vm, 'form.interfaceIdSubform.PointToPointEditor__interfaceId.revalidate');
+    };
+
+    vm.interfaceIdValidator = (interfaceId) => {
+        const {type} = vm.model;
+        const usedIds = vm.usedInterfaceIdList
+            .filter(item => item.startsWith(type))
+            .map(item => item.replace(type, ''));
+
+        return usedIds.includes(interfaceId)
+            ? vm.l10n.field_interfaceId_numberIsUsedError
+            : '';
+    };
 
     vm.ui = {
         isLocked: false,
@@ -167,6 +189,9 @@ export function PointToPointEditorController() {
             ..._.cloneDeep(parentController.interfaceOptions),
         ];
 
+        vm.usedInterfaceIdList = parentController.usedInterfaceIdList
+            .filter(item => item !== idToExclude);
+
         vm.restrictedSubnetsList = _.cloneDeep(parentController.usedSubnets)
             .filter(item => item.ifaceId !== idToExclude)
             .map(item => {
@@ -186,7 +211,12 @@ export function PointToPointEditorController() {
 
         requester.stopPolling();
 
-        vm.isVisible = true;
+        vm.onIsServerToggle(vm.model.ipsec.isEnabled && vm.model.ipsec.isServer);
+
+        $timeout(() => {
+            vm.setFormPristine();
+            vm.isVisible = true;
+        });
     };
 
     vm.closeEditor = () => {
