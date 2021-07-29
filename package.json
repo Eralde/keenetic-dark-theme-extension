@@ -27,7 +27,8 @@
     "sass-loader": "^10.1.1",
     "style-loader": "^1.1.1",
     "webextension-toolbox": "latest",
-    "webpack": "^5.38.1"
+    "webpack": "^5.38.1",
+    "yargs": "^17.0.1"
   },
   "dependencies": {
     "@simonwep/pickr": "^1.6.0",
