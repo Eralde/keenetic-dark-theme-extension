@@ -62,6 +62,7 @@ const appendWolButtonToCell = (cell) => {
     });
 
     cell.appendChild(button);
+    cell.classList.add('inactive-device');
 };
 
 const addWoLButton = () => {
