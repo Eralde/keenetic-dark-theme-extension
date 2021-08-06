@@ -9,6 +9,7 @@ export const pointToPointService = (function() {
     const router = getAngularService('router');
     const interfaces = getAngularService('interfaces');
     const CONSTANT = getAngularService('CONSTANT');
+    const NDM = getAngularService('NDM');
 
     const {
         INTERFACE_STATE,
@@ -85,6 +86,7 @@ export const pointToPointService = (function() {
 
     const isPointToPoint = ({type}) => TUNNEL_TYPES_LIST.includes(type);
     const isPort = ({type}) => type === 'Port';
+    const isWifiMaster = ({id}) => [NDM.MASTER, NDM.MASTER_5G].includes(id);
 
     const hasIpsecPsk = (interfaceConfiguration) => {
         return _.has(interfaceConfiguration, IPSEC_PRESHARED_KEY);
@@ -95,19 +97,16 @@ export const pointToPointService = (function() {
     };
 
     const isServer = (interfaceConfiguration) => {
-        const sourceAddress = _.get(interfaceConfiguration, TUNNEL_SOURCE_ADDRESS_PROP, '');
-        const sourceInterface = _.get(interfaceConfiguration, TUNNEL_SOURCE_INTERFACE_PROP, '');
         const destination = _.get(interfaceConfiguration, TUNNEL_DESTINATION_PROP, '');
 
-        return hasIpsecPsk(interfaceConfiguration)
-            && Boolean(sourceAddress || sourceInterface)
-            && !destination;
+        return hasIpsecPsk(interfaceConfiguration) && !destination;
     };
 
     const getSuitableInterfaceOptions = (showInterfaceData) => {
         return interfaces.getInterfaceOptions(showInterfaceData)
             .filter(item => !isPointToPoint(item))
-            .filter(item => !isPort(item));
+            .filter(item => !isPort(item))
+            .filter(item => !isWifiMaster(item));
     };
 
     const getInterfaceDescriptionQuery = (interfaceId, description) => {
@@ -189,7 +188,7 @@ export const pointToPointService = (function() {
             eoipId: '',
 
             destination: '',
-            source: LOCAL_SOURCE.AUTO,
+            source: LOCAL_SOURCE.MANUAL,
             sourceIp: '',
 
             ipsec: {
@@ -301,7 +300,7 @@ export const pointToPointService = (function() {
             return _.set(
                 {},
                 `${prefix}.${TUNNEL_SOURCE_PROP}`,
-                NO,
+                {auto: 'auto'},
             );
         } else if (source === LOCAL_SOURCE.MANUAL) {
             return _.set(

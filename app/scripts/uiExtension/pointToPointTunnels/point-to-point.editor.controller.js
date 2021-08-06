@@ -157,16 +157,19 @@ export function PointToPointEditorController() {
     };
 
     vm.onIsServerToggle = (isEnabled) => {
-        vm.sourceHint = isEnabled
-            ? getL10n('otherConnections_pointToPoint_editor_field_source_requiredHint')
-            : '';
-
         vm.isServerModeEnabled = isEnabled;
-        vm.isSourceValid = !isEnabled || vm.model.source !== LOCAL_SOURCE.AUTO;
+
+        // disallow: no IPsec + `tunnel source auto` combination
+        vm.isSourceValid = vm.model.source !== LOCAL_SOURCE.AUTO
+            || (vm.model.ipsec.isEnabled && isEnabled);
+
+        vm.sourceHint = vm.isSourceValid
+            ? ''
+            : getL10n('otherConnections_pointToPoint_editor_field_source_requiredHint');
     };
 
     vm.onSourceChange = (value) => {
-        if (!vm.model.ipsec.isEnabled || !vm.model.ipsec.isServer) {
+        if (vm.model.ipsec.isEnabled && vm.model.ipsec.isServer) {
             return;
         }
 
