@@ -33,6 +33,12 @@
 .show-filter-checkboxes {
     position: absolute;
     right: @new-gap-sm;
+
+    &.ndm-checkbox.form__row {
+        .mobile({
+            margin-top: 0;
+        });
+    }
 }
 
 .hidden-table-row {

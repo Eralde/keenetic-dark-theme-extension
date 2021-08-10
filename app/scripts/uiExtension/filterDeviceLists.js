@@ -9,6 +9,8 @@ import {
     UNREG_DEVICES_FLAGS,
     FILTERS_TOGGLE_CLASS,
     HIDDEN_TABLE_ROW_CLASS,
+    DEVICES_LIST_TEMPLATE_PATH,
+    FLAGS_CHANGE_EVENT,
 } from '../lib/constants';
 
 import {
@@ -19,6 +21,7 @@ import {
     callOnPageLoad,
     getNdmPageController,
     getNdmPageScope,
+    getTemplate,
 } from '../lib/ndmUtils';
 
 import {
@@ -37,8 +40,11 @@ import {
     isElementVisible,
 } from '../lib/domUtils';
 
-import {flags} from '../lib/state';
+import {flags, sharedData} from '../lib/state';
 import {logWarning} from '../lib/log';
+
+import filterTemplate from '../../pages/ui/device-lists-input-filter.html';
+import * as CONSTANTS from '../lib/constants';
 
 /*
  * This UI extension adds filters to device lists on the 'Device lists' page
@@ -46,6 +52,7 @@ import {logWarning} from '../lib/log';
 
 const $timeout = getAngularService('$timeout');
 const $q = getAngularService('$q');
+const $rootScope = getAngularService('$rootScope');
 
 const router = getAngularService('router');
 const wirelessAcl = getAngularService('wirelessAcl');
@@ -56,6 +63,7 @@ const origPostToRciRoot = _.get(router, 'postToRciRoot');
 const macRegexp = /^[0-9a-f]{1}[02468ace]{1}(?:[\:\- ]?[0-9a-f]{2}){5}$/i;
 
 let _MACS_TO_HIDE = [];
+let _MAC_BY_NAME = {};
 
 /**
  * Replaces router.post & routerService.postToRciRoot methods
@@ -70,6 +78,20 @@ const modifyShowIpHotspotData = (globalFlags, __VARS, routerService) => {
     const path = 'show.ip.hotspot';
 
     const getHosts = (hosts) => {
+        _MAC_BY_NAME = hosts.reduce(
+            (acc, item) => {
+                if (!item.name) {
+                    return acc;
+                }
+
+                return {
+                    ...acc,
+                    [item.name]: item.mac,
+                };
+            },
+            {},
+        );
+
         const hideUnregisteredHosts = globalFlags.get(FLAGS.HIDE_UNREGISTERED_HOSTS);
         const areFiltersVisible = isElementVisible(__VARS.filtersToggleCheckbox); //.display !== 'none';
         const applyFilters = globalFlags.get(FLAGS.SHOW_FILTERS) && areFiltersVisible;
@@ -172,6 +194,9 @@ const addDeviceListsFilters = () => {
                             parentEl: regFlexContainer,
                             flagName: flag,
                             flagLabelL10nId: flag,
+                            cbk: (value) => {
+                                $rootScope.$broadcast(FLAGS_CHANGE_EVENT, {flag, value});
+                            },
                         },
                     );
                 });
@@ -187,6 +212,9 @@ const addDeviceListsFilters = () => {
                             parentEl: unregFlexContainer,
                             flagName: flag,
                             flagLabelL10nId: flag,
+                            cbk: (value) => {
+                                $rootScope.$broadcast(FLAGS_CHANGE_EVENT, {flag, value});
+                            },
                         },
                     )
                 });
@@ -199,7 +227,10 @@ const addDeviceListsFilters = () => {
                     __VARS,
                     pageHeaderEl,
                     containers,
-                    headers
+                    headers,
+                    (value) => {
+                        $rootScope.$broadcast(FLAGS_CHANGE_EVENT, {flag: FLAGS.SHOW_FILTERS, value});
+                    },
                 );
 
                 __VARS.filtersToggleCheckbox = filtersToggleEl.closest(`.${FILTERS_TOGGLE_CLASS}`);
@@ -232,23 +263,57 @@ const addDeviceListsFilters = () => {
             const ctrl = await getNdmPageController();
             const $scope = await getNdmPageScope();
 
-            $scope.$watch('DevicesList.registeredDevices', () => {
-                const ipCells = [
-                    ...document.querySelectorAll('.table-ip')
-                ];
+            ctrl.extensionFlags = flags.getAll();
 
+            $scope.$on(
+                '$destroy',
+                $rootScope.$on(FLAGS_CHANGE_EVENT, ($event, {flag, value}) => {
+                    ctrl.extensionFlags[flag] = value;
+                }),
+            );
+
+            const applyFilters = (ipCells, filterInputValue = '') => {
                 const hostRows = ipCells
                     .map(cell => [cell, cell.innerText.split('\n')])
                     .filter(([cell, lines]) => lines.some(line => macRegexp.test(line)));
 
-                const [toHide, toShow] = _.partition(hostRows, ([cell, lines]) => lines.some(line => _MACS_TO_HIDE.includes(line)));
+                const [toHide, toShow] = _.partition(
+                    hostRows,
+                    ([cell, lines]) => {
+                        if (!sharedData.get(CONSTANTS.UI_EXTENSIONS_KEY)) {
+                            return false;
+                        }
+
+                        if (lines.some(line => _MACS_TO_HIDE.includes(line))) {
+                            return true;
+                        }
+
+                        if (!filterInputValue) {
+                            return false;
+                        }
+
+                        const macsFilteredByName = _.filter(
+                            _MAC_BY_NAME,
+                            (mac, name) => !name.toLocaleLowerCase().includes(filterInputValue.toLocaleLowerCase()),
+                        );
+
+                        return lines.some(line => macsFilteredByName.includes(line));
+                    },
+                );
 
                 const rowsToHide = toHide.map(el => el[0].closest('tr'));
                 toggleCssClass(rowsToHide, HIDDEN_TABLE_ROW_CLASS, true);
 
                 const rowsToShow = toShow.map(el => el[0].closest('tr'));
                 toggleCssClass(rowsToShow, HIDDEN_TABLE_ROW_CLASS, false);
+            }
 
+            $scope.$watch('DevicesList.registeredDevices', () => {
+                const ipCells = [
+                    ...document.querySelectorAll('.table-ip')
+                ];
+
+                applyFilters(ipCells, $rootScope.devicesListNameFilter);
                 forceScopeDigest($scope);
             });
 
@@ -256,6 +321,15 @@ const addDeviceListsFilters = () => {
             window[__VARS.ctrlName] = ctrl;
 
             getRowsToHide(regTableEl, unregTableEl, getPageHeaderEl());
+
+            $rootScope.filterDevicesList = (filterValue) => {
+                const ipCells = [
+                    ...document.querySelectorAll('.table-ip')
+                ];
+
+                applyFilters(ipCells, filterValue);
+                forceScopeDigest($scope);
+            };
         });
     });
 };
@@ -267,7 +341,35 @@ const cleanupDeviceListsFilters = () => {
     router.postToRciRoot = origPostToRciRoot;
 };
 
-    export const deviceListFilters = {
+const injectFilterInputTemplate = () => {
+    const $templateCache = getAngularService('$templateCache');
+    const devicesListTemplate = getTemplate(DEVICES_LIST_TEMPLATE_PATH);
+
+    const regTableHeaderOpenTagIndex = devicesListTemplate.indexOf('label="devices-list.registered-devices.header"');
+    const errMsg = 'failed to determine proper place to inject filter input';
+
+    if (regTableHeaderOpenTagIndex === -1) {
+        logWarning(errMsg);
+
+        return;
+    }
+
+    const injectionIndex = devicesListTemplate.indexOf('</ndm-title>', regTableHeaderOpenTagIndex);
+
+    if (injectionIndex === -1) {
+        logWarning(errMsg);
+
+        return;
+    }
+
+    const prefix = devicesListTemplate.substr(0, injectionIndex);
+    const suffix = devicesListTemplate.substr(injectionIndex);
+
+    $templateCache.put(DEVICES_LIST_TEMPLATE_PATH, prefix + filterTemplate + suffix);
+};
+
+export const deviceListFilters = {
+    onInit: injectFilterInputTemplate,
     onLoad: addDeviceListsFilters,
     onDestroy: cleanupDeviceListsFilters,
 };

@@ -1,4 +1,5 @@
 @import (reference) "../__mixins__";
+@import (reference) "../__ndwVars__";
 
 .ndm-checkbox {
     &--dark { // theme-specific
@@ -17,6 +18,68 @@
 
 .page-devices-list {
 
+    @filter-input-height: 21px;
+    @filter-input-top-mobile: 30px;
+
+    .ndm-title[label="devices-list.registered-devices.header"] {
+        .__inline-flex-row {
+            position: relative;
+            top: -2px;
+
+            .mobile({
+                position: static;
+            });
+        }
+
+        ndm-help {
+            height: 28px;
+            position: relative;
+            top: 2px;
+        }
+    }
+
+    .devices-lists-input-filter {
+        margin-left: 14px;
+        margin-right: -14px;
+        position: relative;
+        top: 5px;
+
+        .mobile({
+            position: absolute;
+            top: @filter-input-top-mobile;
+            padding-top: 0;
+            left: -8px;
+        });
+
+        @input-horizontal-padding: 22px;
+
+        .ndm-input-filter__icon {
+            top: 0;
+            left: 0;
+            transform: scale(0.75);
+        }
+
+        .ndm-input-filter__input {
+            height: @filter-input-height;
+            font-size: 14px;
+            padding: @new-unit @input-horizontal-padding;
+            border-radius: 4px;
+
+            &:focus {
+                padding: (@new-unit - 1px) (@input-horizontal-padding - 1px);
+            }
+        }
+
+        .ndm-input-filter__reset-btn {
+            top: 1px;
+            right: -2px;
+
+            .icon.icon--cancel {
+                margin-right: 0;
+            }
+        }
+    }
+
     .ndm-title.tretiary-title {
 
         .devices-list-toolbar { // theme-specific
@@ -24,6 +87,7 @@
             flex-direction: row;
             position: relative;
             left: 30px;
+            top: 5px;
             padding-top: 4px;
 
             .tablet({
@@ -37,6 +101,14 @@
                 padding-top: 0;
                 left: 0;
             });
+        }
+
+        &[label="devices-list.registered-devices.header"] {
+            .devices-list-toolbar {
+                .mobile({
+                    top: 60px;
+                });
+            }
         }
     }
 

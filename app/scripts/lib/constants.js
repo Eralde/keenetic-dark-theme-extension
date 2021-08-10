@@ -66,6 +66,8 @@ export const FLAGS = {
     SHOW_FILTERS: 'showFilterCheckboxes',
 };
 
+export const FLAGS_CHANGE_EVENT = '__DARK-THEME-EXTENSION__FLAGS_CHANGE__';
+
 export const FLAG_DEFAULTS = {
     [FLAGS.HIDE_UNREGISTERED_HOSTS]: false,
     [FLAGS.HIDE_HOSTS_BLOCKED_BY_MAC]: false,
@@ -106,6 +108,7 @@ export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
 export const SYSTEM_SWITCHPORTS_TEMPLATE_PATH = 'app/page/controlPanel/control/system/switchports/switchports.html';
 export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
+export const DEVICES_LIST_TEMPLATE_PATH = 'app/page/controlPanel/myNetwork/devicesList/devicesList.html';
 export const STATIC_ROUTES_TEMPLATE_PATH = 'app/page/controlPanel/networkRules/staticRoutes/staticRoutes.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 

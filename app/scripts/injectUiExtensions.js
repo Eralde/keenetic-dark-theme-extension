@@ -55,6 +55,8 @@ export const injectUiExtensions = () => {
     const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
     const systemSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
 
+    deviceListFilters.onInit();
+
     if (!dashboardSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
     } else {

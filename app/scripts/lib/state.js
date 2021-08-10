@@ -67,9 +67,17 @@ export const flags = {
         saveFlags();
     },
 
+    getAll: () => {
+        if (!_flagsRead) {
+            console.warn('flags read before initialization');
+        }
+
+        return _.cloneDeep(_FLAGS);
+    },
+
     init: (deviceServicetag) => {
         readFlags(deviceServicetag);
-    }
+    },
 };
 
 export const sharedData = (function() {
