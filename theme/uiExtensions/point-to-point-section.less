@@ -45,15 +45,12 @@
 
 .point-to-point-editor__popup {
     .invalid-field {
-        border: 2px solid red;
-
-        .sb-toggle {
-            background-color: red !important;
-        }
-
-        .sb-container .sb-toggle,
-        .ndm-selectbox2__toggle {
+        .dropdown .sb-container .sb-toggle {
             border-color: @new-red;
+
+            &:focus {
+                border-color: @new-red !important;
+            }
         }
     }
 }
