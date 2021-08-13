@@ -40,7 +40,7 @@
 
     .devices-lists-input-filter {
         margin-left: 14px;
-        margin-right: -10px;
+        margin-right: 8px;
         position: relative;
         top: 4px;
 
@@ -69,7 +69,6 @@
             font-size: 13px;
             padding: 9px @input-horizontal-padding 10px @input-horizontal-padding;
             border-radius: 4px;
-            background-color: @dt__grey4;
 
             &:focus {
                 padding: 8px (@input-horizontal-padding - 1px) 9px (@input-horizontal-padding - 1px);
@@ -127,4 +126,12 @@
             display: flex;
         }
     });
+}
+
+.ndm-layout--dark-theme {
+    .page-devices-list {
+        .ndm-input-filter__input {
+            background-color: @dt__grey4;
+        }
+    }
 }
