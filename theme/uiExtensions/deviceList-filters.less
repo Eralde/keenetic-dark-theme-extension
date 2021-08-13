@@ -40,7 +40,7 @@
 
     .devices-lists-input-filter {
         margin-left: 14px;
-        margin-right: -14px;
+        margin-right: -10px;
         position: relative;
         top: 4px;
 
@@ -49,6 +49,7 @@
             top: @filter-input-top-mobile;
             padding-top: 0;
             left: -8px;
+            margin-left: 8px;
         });
 
         @input-horizontal-padding: 22px;
@@ -56,14 +57,19 @@
         .ndm-input-filter__icon {
             top: 0;
             left: 0;
-            transform: scale(0.6);
+            transform: scale(0.55);
+
+            .mobile({
+                top: 2px;
+            });
         }
 
         .ndm-input-filter__input {
             height: @filter-input-height;
-            font-size: 14px;
+            font-size: 13px;
             padding: 9px @input-horizontal-padding 10px @input-horizontal-padding;
             border-radius: 4px;
+            background-color: @dt__grey4;
 
             &:focus {
                 padding: 8px (@input-horizontal-padding - 1px) 9px (@input-horizontal-padding - 1px);
@@ -77,6 +83,10 @@
             .icon.icon--cancel {
                 margin-right: 0;
             }
+
+            .mobile({
+                top: 2px;
+            });
         }
     }
 
