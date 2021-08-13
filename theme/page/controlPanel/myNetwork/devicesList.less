@@ -2,36 +2,6 @@
 @import (reference) "../../../__vars__";
 
 .page-devices-list {
-    .ndm-title.tretiary-title {
-        position: relative;
-
-        @filters-toolbar-height-mobile: 70px;
-
-        .tablet-and-laptop({
-            height: 35px;
-
-            &.__filters-are-visible {
-                & > span:not([ng-transclude]) {
-                    .ellipsis();
-                }
-            }
-        });
-
-        .mobile({
-            &.__filters-are-visible {
-                height: @filters-toolbar-height-mobile;
-            }
-        });
-
-        &[label="devices-list.registered-devices.header"] {
-            .mobile({
-                &.__filters-are-visible {
-                    height: @filters-toolbar-height-mobile + 40px;
-                }
-            });
-        }
-    }
-
     .table-devices-list {
         .__mixin__no-box-shadow-table();
 

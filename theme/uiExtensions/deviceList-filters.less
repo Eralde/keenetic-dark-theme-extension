@@ -21,7 +21,41 @@
     @filter-input-height: 21px;
     @filter-input-top-mobile: 30px;
 
+    .ndm-title.tretiary-title {
+        position: relative;
+
+        @filters-toolbar-height-mobile: 70px;
+
+        .tablet-and-laptop({
+            height: 35px;
+
+            &.__filters-are-visible {
+                & > span:not([ng-transclude]) {
+                    .ellipsis();
+                }
+            }
+        });
+
+        .mobile({
+            &.__filters-are-visible {
+                height: @filters-toolbar-height-mobile;
+            }
+        });
+
+        &[label="devices-list.registered-devices.header"] {
+            .mobile({
+                &.__filters-are-visible {
+                    height: @filters-toolbar-height-mobile + 40px;
+                }
+            });
+        }
+    }
+
     .ndm-title[label="devices-list.registered-devices.header"] {
+        .mobile({
+            position: relative;
+        });
+
         .__inline-flex-row {
             position: relative;
             top: -2px;
@@ -73,6 +107,10 @@
             &:focus {
                 padding: 8px (@input-horizontal-padding - 1px) 9px (@input-horizontal-padding - 1px);
             }
+
+            .mobile({
+                width: calc(~"100vw - 32px");
+            });
         }
 
         .ndm-input-filter__reset-btn {
