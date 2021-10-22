@@ -2,6 +2,7 @@ import * as ndmUtils from '../../lib/ndmUtils';
 import {routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
+import {onLanguageChange} from '../../lib/ndmUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.routes-ip-lookup';
 
@@ -17,9 +18,6 @@ export function IpLookupController() {
     const vm = this;
 
     const $scope = element.scope();
-    const $rootScope = ndmUtils.getAngularService('$rootScope');
-    const $timeout = ndmUtils.getAngularService('$timeout');
-
     const notification = ndmUtils.getAngularService('notification');
 
     const pageController = ndmUtils.getAncestorScopeProperty($scope, 'SRC');
@@ -44,7 +42,7 @@ export function IpLookupController() {
     };
 
     updateL10n();
-    $scope.$on('$destroy', $rootScope.$on('$translateChangeSuccess', () => $timeout(updateL10n)));
+    onLanguageChange(updateL10n);
 
     vm.domain = '';
     vm.isDomainValid = false;

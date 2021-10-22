@@ -3,6 +3,7 @@ import {logWarning} from '../../lib/log';
 import {getL10n} from '../../lib/l10nUtils';
 import * as ndmUtils  from '../../lib/ndmUtils';
 import {routesToolsService} from './routes-tools.service';
+import {onLanguageChange} from '../../lib/ndmUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.routes-toolbar';
 
@@ -32,7 +33,6 @@ export function RoutesToolbarController() {
 
     const $scope = element.scope();
     const $rootScope = ndmUtils.getAngularService('$rootScope');
-    const $timeout = ndmUtils.getAngularService('$timeout');
 
     const modal = ndmUtils.getAngularService('modal');
     const utils = ndmUtils.getAngularService('utils');
@@ -118,7 +118,7 @@ export function RoutesToolbarController() {
     };
 
     updateL10n();
-    $scope.$on('$destroy', $rootScope.$on('$translateChangeSuccess', () => $timeout(updateL10n)));
+    onLanguageChange(updateL10n);
 
     vm.exportSelectedRoutes = () => {
         return routesToolsService.getShowInterfaceData().then(showInterfaceData => {
