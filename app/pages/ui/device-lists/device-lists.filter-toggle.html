@@ -1,0 +1,14 @@
+<div
+    ng-if="progress >= 100"
+    class="devices-lists__filter-toggle"
+>
+    <div ng-if="$root.kdte.currentState === $root.kdte.STATE.DEVICES_LIST_STATE">
+        <ndm-checkbox
+            description="{{ $root.kdte.l10n[$root.kdte.currentLanguage].showFilterCheckboxes }}"
+            model="$root.kdte.DevicesListController.extensionFlags.showFilterCheckboxes"
+            name="toggleDeviceListsFilters"
+            on-value-change="$root.kdte.DevicesListController.toggleShowFilterCheckboxesFlag"
+        >
+        </ndm-checkbox>
+    </div>
+</div>
