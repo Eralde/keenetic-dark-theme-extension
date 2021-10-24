@@ -1,16 +1,18 @@
 <div
-    class="devices-list-toolbar"
+    class="kdte-filters-toolbar"
+    ng-init="
+        $ctx = $root.kdte;
+        $toggleHideUnregistered = $ctx.toggleFlag('hideUnregisteredHosts')
+    "
     ng-class="{
-        '__hidden': !DevicesList.extensionFlags.showFilterCheckboxes
+        '__hidden': !$ctx.flags.showFilterCheckboxes
     }"
 >
-    <div class="devices-lists__filter-checkboxes">
-        <ndm-checkbox
-            description="{{ $root.kdte.l10n[$root.kdte.currentLanguage].hideUnregisteredHosts }}"
-            model="$root.kdte.DevicesListController.extensionFlags.hideUnregisteredHosts"
-            name="hideUnregisteredHosts"
-            on-value-change="$root.kdte.DevicesListController.toggleHideUnregisteredHostsFlag"
-        >
-        </ndm-checkbox>
-    </div>
+    <ndm-checkbox
+        description="{{ $ctx.L10N[$ctx.currentLanguage].hideUnregisteredHosts }}"
+        model="$ctx.flags.hideUnregisteredHosts"
+        name="hideUnregisteredHosts"
+        on-value-change="$toggleHideUnregistered"
+    >
+    </ndm-checkbox>
 </div>

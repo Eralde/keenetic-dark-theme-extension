@@ -1,6 +1,48 @@
 @import (reference) "../__mixins__";
 @import (reference) "../__ndwVars__";
 
+.ndm-page-header {
+    .header {
+        &__title {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        ndm-help {
+            margin-left: @new-unit;
+        }
+
+        .devices-lists__filter-toggle {
+            .__mixin__flex-container(row, center);
+
+            margin: 0 0 0 auto;
+            width: auto;
+
+            .mobile({
+                width: 100%;
+            });
+
+            .ndm-checkbox {
+                align-items: center;
+
+                .description {
+                    min-width: unset;
+                    color: @dt__white-text
+                }
+
+                .checkbox {
+                    line-height: normal;
+                }
+
+                .form__cell.form__cell--checkbox {
+                    height: 24px;
+                    padding-top: 3px;
+                }
+            }
+        }
+    }
+}
+
 .ndm-checkbox {
     &--dark { // theme-specific
 
@@ -72,7 +114,7 @@
         }
     }
 
-    .devices-lists-input-filter {
+    .devices-lists__input-filter {
         margin-left: 14px;
         margin-right: 8px;
         position: relative;
@@ -131,13 +173,13 @@
 
     .ndm-title.tretiary-title {
 
-        .devices-list-toolbar { // theme-specific
+        .kdte-filters-toolbar { // theme-specific
             display: inline-flex;
             flex-direction: row;
-            position: relative;
-            left: 30px;
-            top: 5px;
-            padding-top: 4px;
+            //position: relative;
+            //left: 30px;
+            //top: 5px;
+            //padding-top: 4px;
 
             .tablet({
                 left: 8px;
@@ -150,10 +192,14 @@
                 padding-top: 0;
                 left: 0;
             });
+
+            .form__cell.form__cell--checkbox {
+                padding-top: 0;
+            }
         }
 
         &[label="devices-list.registered-devices.header"] {
-            .devices-list-toolbar {
+            .kdte-filters-toolbar {
                 .mobile({
                     top: 60px;
                 });

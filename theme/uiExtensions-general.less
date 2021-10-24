@@ -72,3 +72,42 @@
 .kdte-small-row {
     font-size: 12px !important;
 }
+
+.kdte-filters-toggle {
+    .ndm-checkbox {
+        align-items: center;
+
+        .form__cell {
+            line-height: normal;
+
+            &.form__cell--checkbox {
+                height: 18px;
+                padding-top: 0;
+            }
+
+            .checkbox {
+                margin-bottom: 0;
+            }
+        }
+
+        .form__cell-note {
+            color: @dt__white-text !important;
+        }
+
+        .description {
+            min-width: unset;
+        }
+    }
+}
+
+.kdte-filters-toolbar {
+    background: @dt__grey4;
+
+    .ndm-checkbox {
+        padding-left: 24px;
+
+        .form__cell-note {
+            color: @dt__white-text !important;
+        }
+    }
+}

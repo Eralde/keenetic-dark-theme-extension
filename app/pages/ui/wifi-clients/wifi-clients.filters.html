@@ -1,0 +1,40 @@
+<div
+    class="kdte-filters-toolbar"
+    ng-init="
+        $ctx = $root.kdte;
+        $toggleHideUnregistered = $ctx.toggleFlag('hideUnregisteredHosts');
+        $toggleBlockedByMac = $ctx.toggleFlag('hideHostsBlockedByMac');
+        $toggleOffline = $ctx.toggleFlag('hideOfflineHosts');
+    "
+    ng-class="{
+        '__hidden': !$ctx.flags.showFilterCheckboxes
+    }"
+    ng-style="{
+        'display': $ctx.currentState === $ctx.STATE.WIFI_CLIENTS_STATE ? 'flex' : 'none'
+    }"
+>
+    <ndm-checkbox
+        description="{{ $ctx.L10N[$ctx.currentLanguage].hideUnregisteredHosts }}"
+        model="$ctx.flags.hideUnregisteredHosts"
+        name="hideUnregisteredHosts"
+        on-value-change="$toggleHideUnregistered"
+    >
+    </ndm-checkbox>
+
+    <ndm-checkbox
+        description="{{ $ctx.L10N[$ctx.currentLanguage].hideHostsBlockedByMac }}"
+        model="$ctx.flags.hideHostsBlockedByMac"
+        name="hideHostsBlockedByMac"
+        on-value-change="$toggleBlockedByMac"
+    >
+    </ndm-checkbox>
+
+    <ndm-checkbox
+        description="{{ $ctx.L10N[$ctx.currentLanguage].hideOfflineHosts }}"
+        model="$ctx.flags.hideOfflineHosts"
+        name="hideOfflineHosts"
+        on-value-change="$toggleOffline"
+    >
+    </ndm-checkbox>
+</div>
+

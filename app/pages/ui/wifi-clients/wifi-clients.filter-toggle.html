@@ -1,17 +1,17 @@
 <div
     ng-if="progress >= 100"
-    class="kdte-filters-toggle devices-lists__filter-toggle"
+    class="kdte-filters-toggle wifiClients__filter-toggle"
     ng-init="
         $ctx = $root.kdte;
         $toggleShowFiltersCallback = $ctx.toggleFlag('showFilterCheckboxes');
     "
 >
-    <div ng-if="$ctx.currentState === $ctx.STATE.DEVICES_LIST_STATE">
+    <div ng-if="$ctx.currentState === $ctx.STATE.WIFI_CLIENTS_STATE">
         <ndm-checkbox
-            class="devices-lists__filter-toggle__checkbox"
+            class="wifiClients__filter-toggle__checkbox"
             description="{{ $ctx.L10N[$ctx.currentLanguage].showFilterCheckboxes }}"
             model="$ctx.flags.showFilterCheckboxes"
-            name="toggleDeviceListsFilters"
+            name="toggleWifiClientsFilters"
             on-value-change="$toggleShowFiltersCallback"
         >
         </ndm-checkbox>

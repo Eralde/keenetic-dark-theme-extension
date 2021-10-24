@@ -1,15 +1,20 @@
 <div
-    class="devices-list-toolbar"
+    class="kdte-filters-toolbar"
+    ng-init="
+        $ctx = $root.kdte;
+        $toggleBlockedByMac = $ctx.toggleFlag('hideHostsBlockedByMac');
+        $toggleOffline = $ctx.toggleFlag('hideOfflineHosts');
+    "
     ng-class="{
-        '__hidden': !DevicesList.extensionFlags.showFilterCheckboxes
+        '__hidden': !$ctx.flags.showFilterCheckboxes
     }"
 >
     <!-- filter by substring in the device name -->
     <div class="devices-lists__input-filter">
         <ndm-input-filter
             name="devicesFilter"
-            value="$root.devicesListNameFilter"
-            on-change="$root.filterDevicesList"
+            value="$ctx.model.DevicesList__nameFilter"
+            on-change="$ctx.callbacks.DevicesList__filterDevicesList"
         >
         </ndm-input-filter>
     </div>
@@ -17,18 +22,18 @@
     <!-- predefined filters -->
 <!--    <div class="devices-lists__filter-checkboxes">-->
         <ndm-checkbox
-            description="{{ $root.kdte.l10n[$root.kdte.currentLanguage].hideHostsBlockedByMac }}"
-            model="$root.kdte.DevicesListController.extensionFlags.toggleHideHostsBlockedByMacFlag"
+            description="{{ $ctx.L10N[$ctx.currentLanguage].hideHostsBlockedByMac }}"
+            model="$ctx.flags.hideHostsBlockedByMac"
             name="hideHostsBlockedByMac"
-            on-value-change="$root.kdte.DevicesListController.createToggleFlagFunction('hideHostsBlockedByMac')"
+            on-value-change="$toggleBlockedByMac"
         >
         </ndm-checkbox>
 
         <ndm-checkbox
-            description="{{ $root.kdte.l10n[$root.kdte.currentLanguage].hideOfflineHosts }}"
-            model="$root.kdte.DevicesListController.extensionFlags.hideOfflineHosts"
+            description="{{ $ctx.L10N[$ctx.currentLanguage].hideOfflineHosts }}"
+            model="$ctx.flags.hideOfflineHosts"
             name="hideOfflineHosts"
-            on-value-change="$root.kdte.DevicesListController.toggleHideOfflineHostsFlag"
+            on-value-change="$toggleOffline"
         >
         </ndm-checkbox>
 <!--    </div>-->
