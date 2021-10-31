@@ -3,7 +3,6 @@ import {
     callOnPageLoad,
     forceScopeDigest,
     getAngularService,
-    getNdmPageController,
     getNdmPageScope
 } from '../lib/ndmUtils';
 
@@ -80,7 +79,7 @@ const addWoLButton = () => {
             });
         });
     });
-}
+};
 
 export const additionalWolButton = {
     onLoad: addWoLButton,

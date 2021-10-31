@@ -1,13 +1,18 @@
 import * as beautify from 'js-beautify';
 import * as _ from 'lodash';
 
-import {NDM_SWITCHPORT_CONTAINER_TAG, TEMPLATE_PROP_DATA} from './constants';
+import {
+    NDM_SWITCHPORT_CONTAINER_TAG,
+    TEMPLATE_PROP_DATA
+} from './constants';
+
 import {
     createDocumentFragmentFromString,
     getDocumentFragmentInnerHtml,
     wrapHtmlStringIntoDiv,
 } from './domUtils';
-import {getTemplate} from './ndmUtils';
+
+import {getAngularService, getTemplate} from './ndmUtils';
 import {logWarning} from './log';
 
 /**
@@ -79,6 +84,53 @@ export const beautifyHtml = (htmlStr) => {
  * @returns {boolean}
  */
 export const isWrappedInParentheses = (s) => s[0] === '(' && s[s.length - 1] === ')';
+
+/**
+ * @param {string} str
+ * @param {number} injectionIndex
+ * @param {string} injectStr
+ * @returns {string}
+ */
+export const injectAtIndex = (str, injectionIndex, injectStr) => {
+    const prefix = str.substr(0, injectionIndex);
+    const suffix = str.substr(injectionIndex);
+
+    return prefix + injectStr + suffix;
+};
+
+/**
+ * @param {string} templateName
+ * @param {string} str
+ * @param {string[]} injectionMarks
+ * @param {string} errorMessage
+ * @returns {void}
+ */
+export const injectStringIntoTemplate = (
+    templateName,
+    str,
+    injectionMarks,
+    errorMessage,
+) => {
+    const $templateCache = getAngularService('$templateCache');
+    const templateStr = getTemplate(templateName);
+
+    const injectionIndex = injectionMarks.reduce(
+        (acc, mark) => {
+            return templateStr.indexOf(mark, acc);
+        },
+        0,
+    );
+
+    if (injectionIndex === -1) {
+        console.warn(errorMessage);
+
+        return;
+    }
+
+    const updatedTemplate = injectAtIndex(templateStr, injectionIndex, str);
+
+    $templateCache.put(templateName, updatedTemplate);
+};
 
 /**
  * @param {Array<object>} propsList

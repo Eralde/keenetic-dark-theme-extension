@@ -2,7 +2,7 @@
     class="kdte-filters-toolbar"
     ng-init="
         $ctx = $root.kdte;
-        $toggleHideUnregistered = $ctx.toggleFlag('hideUnregisteredHosts')
+        $toggleHideUnregistered = $ctx.getToggleFlagFn('hideUnregisteredHosts')
     "
     ng-class="{
         '__hidden': !$ctx.flags.showFilterCheckboxes

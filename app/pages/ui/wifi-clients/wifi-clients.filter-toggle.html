@@ -3,7 +3,7 @@
     class="kdte-filters-toggle wifiClients__filter-toggle"
     ng-init="
         $ctx = $root.kdte;
-        $toggleShowFiltersCallback = $ctx.toggleFlag('showFilterCheckboxes');
+        $toggleShowFiltersCallback = $ctx.getToggleFlagFn('showFilterCheckboxes');
     "
 >
     <div ng-if="$ctx.currentState === $ctx.STATE.WIFI_CLIENTS_STATE">

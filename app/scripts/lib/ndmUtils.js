@@ -24,6 +24,7 @@ export const getAngularService = (serviceName) => {
     return injector.get(serviceName);
 };
 
+const $rootScope = getAngularService('$rootScope');
 const $q = getAngularService('$q');
 const $transitions = getAngularService('$transitions');
 const $http = getAngularService('$http');
@@ -458,4 +459,8 @@ export const getDebouncedCallback = (callback, leading = true) => {
             maxWait: 400,
         },
     );
+};
+
+export const subscribeOnRootScopeEvent = ($scope, event, callback) => {
+    $scope.$on('$destroy', $rootScope.$on(event, callback));
 };

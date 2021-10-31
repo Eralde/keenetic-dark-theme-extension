@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import sectionTemplate from '../../pages/ui/point-to-point-tunnels/point-to-point-tunnels-section.html';
 import editorTemplate from '../../pages/ui/point-to-point-tunnels/point-to-point-tunnels-editor.html';
 import {getAngularService, getTemplate} from '../lib/ndmUtils';
@@ -39,4 +40,10 @@ export const injectPointToPointSectionTemplate = () => {
     const fullTemplate = sectionTemplate.replace(EDITOR_INJECTION_POINT, editorTemplate);
 
     $templateCache.put(OTHER_CONNECTIONS_TEMPLATE_PATH, prefix + fullTemplate + suffix);
+}
+
+export const pointToPointSection = {
+    onInit: injectPointToPointSectionTemplate,
+    onLoad: _.noop,
+    onDestroy: _.noop,
 }

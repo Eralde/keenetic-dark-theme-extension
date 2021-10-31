@@ -5,6 +5,12 @@ import * as ndmUtils from './lib/ndmUtils';
 import {flags, sharedData} from './lib/state';
 import {interceptMouseover,} from './lib/domUtils';
 
+import {logWarning} from './lib/log';
+import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
+import {l10n} from './lib/l10n';
+import {onLanguageChange} from './lib/ndmUtils';
+import {DEVICES_LIST_STATE, FLAGS_CHANGE_EVENT, WIFI_CLIENTS_STATE} from './lib/constants';
+
 import {extendMenu2x} from './uiExtension/extendMenu2x';
 import {extendMenu3x} from './uiExtension/extendMenu3x';
 
@@ -19,16 +25,14 @@ import {addDeltaSandbox, overrideSandboxesList} from './uiExtension/componentsLi
 import {extendedDslStat} from './uiExtension/extendDslStat';
 import {additionalWolButton} from './uiExtension/additionalWolButton';
 
-import {injectPointToPointSectionTemplate,} from './uiExtension/pointToPointTunnelsSection';
+import {pointToPointSection} from './uiExtension/pointToPointTunnelsSection';
 import {PointToPointController} from './uiExtension/pointToPointTunnels/point-to-point.controller';
 import {PointToPointEditorController} from './uiExtension/pointToPointTunnels/point-to-point.editor.controller';
 
-import {logWarning} from './lib/log';
-import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
-import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
-import {injectRoutesToolbarSectionTemplate} from './uiExtension/routesToolbar';
-import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
+import {routesToolbarExtension} from './uiExtension/routesToolbar';
 import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controller';
+import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
+import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -42,20 +46,77 @@ export const injectUiExtensions = () => {
 
     const $rootScope = ndmUtils.getAngularService('$rootScope');
     const $transitions = ndmUtils.getAngularService('$transitions');
+    const utils = ndmUtils.getAngularService('utils');
 
-    // We add controller to the $rootScope,
-    // otherwise it won't be available on page load
+    // We assign additional controllers directly to the $rootScope,
+    // otherwise they will not be accessible inside additional templates
     $rootScope.PointToPointController = PointToPointController;
     $rootScope.PointToPointEditorController = PointToPointEditorController;
     $rootScope.RoutesToolbarController = RoutesToolbarController;
     $rootScope.RoutesImportPopupController = RoutesImportPopupController;
     $rootScope.IpLookupController = IpLookupController;
 
+    $rootScope.kdte = {
+        L10N: l10n,
+        STATE: {
+            DEVICES_LIST_STATE,
+            WIFI_CLIENTS_STATE,
+        },
+        currentLanguage: utils.getCurrentLanguage(),
+        currentState: $state.current.name,
+
+        getToggleFlagFn: (flag) => {
+            return (value) => {
+                flags.set(flag, value);
+                $rootScope.$broadcast(FLAGS_CHANGE_EVENT, {flag, value});
+            };
+        },
+
+        callback: {},
+        controller: {},
+        model: {},
+        registerCallback: (contextName, callbackName, callback) => {
+          const name = `${contextName}__${callbackName}`;
+
+          $rootScope.kdte.callback[name] = callback;
+        },
+        registerModel: (contextName, modelName, value) => {
+            const name = `${contextName}__${modelName}`;
+
+            $rootScope.kdte.model[name] = value;
+        },
+        getModelValue: (contextName, modelName, defaultValue) => {
+            return _.get($rootScope.kdte.model, `${contextName}__${modelName}`, defaultValue);
+        },
+
+        cleanUpContext: (contextName) => {
+            const self = $rootScope.kdte;
+
+            self.controller = _.omit(self, [contextName]);
+
+            self.callback = _.pickBy(
+                self.callback,
+                (callback, name) => !name.startsWith(contextName)
+            );
+
+            self.model = _.pickBy(
+                self.model,
+                (value, name) => !name.startsWith(contextName)
+            );
+        },
+    };
+
+    onLanguageChange(() => {
+        $rootScope.kdte.currentLanguage = utils.getCurrentLanguage();
+    });
+
+    $transitions.onSuccess({}, (transition) => {
+        $rootScope.kdte.currentState = transition.to().name;
+    });
+
     // Should be done BEFORE authentication
     const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
     const systemSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
-
-    deviceListFilters.onInit();
 
     if (!dashboardSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
@@ -72,18 +133,25 @@ export const injectUiExtensions = () => {
         );
     }
 
+    /** UI extensions initialization */
+
+    /* EoIP / IPIP / GRE section ('Other connections') */
     const ndmVersion = _.get(window, 'NDM.version', '');
     const ndwBranch = ndmVersion.substr(0, 3);
 
-    /* EoIP / IPIP / GRE section ('Other connections') */
     if (
         ndmUtils.is3xVersion(ndwBranch)
         && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
     ) {
-        injectPointToPointSectionTemplate();
+        pointToPointSection.onInit();
     }
 
-    injectRoutesToolbarSectionTemplate();
+    deviceListFilters.onInit();
+    wifiClientsFilters.onInit();
+    routesToolbarExtension.onInit();
+    addDeltaSandbox.onInit();
+
+    /** END of UI extensions initialization */
 
     let __TAG = '';
 
@@ -189,6 +257,8 @@ export const injectUiExtensions = () => {
         __TAG = tag;
         initFlags();
 
+        $rootScope.kdte.flags = flags.getAll();
+
         if (!$rootScope) {
             return;
         }
@@ -249,8 +319,6 @@ export const injectUiExtensions = () => {
         }
 
         /* 'delta' sandbox option for older models */
-        overrideSandboxesList();
-
         ndmUtils.addUiExtension(
             CONSTANTS.CONTROL_SYSTEM_STATE,
             addDeltaSandbox.onLoad,

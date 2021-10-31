@@ -3,7 +3,7 @@
     class="kdte-filters-toggle devices-lists__filter-toggle"
     ng-init="
         $ctx = $root.kdte;
-        $toggleShowFiltersCallback = $ctx.toggleFlag('showFilterCheckboxes');
+        $toggleShowFiltersCallback = $ctx.getToggleFlagFn('showFilterCheckboxes');
     "
 >
     <div ng-if="$ctx.currentState === $ctx.STATE.DEVICES_LIST_STATE">

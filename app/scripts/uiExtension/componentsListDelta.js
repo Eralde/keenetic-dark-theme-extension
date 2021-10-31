@@ -71,12 +71,7 @@ const cancelComponentsSectionsWatchers = () => {
     watchers.forEach(item => item());
 }
 
-export const addDeltaSandbox = {
-    onLoad: overrideSandboxOptions,
-    onDestroy: cancelComponentsSectionsWatchers,
-};
-
-export const overrideSandboxesList = () => {
+const overrideSandboxesList = () => {
     if (!isSuitableDevice()) {
         return;
     }
@@ -93,3 +88,9 @@ export const overrideSandboxesList = () => {
     constant.FW_CHANNEL.DELTA = DELTA_CHANNEL;
     constant.AUTO_UPDATE_CHANNELS_LIST.push(constant.FW_CHANNEL.DELTA);
 }
+
+export const addDeltaSandbox = {
+    onInit: overrideSandboxesList,
+    onLoad: overrideSandboxOptions,
+    onDestroy: cancelComponentsSectionsWatchers,
+};

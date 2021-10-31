@@ -2,9 +2,9 @@
     class="kdte-filters-toolbar"
     ng-init="
         $ctx = $root.kdte;
-        $toggleHideUnregistered = $ctx.toggleFlag('hideUnregisteredHosts');
-        $toggleBlockedByMac = $ctx.toggleFlag('hideHostsBlockedByMac');
-        $toggleOffline = $ctx.toggleFlag('hideOfflineHosts');
+        $toggleHideUnregistered = $ctx.getToggleFlagFn('hideUnregisteredHosts');
+        $toggleBlockedByMac = $ctx.getToggleFlagFn('hideHostsBlockedByMac');
+        $toggleOffline = $ctx.getToggleFlagFn('hideOfflineHosts');
     "
     ng-class="{
         '__hidden': !$ctx.flags.showFilterCheckboxes

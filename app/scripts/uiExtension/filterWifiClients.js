@@ -1,17 +1,15 @@
 import * as _ from 'lodash';
 
 import {
-    FILTERS_TOGGLE_CLASS,
-    FLAGS,
-    HIDE_CLASS,
-    REG_DEVICES_FLAGS,
-    UNREG_DEVICES_FLAGS,
+    FLAGS, FLAGS_CHANGE_EVENT,
+    NDM_PAGE_HEADER_TEMPLATE_PATH,
 } from '../lib/constants';
 
 import {
     callOnPageLoad,
     getAngularService,
-    getNdmPageController,
+    getNdmPageScope,
+    subscribeOnRootScopeEvent,
 } from '../lib/ndmUtils';
 
 import {
@@ -20,15 +18,14 @@ import {
 } from '../lib/filters';
 
 import {
-    addFlagCheckbox,
-    addFiltersToggleCheckbox,
-    createDiv,
+    isElementVisible,
 } from '../lib/domUtils';
 
-import {
-    flags,
-} from '../lib/state';
+import {flags} from '../lib/state';
 import {logWarning} from '../lib/log';
+import {injectStringIntoTemplate} from '../lib/ngTemplate';
+import filterToggleTemplate from '../../pages/ui/wifi-clients/wifi-clients.filter-toggle.html';
+import filtersTemplate from '../../pages/ui/wifi-clients/wifi-clients.filters.html';
 
 /*
  * This UI extension adds filters to the 'Wi-Fi clients' page
@@ -43,6 +40,7 @@ const wirelessAcl = getAngularService('wirelessAcl');
 const origWifiClientsGetData = _.get(wifiClients, 'getData');
 
 const NDM_TABLE_SHIFTED_CLASS = 'ndm-table--shifted';
+const FILTERS_TOGGLE_SELECTOR = '.wifiClients__filter-toggle__checkbox';
 
 /**
  * Replaces wifiClients.getData method with a function that modifies data received via the original fn
@@ -59,7 +57,7 @@ const modifyWifiClientsService = (globalFlags, __VARS) => {
             .then(data => {
                 const clients = data.clients.slice() || [];
                 const hideUnregisteredHosts = globalFlags.get(FLAGS.HIDE_UNREGISTERED_HOSTS);
-                const areFiltersVisible = getComputedStyle(__VARS.filtersToggleCheckbox).display !== 'none';
+                const areFiltersVisible = isElementVisible(document.querySelector(FILTERS_TOGGLE_SELECTOR));
 
                 data.clients = (globalFlags.get(FLAGS.SHOW_FILTERS) && areFiltersVisible)
                     ? clients
@@ -75,8 +73,8 @@ const modifyWifiClientsService = (globalFlags, __VARS) => {
 const addWifiClientsFilters = () => {
     let __VARS = {};
 
-    const getRowsToHide = (elToAppendTo, pageHeaderEl, tableEl) => {
-        $q
+    const getDataForFilters = () => {
+        return $q
             .all([
                 origWifiClientsGetData(),
                 wirelessAcl.getAclConfiguration(),
@@ -87,52 +85,6 @@ const addWifiClientsFilters = () => {
                 __VARS = processAclConfigurations(__VARS, regHosts, aclCfg);
 
                 modifyWifiClientsService(flags, __VARS);
-
-                const flexContainer = createDiv('devices-list-toolbar dark-theme__wifi-clients-filters');
-                pageHeaderEl.appendChild(flexContainer);
-
-                REG_DEVICES_FLAGS.forEach(flag => {
-                    addFlagCheckbox(
-                        flags,
-                        {
-                            parentEl: flexContainer,
-                            flagName: flag,
-                            flagLabelL10nId: flag,
-                        },
-                    );
-                });
-
-                UNREG_DEVICES_FLAGS.forEach(flag => {
-                    addFlagCheckbox(
-                        flags,
-                        {
-                            parentEl: flexContainer,
-                            flagName: flag,
-                            flagLabelL10nId: flag,
-                        },
-                    );
-                });
-
-                const filtersToggleEl = addFiltersToggleCheckbox(
-                    flags,
-                    __VARS,
-                    pageHeaderEl,
-                    [flexContainer],
-                    [],
-                    (val) => {
-                        const fnName = val ? 'add' : 'remove';
-
-                        tableEl.classList[fnName](NDM_TABLE_SHIFTED_CLASS);
-                    }
-                );
-
-                __VARS.filtersToggleCheckbox = filtersToggleEl.closest(`.${FILTERS_TOGGLE_CLASS}`);
-
-                if (!flags.get(FLAGS.SHOW_FILTERS)) {
-                    flexContainer.classList.add(HIDE_CLASS);
-                } else {
-                    tableEl.classList.add(NDM_TABLE_SHIFTED_CLASS);
-                }
             });
 
     };
@@ -147,15 +99,30 @@ const addWifiClientsFilters = () => {
                 return;
             }
 
-            const ctrl = await getNdmPageController();
-
-            __VARS.ctrlName = 'WifiClientsController';
-            window[__VARS.ctrlName] = ctrl;
-
-            const parentEl = document.querySelector('.ndm-page-header');
+            const $scope = await getNdmPageScope();
             const tableEl = document.querySelector('.ndm-table');
 
-            getRowsToHide(pollerEl, parentEl, tableEl);
+            const toggleTableClass = (isClassEnabled) => {
+                if (isClassEnabled) {
+                    tableEl.classList.add(NDM_TABLE_SHIFTED_CLASS);
+                } else {
+                    tableEl.classList.remove(NDM_TABLE_SHIFTED_CLASS);
+                }
+            }
+
+            subscribeOnRootScopeEvent(
+                $scope,
+                FLAGS_CHANGE_EVENT,
+                ($event, {flag, value}) => {
+                    if (flag !== FLAGS.SHOW_FILTERS) {
+                        return;
+                    }
+
+                    toggleTableClass(value);
+                },
+            );
+
+            getDataForFilters().then(() => toggleTableClass(flags.get(FLAGS.SHOW_FILTERS)));
         });
     });
 };
@@ -164,7 +131,36 @@ const cleanupWifiClientsFilters = () => {
     wifiClients.getData = origWifiClientsGetData;
 };
 
+const injectFiltersToggleTemplate = () => {
+    injectStringIntoTemplate(
+        NDM_PAGE_HEADER_TEMPLATE_PATH,
+        filterToggleTemplate,
+        [
+            '</ndm-help>',
+            '</span>',
+        ],
+        'failed to determine proper place to inject filter toggle checkbox',
+    );
+};
+
+
+const injectFiltersTemplate = () => {
+    injectStringIntoTemplate(
+        NDM_PAGE_HEADER_TEMPLATE_PATH,
+        filtersTemplate,
+        [
+            '</ndm-notifications-container>',
+            '</div>',
+        ],
+        'failed to determine proper place to inject filters for the "Wi-Fi clients" table',
+    );
+};
+
 export const wifiClientsFilters = {
+    onInit: () => {
+        injectFiltersToggleTemplate();
+        injectFiltersTemplate();
+    },
     onLoad: addWifiClientsFilters,
     onDestroy: cleanupWifiClientsFilters,
 };

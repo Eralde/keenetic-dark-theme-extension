@@ -109,6 +109,7 @@ export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_swit
 export const SYSTEM_SWITCHPORTS_TEMPLATE_PATH = 'app/page/controlPanel/control/system/switchports/switchports.html';
 export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
 export const DEVICES_LIST_TEMPLATE_PATH = 'app/page/controlPanel/myNetwork/devicesList/devicesList.html';
+export const NDM_PAGE_HEADER_TEMPLATE_PATH = 'app/components/ndm-page-header/ndm-page-header.html';
 export const STATIC_ROUTES_TEMPLATE_PATH = 'app/page/controlPanel/networkRules/staticRoutes/staticRoutes.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
@@ -294,6 +295,7 @@ export const SHOW_INTERFACE = 'show.interface';
 export const SHOW_RC_INTERFACE = 'show.rc.interface';
 export const SHOW_INTERFACE_STAT = 'show.interface.stat';
 export const SHOW_SCHEDULE = 'show.schedule';
+export const SHOW_IP_HOTSPOT = 'show.ip.hotspot';
 
 export const IP_ROUTE = 'ip.route';
 export const SHOW_RC_IP_ROUTE = 'show.rc.ip.route';
