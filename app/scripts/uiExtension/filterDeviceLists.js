@@ -8,6 +8,7 @@ import {
     NDM_PAGE_HEADER_TEMPLATE_PATH,
     SHOW_IP_HOTSPOT,
     UI_EXTENSIONS_KEY,
+    FILTERS_ARE_VISIBLE_CLASS,
 } from '../lib/constants';
 
 import {
@@ -36,6 +37,7 @@ import {injectStringIntoTemplate} from '../lib/ngTemplate';
 import registeredDeviceFiltersTemplate from '../../pages/ui/device-lists/device-lists.registered-devices.filters.html';
 import unregisteredDeviceFiltersTemplate from '../../pages/ui/device-lists/device-lists.unregistered-devices.filters.html';
 import filterToggleTemplate from '../../pages/ui/device-lists/device-lists.filter-toggle.html';
+import {logWarning} from '../lib/log';
 
 /*
  * This UI extension adds filters to device lists on the 'Device lists' page
@@ -180,6 +182,17 @@ const addDeviceListsFilters = () => {
 
     callOnPageLoad(() => {
         $timeout(async () => {
+            const tableHeaders = [...document.querySelectorAll('.ndm-title')];
+
+            if (tableHeaders.length < 2) {
+                logWarning('Failed to get DOM element for one of the table headers');
+                return;
+            }
+
+            const toggleTableHeaderClasses = (areFiltersVisible) => {
+                toggleCssClass(tableHeaders, FILTERS_ARE_VISIBLE_CLASS, areFiltersVisible);
+            };
+
             const $scope = await getNdmPageScope();
 
             const applyFilters = (ipCells, filterInputValue = '') => {
@@ -244,11 +257,13 @@ const addDeviceListsFilters = () => {
             subscribeOnRootScopeEvent(
                 $scope,
                 FLAGS_CHANGE_EVENT,
-                ($event, {flag}) => {
+                ($event, {flag, value}) => {
                     if (flag !== FLAGS.SHOW_FILTERS) {
                         $timeout(() => {
                             onFiltersChange($rootScope.kdte.getModelValue(CTX_NAME, filterInputModelName, ''));
                         });
+                    } else {
+                        toggleTableHeaderClasses(value);
                     }
                 },
             );
@@ -258,7 +273,9 @@ const addDeviceListsFilters = () => {
                 () => onFiltersChange($rootScope.kdte.getModelValue(CTX_NAME, filterInputModelName, '')),
             );
 
-            getRowsToHide();
+            getRowsToHide().then(() => {
+                toggleTableHeaderClasses(flags.get(FLAGS.SHOW_FILTERS));
+            });
         });
     });
 };

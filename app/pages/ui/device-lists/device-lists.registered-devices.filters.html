@@ -20,22 +20,20 @@
     </div>
 
     <!-- predefined filters -->
-<!--    <div class="devices-lists__filter-checkboxes">-->
-        <ndm-checkbox
-            description="{{ $ctx.L10N[$ctx.currentLanguage].hideHostsBlockedByMac }}"
-            model="$ctx.flags.hideHostsBlockedByMac"
-            name="hideHostsBlockedByMac"
-            on-value-change="$toggleBlockedByMac"
-        >
-        </ndm-checkbox>
+    <ndm-checkbox
+        description="{{ $ctx.L10N[$ctx.currentLanguage].hideHostsBlockedByMac }}"
+        model="$ctx.flags.hideHostsBlockedByMac"
+        name="hideHostsBlockedByMac"
+        on-value-change="$toggleBlockedByMac"
+    >
+    </ndm-checkbox>
 
-        <ndm-checkbox
-            description="{{ $ctx.L10N[$ctx.currentLanguage].hideOfflineHosts }}"
-            model="$ctx.flags.hideOfflineHosts"
-            name="hideOfflineHosts"
-            on-value-change="$toggleOffline"
-        >
-        </ndm-checkbox>
-<!--    </div>-->
+    <ndm-checkbox
+        description="{{ $ctx.L10N[$ctx.currentLanguage].hideOfflineHosts }}"
+        model="$ctx.flags.hideOfflineHosts"
+        name="hideOfflineHosts"
+        on-value-change="$toggleOffline"
+    >
+    </ndm-checkbox>
 </div>
 
