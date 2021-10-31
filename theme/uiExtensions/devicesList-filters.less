@@ -64,14 +64,18 @@
 .page-devices-list {
 
     .ndm-title.tretiary-title {
+        @filters-toolbar-height-mobile: 70px;
+
+        .__mixin__flex-row();
+
         position: relative;
         display: flex;
         flex-direction: row;
         align-items: baseline;
 
-        @filters-toolbar-height-mobile: 70px;
+        & > span[ng-transclude] {
+            .__mixin__flex-row();
 
-        & span[ng-transclude] {
             margin-left: 8px;
         }
 

@@ -152,6 +152,12 @@
     justify-content: center;
 }
 
+.__mixin__flex-row(@align-items: baseline) {
+    display: flex;
+    flex-direction: row;
+    align-items: @align-items;
+}
+
 .__mixin__flex-container(@direction: column, @align-items: center) {
     width: 100%;
     display: flex;
