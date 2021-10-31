@@ -103,8 +103,17 @@
 .kdte-filters-toolbar {
     background: @dt__grey4;
 
+    .mobile({
+        margin-top: 4px;
+    });
+
     .ndm-checkbox {
         padding-left: 24px;
+
+        .mobile({
+            height: 24px;
+            padding-left: 0;
+        });
 
         .form__cell-note {
             color: @dt__white-text !important;

@@ -1,0 +1,68 @@
+@import (reference) "../__mixins__";
+@import (reference) "../__ndwVars__";
+
+.page-devices-list {
+    .devices-lists__input-filter {
+        @input-horizontal-padding: 22px;
+        @filter-input-height: 21px;
+        @filter-input-top-mobile: 30px;
+
+        margin-left: 14px;
+        position: relative;
+        top: -2px;
+        width: @form-element-label-width;
+
+        .mobile({
+            margin-top: 8px;
+            padding-top: 0;
+            margin-left: 0;
+            width: auto;
+        });
+
+        .ndm-input-filter__icon {
+            top: 2px;
+            left: 0;
+            transform: scale(0.55);
+
+            .mobile({
+                top: 1px;
+            });
+        }
+
+        .ndm-input-filter__input {
+            height: @filter-input-height;
+            font-size: 13px;
+            padding: 10px @input-horizontal-padding 9px @input-horizontal-padding;
+            border-radius: 4px;
+
+            &:focus {
+                padding: 9px (@input-horizontal-padding - 1px) 8px (@input-horizontal-padding - 1px);
+            }
+
+            .mobile({
+                width: calc(~"100vw - 32px");
+            });
+        }
+
+        .ndm-input-filter__reset-btn {
+            top: 1px;
+            right: -2px;
+
+            .icon.icon--cancel {
+                margin-right: 0;
+            }
+
+            .mobile({
+                top: 2px;
+            });
+        }
+    }
+}
+
+.ndm-layout--dark-theme {
+    .page-devices-list {
+        .ndm-input-filter__input {
+            background-color: @dt__grey4;
+        }
+    }
+}
