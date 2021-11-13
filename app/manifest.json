@@ -34,7 +34,8 @@
     "styles/uiExtensions-3.x--no-menu-animation.css",
     "styles/hideUiExtensions-2.x.css",
     "styles/hideUiExtensions-3.x.css",
-    "styles/2_11.css"
+    "styles/2_11.css",
+    "styles/extra__3_7_40.css"
   ],
   "content_scripts": [
     {

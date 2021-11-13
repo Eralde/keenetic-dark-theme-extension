@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as CONSTANTS from './lib/constants';
 
 import {
+    compareVersions,
     is2xVersion,
     is3xVersion,
 } from './lib/ndmUtils';
@@ -272,6 +273,22 @@ const processNdmVerMessage = (event) => {
 
         return;
     }
+
+    const additionalStyles = _
+        .chain(CONSTANTS.EXTRA_STYLES)
+        .filter(item => {
+            const lowerBound = !item.from
+                || compareVersions(item.from, version) !== 1;
+
+            const upperBound = !item.to
+                || compareVersions(version, item.to) !== 1;
+
+            return lowerBound && upperBound;
+        })
+        .flatMap(item => item.files)
+        .value();
+
+    stylesToInject.push(additionalStyles);
 
     registerCallback(
         () => {

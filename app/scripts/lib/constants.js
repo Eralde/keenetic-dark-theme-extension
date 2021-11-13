@@ -27,6 +27,13 @@ export const STYLES_3X = {
     'hideUiExtensions-3.x': 'styles/hideUiExtensions-3.x.css',
 };
 
+export const EXTRA_STYLES = [
+    {
+        from: '3.7.40',
+        files: ['styles/extra__3_7_40.css'],
+    },
+]
+
 export const STYLES_2X = {
     'theme-2.x': 'styles/theme-2.x.css',
     'uiExtensions-2.x': 'styles/uiExtensions-2.x.css',

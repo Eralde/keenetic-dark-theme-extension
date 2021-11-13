@@ -338,6 +338,32 @@ export const is3xVersion = (ndwVersion) => {
         || ndwVersion.startsWith('3.');
 }
 
+export const compareVersions = (ver1, ver2) => {
+    const toNumbersList = (str) => {
+        // trim suffix for custom versions e.g. '3.7.2-41-....'
+        const _str = str.split('-')[0];
+
+        return _str
+            .split('.')
+            .map(Number)
+            .filter(item => !isNaN(item));
+    };
+
+    const nums1 = toNumbersList(ver1);
+    const nums2 = toNumbersList(ver2);
+    const len = nums1.length;
+
+    for (let i = 0; i < len; ++i) {
+        if (nums1[i] < nums2[i]) {
+            return -1;
+        } else if (nums1[i] > nums2[i]) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 export const isSwitchportOverloadSupported = (ndwVersion) => {
     if (!is3xVersion(ndwVersion)) {
         return false;
