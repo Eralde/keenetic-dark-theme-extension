@@ -1,0 +1,31 @@
+@import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
+@import (reference) "../__mixins__";
+
+.d-header {
+    &__lodge-bar {
+        &__right-column {
+            background-color: @dt__header-background;
+
+            .search__input {
+                background: @dt__grey6;
+
+                &--active,
+                &:active,
+                &:focus {
+                    color: @dt__white-text;
+
+                    & + .search__icon {
+                        opacity: 1;
+                        filter: brightness(0.8);
+                    }
+                }
+            }
+
+            .search__clear-input-icon {
+                opacity: 1;
+                filter: brightness(0) invert(85%) sepia(8%) saturate(49%) hue-rotate(109deg) brightness(105%) contrast(84%);;
+            }
+        }
+    }
+}
