@@ -37,6 +37,12 @@
     }
 }
 
+.not-mobile(@rules) {
+    @media screen and (min-width: @sizes[mobile]) {
+        @rules();
+    }
+}
+
 .mobile-landscape(@rules) {
     @media screen and (max-width: @sizes[mobile]) and (orientation: landscape) {
         @rules();

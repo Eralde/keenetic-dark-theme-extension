@@ -1,7 +1,12 @@
 @import (reference) "__vars__";
+@import (reference) "__mixins__";
 
 body {
-    filter: brightness(0.88);
+    // `filter` creates a new containing block for absolute/fixed elements;
+    // this will break menu button positioning for ndw >= 3.7.40
+    .not-mobile({
+        filter: brightness(0.88);
+    });
 }
 
 body,
