@@ -55,12 +55,14 @@
     width: 100%;
 }
 
-.show-rssi-value-form,
-.replace-textarea-cursor-form {
-    .__mixin__flex-container(row);
-
+.checkboxes-form {
+    width: 100%;
     margin-top: @new-gap-sm;
     margin-bottom: @new-gap-xs;
+
+    .checkbox {
+        .__mixin__flex-container(row);
+    }
 }
 
 .switchports-template {
