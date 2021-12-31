@@ -126,38 +126,31 @@ const modifyShowIpHotspotData = (globalFlags, __VARS, routerService) => {
         }
     };
 
-    routerService.postToRciRoot = (...args) => {
-        const req = args[0];
+    const overrideRouterMethod = (methodName, originalMethod) => {
+        routerService[methodName] = (...args) => {
+            const req = args[0];
 
-        if (!requestContainsPath(req, SHOW_IP_HOTSPOT)) {
-            return origPostToRciRoot(...args);
-        }
+            if (!requestContainsPath(req, SHOW_IP_HOTSPOT)) {
+                return originalMethod(...args);
+            }
 
-        const deferred = $q.defer();
-        const pathIndex = getPathIndexInRequest(req, SHOW_IP_HOTSPOT);
-        const thenFn = getThenFn(`${pathIndex}.${SHOW_IP_HOTSPOT}`, deferred);
+            const deferred = $q.defer();
+            const pathIndex = getPathIndexInRequest(req, SHOW_IP_HOTSPOT);
+            const fullHotspotPath = pathIndex
+                ? `${pathIndex}.${SHOW_IP_HOTSPOT}`
+                : SHOW_IP_HOTSPOT;
 
-        origPostToRciRoot(...args)
-            .then(thenFn);
+            const thenFn = getThenFn(fullHotspotPath, deferred);
 
-        return deferred.promise;
-    };
+            originalMethod(...args)
+                .then(thenFn);
 
-    routerService.post = (...args) => {
-        const req = args[0];
-
-        if (!requestContainsPath(req, SHOW_IP_HOTSPOT)) {
-            return origPost.apply(routerService, args);
-        }
-
-        const deferred = $q.defer();
-        const thenFn = getThenFn(SHOW_IP_HOTSPOT, deferred);
-
-        origPost(...args)
-            .then(thenFn);
-
-        return deferred.promise;
+            return deferred.promise;
+        };
     }
+
+    overrideRouterMethod('postToRciRoot', origPostToRciRoot);
+    overrideRouterMethod('post', origPost);
 };
 
 const addDeviceListsFilters = () => {
