@@ -67,26 +67,6 @@
         }
     }
 
-    .system__components-popup {
-
-        .components-group__header {
-            background-color: @dt__grey7 !important;
-        }
-        .component{
-            &:hover {
-                background: @dt__grey6 !important;
-            }
-
-            &__state {
-                .checkbox__label {
-                    &:before {
-                        background-color: @dt__grey7 !important;
-                    }
-                }
-            }
-        }
-    }
-
     .system__system-files-section {
         .system-file {
             &:hover {
@@ -115,6 +95,31 @@
             .sb-toggle * {
                 color: @dt__black2 !important;
                 background: @dt__greyC !important;
+            }
+        }
+    }
+}
+
+.system__components-popup {
+
+    .components-group__header {
+        background-color: @dt__grey7 !important;
+    }
+
+    span.components-group__header-details {
+        color: @dt__white-text;
+    }
+
+    .component{
+        &:hover {
+            background: @dt__grey6 !important;
+        }
+
+        &__state {
+            .checkbox__label {
+                &:before {
+                    background-color: @dt__grey7 !important;
+                }
             }
         }
     }
