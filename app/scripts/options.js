@@ -8,6 +8,8 @@ import 'toaster-js/default.scss';
 import {
     DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
+    SHOW_RSSI_VALUE,
+    STORAGE_DEFAULTS,
     SWITCHPORT_TEMPLATE_DATA_KEY,
     SWITCHPORT_TEMPLATE_PROP,
     SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY,
@@ -289,12 +291,27 @@ async function updateUI() {
 
     const data = await browser.storage.local.get();
     const replaceTextareaCursorEl = document.querySelector('#replaceTextareaCursor');
+    const showRssiValue = document.querySelector('#showRssiValue');
 
-    replaceTextareaCursorEl.checked = _.get(data, REPLACE_TEXTAREA_CURSOR_STORAGE_KEY, true);
+    replaceTextareaCursorEl.checked = _.get(
+        data,
+        REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
+        STORAGE_DEFAULTS[REPLACE_TEXTAREA_CURSOR_STORAGE_KEY],
+    );
+
+    showRssiValue.checked = _.get(
+        data,
+        SHOW_RSSI_VALUE,
+        STORAGE_DEFAULTS[SHOW_RSSI_VALUE],
+    );
 }
 
-async function updateResetTextareaCursorValue(event) {
+async function updateReplaceTextareaCursorValue(event) {
     await browser.storage.local.set({[REPLACE_TEXTAREA_CURSOR_STORAGE_KEY]: event.target.checked});
+}
+
+async function updateShowRssiValue(event) {
+    await browser.storage.local.set({[SHOW_RSSI_VALUE]: event.target.checked});
 }
 
 async function updateShortcut() {
@@ -373,6 +390,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelector('#updateShortcut').addEventListener('click', updateShortcut);
     document.querySelector('#resetShortcut').addEventListener('click', resetShortcut);
-    document.querySelector('#replaceTextareaCursor').addEventListener('change', updateResetTextareaCursorValue);
+
+    document.querySelector('#replaceTextareaCursor').addEventListener('change', updateReplaceTextareaCursorValue);
+    document.querySelector('#showRssiValue').addEventListener('change', updateShowRssiValue);
+
     document.querySelector('#clearStorage').addEventListener('click', clearStorage);
 });

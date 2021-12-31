@@ -8,7 +8,7 @@ import {interceptMouseover,} from './lib/domUtils';
 import {logWarning} from './lib/log';
 import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
 import {l10n} from './lib/l10n';
-import {onLanguageChange} from './lib/ndmUtils';
+import {getAngularService, onLanguageChange} from './lib/ndmUtils';
 import {DEVICES_LIST_STATE, FLAGS_CHANGE_EVENT, WIFI_CLIENTS_STATE} from './lib/constants';
 
 import {extendMenu2x} from './uiExtension/extendMenu2x';
@@ -24,6 +24,7 @@ import {extendedSystemSwitchportsData} from './uiExtension/extendSystemSwitchpor
 import {addDeltaSandbox, overrideSandboxesList} from './uiExtension/componentsListDelta';
 import {extendedDslStat} from './uiExtension/extendDslStat';
 import {additionalWolButton} from './uiExtension/additionalWolButton';
+import {rssiValueInConnectionInfo} from './uiExtension/rssiValueInConnectionInfo';
 
 import {pointToPointSection} from './uiExtension/pointToPointTunnelsSection';
 import {PointToPointController} from './uiExtension/pointToPointTunnels/point-to-point.controller';
@@ -191,6 +192,14 @@ export const injectUiExtensions = () => {
                 case CONSTANTS.INITIAL_STORAGE_DATA:
                     const payload = _.get(event, 'data.payload');
 
+                    const showRssiValue = _.get(
+                        payload,
+                        CONSTANTS.SHOW_RSSI_VALUE,
+                        CONSTANTS.STORAGE_DEFAULTS[CONSTANTS.SHOW_RSSI_VALUE],
+                    );
+
+                    sharedData.set(CONSTANTS.SHOW_RSSI_VALUE, showRssiValue);
+
                     const uiExtensionsToggleValue = _.get(
                         payload,
                         CONSTANTS.UI_EXTENSIONS_KEY,
@@ -209,7 +218,7 @@ export const injectUiExtensions = () => {
                         className: 'ndm-textarea__textarea--default-cursor',
                         insertAfterClass: 'ndm-textarea__textarea',
                         state: replaceTextareaCursorValue,
-                    })
+                    });
 
                     if (ndmUtils.is2xVersion(ndwBranch)) {
                         return;
@@ -344,6 +353,13 @@ export const injectUiExtensions = () => {
         ndmUtils.addUiExtension(
             CONSTANTS.DEVICES_LIST_STATE,
             additionalWolButton.onLoad,
+        );
+
+        /* Show RSSI value for wireless devices */
+        ndmUtils.addUiExtension(
+            CONSTANTS.DEVICES_LIST_STATE,
+            rssiValueInConnectionInfo.onLoad,
+            rssiValueInConnectionInfo.onDestroy,
         );
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');

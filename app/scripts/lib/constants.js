@@ -166,10 +166,12 @@ export const SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY = 'systemSwitchportTemplate
 export const SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY = 'switchportTemplateProps';
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';
+export const SHOW_RSSI_VALUE = 'showRssiValue';
 export const NDM_SWITCHPORT_CONTAINER_TAG = 'ndm-switchport-container';
 
 export const STORAGE_DEFAULTS = {
     [REPLACE_TEXTAREA_CURSOR_STORAGE_KEY]: true,
+    [SHOW_RSSI_VALUE]: false,
 };
 
 export const LOG_PREFIX = '[Keenetic Dark Theme Extension]:';
