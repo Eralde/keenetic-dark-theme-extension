@@ -2,8 +2,17 @@
 @import (reference) "../__vars__";
 
 .ndm-radio-buttons {
+    &__list,
+    &__item {
+        border-color: darken(@blue-main, 10%);
+    }
+
     &__item:not(.ndm-radio-buttons__item--active) {
         background-color: @dt__grey6;
         color: @dt__white-text;
+    }
+
+    &__item--active {
+        background-color: darken(@blue-main, 10%);
     }
 }
