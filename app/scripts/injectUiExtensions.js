@@ -21,7 +21,8 @@ import {wifiClientsFilters} from './uiExtension/filterWifiClients';
 import {addVpnStatLinks} from './uiExtension/addVpnStatLinks';
 import {extendedDashboardSwitchportsData} from './uiExtension/gatherStatForPorts';
 import {extendedSystemSwitchportsData} from './uiExtension/extendSystemSwitchportData';
-import {addDeltaSandbox, overrideSandboxesList} from './uiExtension/componentsListDelta';
+import {overrideDeltaL10n} from './uiExtension/componentsListDeltaDashboard';
+import {addDeltaSandbox} from './uiExtension/componentsListDelta';
 import {extendedDslStat} from './uiExtension/extendDslStat';
 import {additionalWolButton} from './uiExtension/additionalWolButton';
 import {rssiValueInConnectionInfo} from './uiExtension/rssiValueInConnectionInfo';
@@ -360,6 +361,13 @@ export const injectUiExtensions = () => {
             CONSTANTS.DEVICES_LIST_STATE,
             rssiValueInConnectionInfo.onLoad,
             rssiValueInConnectionInfo.onDestroy,
+        );
+
+        /* Show 'Delta' auto-update channel on dashboard */
+        ndmUtils.addUiExtension(
+            CONSTANTS.DASHBOARD_STATE,
+            overrideDeltaL10n.onLoad,
+            overrideDeltaL10n.onDestroy,
         );
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');

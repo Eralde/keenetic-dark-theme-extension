@@ -4,7 +4,7 @@ import {getL10n} from '../lib/l10nUtils';
 import {logWarning} from '../lib/log';
 
 const watchers = [];
-const DELTA_CHANNEL = 'delta';
+export const DELTA_CHANNEL = 'delta';
 const DELTA_DEVICES = [
     'ku_rd',    // Ultra II
     'kng_re',   // Giga III
@@ -12,7 +12,7 @@ const DELTA_DEVICES = [
     'ki_ra',    // Air
 ];
 
-const isSuitableDevice = () => {
+export const isSuitableDevice = () => {
     return DELTA_DEVICES.includes(_.get(window, 'NDM.hw_id', ''));
 }
 
