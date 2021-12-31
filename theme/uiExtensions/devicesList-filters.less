@@ -155,7 +155,16 @@
 
     .mobile({
         .table_devices-list tr.hidden-table-row {
-            display: flex;
+            position: absolute;
+            bottom: 1px;
+            left: 1px;
+
+            &, & * {
+                font-size: 0 !important;
+                line-height: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
         }
     });
 }
