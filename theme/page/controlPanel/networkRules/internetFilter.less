@@ -1,0 +1,64 @@
+@import (reference) "../../../__vars__";
+@import (reference) "../../../__mixins__";
+
+.__mixin__toolbar-button(@size: @new-gap-md) {
+    filter: brightness(0.5);
+
+    &:hover {
+        filter: brightness(1);
+    }
+}
+
+.page-internet-filter {
+    .content-filter {
+        .content-filter__unavailable-warning {
+            &--loading {
+                color: @dt__white-text;
+            }
+        }
+    }
+
+    .dns-profiles {
+        .dns-profiles__list,
+        .dns-profiles__selected-profile-contents {
+            &__header {
+                color: @dt__white-text;
+                background-color: @dt__grey5;
+            }
+        }
+
+        .ndm-name-editor-form,
+        .unsaved-new-dns-profile {
+            background-color: @dt__grey6;
+        }
+
+        .dns-profile {
+            background-color: @dt__grey5;
+
+            &--selected {
+                background-color: @dt__grey6;
+            }
+
+            &__toolbar__button {
+                .__mixin__toolbar-button();
+            }
+        }
+
+        .ndm-name-server-card {
+            background-color: @dt__grey5;
+
+            &--FROM_ISP {
+                background-color: darken(mix(@dt__grey5, @yellow-light, 75%), 10%);
+            }
+        }
+
+        .name-server__toolbar {
+            background-color: @dt__grey5;
+            border-color: darken(@blue-main, 20%);
+
+            &__button {
+                .__mixin__toolbar-button();
+            }
+        }
+    }
+}
