@@ -98,7 +98,7 @@
         &[label="@{reg-table-header}"] {
             .mobile({
                 &.__filters-are-visible {
-                    height: @filters-toolbar-height-mobile + 40px;
+                    height: @filters-toolbar-height-mobile + 50px;
                 }
             });
         }
@@ -118,6 +118,10 @@
                 top: 24px;
                 padding-top: 0;
                 left: 0;
+
+                .ndm-checkbox.form__row {
+                    flex-wrap: nowrap;
+                }
             });
 
             .ndm-checkbox {
