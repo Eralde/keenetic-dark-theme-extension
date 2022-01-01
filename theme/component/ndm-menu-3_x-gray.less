@@ -1,3 +1,7 @@
+@import (reference) "../__vars__";
+@import (reference) "../__ndwVars__";
+@import (reference) "../__mixins__";
+
 .ndm-menu {
     &__title-text {
         overflow-wrap: break-word;
@@ -6,7 +10,37 @@
 
     &__scrollable,
     &__toggle {
-        filter: grayscale(0.8);
+        // `filter` creates a new containing block for absolute/fixed elements;
+        // this will break menu button positioning for ndw >= 3.7.40
+        .not-mobile({
+            filter: grayscale(0.8);
+        });
+
+        .mobile({
+            background-color: darken(@blue-main, 20%);
+        });
+    }
+
+    &--opened:not(.ndm-menu--accordion) .ndm-menu__group--opened .ndm-menu__title {
+        .mobile({
+            width: calc(~"100% + 8px");
+            background-color: @dt__search-background;
+            padding: 8px 0;
+        });
+    }
+
+    &__bottom__wrapper {
+        .mobile({
+            background-color: @dt__search-background;
+        });
+
+        .ndm-selectbox {
+            .dropdown .sb-container .sb-dropdown .sb-item,
+            .dropdown .sb-container .sb-dropdown .sb-item a,
+            .sb-toggle {
+                background-color: @dt__search-background !important;
+            }
+        }
     }
 
     &__item {

@@ -7,6 +7,10 @@
         &__right-column {
             background-color: @dt__header-background;
 
+            .mobile({
+                background-color: @dt__search-background;
+            });
+
             .search__icon {
                 z-index: 1;
             }
@@ -36,4 +40,10 @@
             }
         }
     }
+}
+
+.ndm-layout--dark-theme div.d-header__lodge-bar__left_column {
+    .mobile({
+        background-color: @dt__header-background;
+    });
 }
