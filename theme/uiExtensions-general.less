@@ -101,8 +101,6 @@
 }
 
 .kdte-filters-toolbar {
-    background: @dt__grey4;
-
     .mobile({
         margin-top: 4px;
     });
@@ -118,7 +116,14 @@
         .form__cell-note {
             min-width: unset;
             font-size: 13px;
-            color: @dt__white-text !important;
         }
+    }
+}
+
+.ndm-layout--dark-theme .kdte-filters-toolbar {
+    background: @dt__grey4;
+
+    .form__cell-note {
+        color: @dt__white-text !important;
     }
 }
