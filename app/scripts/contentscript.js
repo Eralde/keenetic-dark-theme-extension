@@ -288,7 +288,9 @@ const processNdmVerMessage = (event) => {
         .flatMap(item => item.files)
         .value();
 
-    stylesToInject.push(additionalStyles);
+    if (additionalStyles.length > 0) {
+        stylesToInject.push(additionalStyles);
+    }
 
     registerCallback(
         () => {
