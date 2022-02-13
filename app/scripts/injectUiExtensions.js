@@ -148,6 +148,8 @@ export const injectUiExtensions = () => {
         pointToPointSection.onInit();
     }
 
+    $rootScope.kdte.ifInputFilterComponentAvailable = ndmUtils.is3xVersion(ndwBranch);
+
     deviceListFilters.onInit();
     wifiClientsFilters.onInit();
     routesToolbarExtension.onInit();

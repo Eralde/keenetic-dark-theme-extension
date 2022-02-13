@@ -10,11 +10,15 @@
     }"
 >
     <!-- filter by substring in the device name -->
-    <div class="devices-lists__input-filter">
+    <div
+        ng-if="$ctx.ifInputFilterComponentAvailable"
+        class="devices-lists__input-filter"
+    >
         <ndm-input-filter
             name="devicesFilter"
             value="$ctx.model.DevicesList__nameFilter"
             on-change="$ctx.callbacks.DevicesList__filterDevicesList"
+            bs-modifiable="0"
         >
         </ndm-input-filter>
     </div>
@@ -25,6 +29,7 @@
         model="$ctx.flags.hideOfflineHosts"
         name="hideOfflineHosts"
         on-value-change="$toggleOffline"
+        bs-modifiable="0"
     >
     </ndm-checkbox>
 
@@ -33,6 +38,7 @@
         model="$ctx.flags.hideHostsBlockedByMac"
         name="hideHostsBlockedByMac"
         on-value-change="$toggleBlockedByMac"
+        bs-modifiable="0"
     >
     </ndm-checkbox>
 </div>

@@ -3,3 +3,18 @@
 @import "uiExtensions/devicesList-wol-button";
 @import "uiExtensions/devicesList-input-filter";
 @import "uiExtensions/devicesList-filters";
+
+// 2.x-specific overloads for styles in `uiExtensions/devicesList-filters`
+.page-devices-list {
+    .ndm-title.tretiary-title {
+        align-items: flex-start;
+
+        & > span[ng-transclude] {
+            align-items: flex-start;
+        }
+    }
+
+    .ndm-title[label="devices-list.registered-devices.header"] ndm-help {
+        top: 0;
+    }
+}
