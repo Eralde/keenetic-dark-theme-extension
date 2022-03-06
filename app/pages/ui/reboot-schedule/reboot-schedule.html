@@ -5,14 +5,14 @@
     <!-- `vm` is a reference to the RebootController -->
 
     <br/>
-    <br/>
 
     <ndm-schedule-select
-        is-disabled="vm.isLocked"
+        is-disabled="vm.isLocked || system.ui.isLocked"
         label="{{vm.l10n.rebootScheduleLabel}}"
         no-schedule-label="{{vm.l10n.rebootScheduleNoScheduleOption}}"
         name="rebootSchedule"
         model="vm.rebootSchedule"
+        no-selected-thumb="true"
     >
     </ndm-schedule-select>
 </div>
