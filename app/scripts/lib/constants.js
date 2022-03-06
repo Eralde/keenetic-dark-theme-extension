@@ -114,6 +114,7 @@ export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
 export const SYSTEM_SWITCHPORTS_TEMPLATE_PATH = 'app/page/controlPanel/control/system/switchports/switchports.html';
+export const CABLE_DIAGNOSTICS_TEMPLATE_PATH = 'app/page/controlPanel/control/diagnostics/cable-diagnostics/cable-diagnostics.html';
 export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
 export const DEVICES_LIST_TEMPLATE_PATH = 'app/page/controlPanel/myNetwork/devicesList/devicesList.html';
 export const NDM_PAGE_HEADER_TEMPLATE_PATH = 'app/components/ndm-page-header/ndm-page-header.html';
@@ -163,6 +164,7 @@ export const INITIAL_STORAGE_DATA = 'INITIAL_STORAGE_DATA';
 export const SWITCHPORT_TEMPLATE_DATA_KEY = 'switchportTemplate';
 export const DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY = 'dashboardSwitchportTemplate';
 export const SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY = 'systemSwitchportTemplate';
+export const CABLE_DIAGNOSTICS_TEMPLATE_ORIGINAL_KEY = 'cableDiagnosticsTemplate';
 export const SWITCHPORT_TEMPLATE_PROPS_STORAGE_KEY = 'switchportTemplateProps';
 
 export const REPLACE_TEXTAREA_CURSOR_STORAGE_KEY = 'replaceTextareaCursor';

@@ -354,6 +354,7 @@ const processSwitchportsTemplateMessage = async (event) => {
     const payload = _.get(event, 'data.payload');
     const dashboardData = _.get(payload, 'dashboard', {});
     const systemData = _.get(payload, 'system', {});
+    const cableDiagnosticsData = _.get(payload, 'cableDiagnostics', {});
 
     const storageData = {};
 
@@ -363,6 +364,10 @@ const processSwitchportsTemplateMessage = async (event) => {
 
     if (!_.isEmpty(systemData)) {
         storageData[CONSTANTS.SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY] = systemData;
+    }
+
+    if (!_.isEmpty(cableDiagnosticsData)) {
+        storageData[CONSTANTS.CABLE_DIAGNOSTICS_TEMPLATE_ORIGINAL_KEY] = cableDiagnosticsData;
     }
 
     await browser.storage.local.set(storageData);

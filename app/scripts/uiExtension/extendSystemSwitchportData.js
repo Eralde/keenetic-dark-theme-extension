@@ -1,16 +1,18 @@
 import * as _ from 'lodash';
 
 import {
-    getAngularService,
     getNdmPageController,
     getElementController,
-    getPortInterfaceStatus,
-    getAdditionalSwitchportProps,
-    extendSwitchportsListWithStatData,
-    extendGroupedSwitchportsListItem,
+    getAngularService,
 } from '../lib/ndmUtils';
 
-import {formatPortDuplex, formatPortLinkSpeed} from '../lib/formatUtils';
+import {
+    extendGroupedSwitchportsList,
+    extendSwitchportsListWithStatData,
+    getPortIdList,
+    getPortStatQueryList,
+} from '../lib/switchportUtils';
+
 import {
     SHOW_INTERFACE,
     SHOW_INTERFACE_STAT,
@@ -33,35 +35,11 @@ switchportsService.processConfiguration = (responses) => {
     const retVal = originalProcessConfiguration(responses);
     const groupedSwitchportsList = _.get(retVal, 'groupedSwitchportsList', []);
 
-    retVal.groupedSwitchportsList = groupedSwitchportsList.map(item => {
-        const {interfaceId, port} = item;
-
-        const interfaceStatus = getPortInterfaceStatus(item, showInterfaceData);
-        const additionalProps = getAdditionalSwitchportProps(item, interfaceStatus);
-
-        if (item.linkedPort) {
-            item.linkedPort = extendGroupedSwitchportsListItem(item.linkedPort, showInterfaceData);
-
-            // workaround to show proper label inside the port icon & proper description below
-            item.linkedPort.description = item.linkedPort.name
-            item.linkedPort.name = item.linkedPort.portIconLabel;
-        }
-
-        const interfaceConfiguration = _.get(showRcInterfaceData, interfaceId)
-            || _.find(showRcInterfaceData, item => item.rename === port);
-
-        const description = _.get(interfaceConfiguration, 'description', port);
-        const speed = formatPortLinkSpeed(interfaceStatus);
-        const duplex = formatPortDuplex(interfaceStatus);
-
-        return {
-            ...item,
-            ...additionalProps,
-            speed,
-            duplex,
-            description,
-        };
-    });
+    retVal.groupedSwitchportsList = extendGroupedSwitchportsList(
+        groupedSwitchportsList,
+        showInterfaceData,
+        showRcInterfaceData,
+    );
 
     return retVal;
 };
@@ -75,13 +53,8 @@ const extendSystemSwitchportData = async () => {
         return switchportsController.groupedSwitchportsList || switchportsController.ports;
     };
 
-    const portIds = _
-        .chain(window.NDM)
-        .get('PORTS_MAP')
-        .map(port => port.interfaceId || port.port)
-        .value();
-
-    const statQueries = portIds.map(id => _.set({}, SHOW_INTERFACE_STAT, {name: id}));
+    const portIds = getPortIdList();
+    const statQueries = getPortStatQueryList(portIds);
 
     switchportsController.requester.registerDynamicCallback(
         () => {

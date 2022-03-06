@@ -11,6 +11,7 @@ import {
 } from './constants.js';
 
 import {sharedData} from './state';
+import * as CONSTANTS from './constants';
 
 const DEFAULT_GET_SERVICE_TAG_TIMEOUT = 5000;
 
@@ -245,6 +246,12 @@ export const getTemplate = (path) => {
     return _.cloneDeep($templateCache.get(path));
 };
 
+export const extractAndReplaceSwitchportsTemplate = (payload, templateDataProperty, templatePath) => {
+    const _template = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, templateDataProperty]);
+
+    replaceSwitchportsTemplate(_template, templatePath);
+}
+
 export const replaceSwitchportsTemplate = (templateData, path) => {
     if (!templateData) {
         return;
@@ -384,82 +391,6 @@ export const getPortInterfaceStatus = (port, showInterfaceData) => {
         showInterfaceData,
         item => item.id === port.interfaceId || item['interface-name'] === port.port,
     );
-}
-
-export const getAdditionalSwitchportProps = (port, interfaceStatus) => {
-    const portIconLabel = port.type === 'dsl'
-        ? port.portId
-        : port.port;
-
-    // This does not work for Ethernet ports, but works for Dsl0 >_<
-    const interfaceDescription = _.get(interfaceStatus, 'description', '');
-
-    return {
-        portIconLabel,
-        interfaceDescription,
-    };
-}
-
-export const extendGroupedSwitchportsListItem = (port, showInterfaceData) => {
-    const interfaceStatus = getPortInterfaceStatus(port, showInterfaceData);
-    const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
-
-    return {
-        ...port,
-        ...additionalProps,
-    };
-};
-
-export const getGroupedSwitchportsListOverload = (getGroupedSwitchportsList) => {
-    return (...args) => {
-        const returnValue = getGroupedSwitchportsList(...args);
-        const showInterfaceData = _.get(args, [1], {});
-
-        return returnValue.map(port => {
-            if (port.linkedPort) {
-                port.linkedPort = extendGroupedSwitchportsListItem(port.linkedPort, showInterfaceData);
-
-                // workaround to show proper label inside the port icon & proper description below
-                port.linkedPort.description = port.linkedPort.name
-                port.linkedPort.name = port.linkedPort.portIconLabel;
-            }
-
-            return extendGroupedSwitchportsListItem(port, showInterfaceData);
-        });
-    };
-};
-
-const extendPortData = ({utils, port, portIdsList, statDataList}) => {
-    const {interfaceId} = port;
-
-    const index = _.findIndex(portIdsList, item => item === interfaceId);
-    const statData = _.get(statDataList, [index], {});
-    const rxShort = utils.format.size(statData.rxbytes, true);
-    const txShort = utils.format.size(statData.txbytes, true);
-
-    return {
-        ...port,
-        ...statData,
-        'rxbytes-formatted-short': rxShort,
-        'txbytes-formatted-short': txShort,
-    };
-}
-
-export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, statDataList) => {
-    const utils = getAngularService('utils');
-
-    return switchportsList.map(port => {
-        if (port.linkedPort) {
-            port.linkedPort = extendPortData({
-                utils,
-                portIdsList,
-                statDataList,
-                port: port.linkedPort,
-            });
-        }
-
-        return extendPortData({utils, port, portIdsList, statDataList});
-    });
 }
 
 export const getAncestorScopeProperty = ($scope, propName) => {

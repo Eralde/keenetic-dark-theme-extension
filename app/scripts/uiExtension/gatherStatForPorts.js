@@ -1,10 +1,13 @@
 import * as _ from 'lodash';
 import {
-    extendSwitchportsListWithStatData,
     getAngularService,
     getDashboardController,
-    getElementController, getGroupedSwitchportsListOverload,
+    getElementController,
 } from '../lib/ndmUtils';
+import {
+    extendSwitchportsListWithStatData,
+    getGroupedSwitchportsListOverload, getPortIdList,
+} from '../lib/switchportUtils';
 import {sharedData} from '../lib/state';
 import {
     __SHOW_INTERFACE_STAT_PROPS__,
@@ -29,12 +32,7 @@ const gatherStatForPorts = async () => {
     const switchportsController = await getElementController('#card_switchports');
 
     dashboardDataService.registerCallback([], () => {
-        const portIds = _
-            .chain(window.NDM)
-            .get('PORTS_MAP')
-            .map(port => port.interfaceId || port.port)
-            .value();
-
+        const portIds = getPortIdList();
 
         // Overload to preserve existing stat data
         utils.getSwitchportsList = () => {

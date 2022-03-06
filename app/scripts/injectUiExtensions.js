@@ -8,8 +8,12 @@ import {interceptMouseover,} from './lib/domUtils';
 import {logWarning} from './lib/log';
 import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
 import {l10n} from './lib/l10n';
-import {getAngularService, onLanguageChange} from './lib/ndmUtils';
-import {DEVICES_LIST_STATE, FLAGS_CHANGE_EVENT, WIFI_CLIENTS_STATE} from './lib/constants';
+import {onLanguageChange} from './lib/ndmUtils';
+import {
+    DEVICES_LIST_STATE,
+    FLAGS_CHANGE_EVENT,
+    WIFI_CLIENTS_STATE
+} from './lib/constants';
 
 import {extendMenu2x} from './uiExtension/extendMenu2x';
 import {extendMenu3x} from './uiExtension/extendMenu3x';
@@ -35,6 +39,7 @@ import {routesToolbarExtension} from './uiExtension/routesToolbar';
 import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controller';
 import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
 import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
+import {extendedCableDiagnosticsSwitchportsData} from "./uiExtension/extendCableDiagnosticsSwitchportData";
 
 export const injectUiExtensions = () => {
     let $state;
@@ -119,6 +124,13 @@ export const injectUiExtensions = () => {
     // Should be done BEFORE authentication
     const dashboardSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
     const systemSwitchportsTemplate = getSwitchportsTemplateChunks(CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
+    const cableDiagnosticsTemplate = getSwitchportsTemplateChunks(CONSTANTS.CABLE_DIAGNOSTICS_TEMPLATE_PATH);
+
+    const STATES_WITH_OVERLOADED_TEMPLATES = [
+        CONSTANTS.DASHBOARD_STATE,
+        CONSTANTS.CONTROL_SYSTEM_STATE,
+        CONSTANTS.DIAGNOSTICS_STATE,
+    ];
 
     if (!dashboardSwitchportsTemplate) {
         console.log('Keenetic Dark Theme Extension: unsupported switchports template');
@@ -129,6 +141,7 @@ export const injectUiExtensions = () => {
                 payload: {
                     dashboard: dashboardSwitchportsTemplate,
                     system: systemSwitchportsTemplate,
+                    cableDiagnostics: cableDiagnosticsTemplate,
                 },
             },
             '*',
@@ -166,6 +179,8 @@ export const injectUiExtensions = () => {
         (event) => {
             const action = _.get(event, 'data.action', '');
 
+            // console.log(action, _.get(event, 'data.payload'));
+
             switch (action) {
                 case CONSTANTS.TOGGLE_UI_EXTENSIONS_EVENT:
                     window.postMessage({action: CONSTANTS.TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT}, '*');
@@ -187,7 +202,7 @@ export const injectUiExtensions = () => {
                     break;
 
                 case CONSTANTS.RELOAD_PAGES_WITH_OVERRIDDEN_SWITCHPORTS:
-                    if ([CONSTANTS.DASHBOARD_STATE, CONSTANTS.CONTROL_SYSTEM_STATE].includes($state.current.name)) {
+                    if (STATES_WITH_OVERLOADED_TEMPLATES.includes($state.current.name)) {
                         window.location.reload();
                     }
                     break;
@@ -234,13 +249,23 @@ export const injectUiExtensions = () => {
                         break;
                     }
 
-                    const dashboardSwitchportsTemplate = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, 'dashboard']);
+                    ndmUtils.extractAndReplaceSwitchportsTemplate(
+                        payload,
+                        'dashboard',
+                        CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH,
+                    );
 
-                    ndmUtils.replaceSwitchportsTemplate(dashboardSwitchportsTemplate, CONSTANTS.DASHBOARD_SWITCHPORTS_TEMPLATE_PATH);
+                    ndmUtils.extractAndReplaceSwitchportsTemplate(
+                        payload,
+                        'system',
+                        CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH,
+                    );
 
-                    const systemSwitchportTemplate = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, 'system']);
-
-                    ndmUtils.replaceSwitchportsTemplate(systemSwitchportTemplate, CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH);
+                    ndmUtils.extractAndReplaceSwitchportsTemplate(
+                        payload,
+                        'cableDiagnostics',
+                        CONSTANTS.CABLE_DIAGNOSTICS_TEMPLATE_PATH,
+                    );
 
                     break;
             }
@@ -349,7 +374,13 @@ export const injectUiExtensions = () => {
                 CONSTANTS.CONTROL_SYSTEM_STATE,
                 extendedSystemSwitchportsData.onLoad,
                 extendedSystemSwitchportsData.onDestroy,
-            )
+            );
+
+            ndmUtils.addUiExtension(
+                CONSTANTS.DIAGNOSTICS_STATE,
+                extendedCableDiagnosticsSwitchportsData.onLoad,
+                extendedCableDiagnosticsSwitchportsData.onDestroy,
+            );
         }
 
         /* Adds 'WoL' button next to an offline registered host name */

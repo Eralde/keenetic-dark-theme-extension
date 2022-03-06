@@ -6,6 +6,7 @@ import {Toast} from 'toaster-js';
 import 'toaster-js/default.scss';
 
 import {
+    CABLE_DIAGNOSTICS_TEMPLATE_ORIGINAL_KEY,
     DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
     SHOW_RSSI_VALUE,
@@ -130,11 +131,18 @@ const processSwitchportTemplateData = async () => {
 
         const dashboardTemplateOriginal = _.get(data, DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
         const systemTemplateOriginal = _.get(data, SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
+        const cableDiagnosticsOriginal = _.get(data, CABLE_DIAGNOSTICS_TEMPLATE_ORIGINAL_KEY, {});
 
         const selectedProps = sortable2.toArray();
 
         const dashboardTemplate = generateFullDashboardTemplate(dashboardTemplateOriginal.template, selectedProps);
         const systemTemplate = generateFullSystemTemplate(systemTemplateOriginal.template, selectedProps);
+        const cableDiagnosticsTemplate = generateFullCableDiagnosticsTemplate(cableDiagnosticsOriginal.template, selectedProps);
+
+        console.log({
+            cableDiagnosticsOriginal,
+            cableDiagnosticsTemplate,
+        });
 
         const templatePropsData = {
             defaultProps: getDefaultTemplateProps(),
@@ -146,6 +154,7 @@ const processSwitchportTemplateData = async () => {
             [SWITCHPORT_TEMPLATE_DATA_KEY]: {
                 dashboard: {...dashboardTemplateOriginal, template: dashboardTemplate},
                 system: {...systemTemplateOriginal, template: systemTemplate},
+                cableDiagnostics: {...cableDiagnosticsOriginal, template: cableDiagnosticsTemplate},
             },
         });
     };
@@ -157,6 +166,7 @@ const processSwitchportTemplateData = async () => {
 
         const dashboardTemplateOriginal = _.get(data, DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
         const systemTemplateOriginal = _.get(data, SYSTEM_SWITCHPORT_TEMPLATE_ORIGINAL_KEY, {});
+        const cableDiagnosticsOriginal = _.get(data, CABLE_DIAGNOSTICS_TEMPLATE_ORIGINAL_KEY, {});
 
         const templatePropsData = {
             defaultProps: getDefaultTemplateProps(),
@@ -168,6 +178,7 @@ const processSwitchportTemplateData = async () => {
             [SWITCHPORT_TEMPLATE_DATA_KEY]: {
                 dashboard: {...dashboardTemplateOriginal},
                 system: {...systemTemplateOriginal},
+                cableDiagnostics: {...cableDiagnosticsOriginal},
             },
         });
 
@@ -280,6 +291,57 @@ const generateFullSystemTemplate = (originalTemplate, propsList) => {
     return getFinishedTemplateHtml(fragment);
 };
 
+const generateFullCableDiagnosticsTemplate = (originalTemplate, propsList) => {
+    if (!originalTemplate) {
+        logWarning('"original" template is not a string (extension storage is empty?)');
+
+        return '';
+    }
+
+    const _origTemplate = addClassToTheRootSwitchportElement(originalTemplate, propsList);
+
+    const fragment = createDocumentFragmentFromString(_origTemplate);
+    // const propsDiv = fragment.querySelector('.cable-diagnostics__port-state');
+    const templateStr = getPropsTemplateChunk(propsList);
+
+    // if (!controlsDiv) {
+    //     logWarning('failed to parse original template [[generateFullSystemTemplate]]');
+    //
+    //     return beautifyHtml(originalTemplate);
+    // }
+
+    const wrapper = document.createElement('DIV');
+    const elToAttachTo = fragment.querySelector('.cable-diagnostics__port-state');
+
+    // wrapper.appendChild(wrapHtmlStringIntoDiv(elToAttachTo.innerHTML));
+    wrapper.style.width = '100%';
+
+    const innerWrapper = document.createElement('DIV');
+
+    innerWrapper.classList.add('extended-switchport-status-wrapper')
+
+    innerWrapper.appendChild(
+        wrapHtmlStringIntoDiv(templateStr, {'class': 'extended-switchport-status'}),
+    );
+
+    innerWrapper.appendChild(
+        wrapHtmlStringIntoDiv(
+            getLinkedPortTemplate(templateStr),
+            {
+                'class': 'extended-switchport-status',
+                'ng-if': 'port.linkedPort',
+            },
+        ),
+    );
+
+    wrapper.appendChild(innerWrapper);
+
+    removeAllChildNodes(elToAttachTo);
+    elToAttachTo.appendChild(wrapper);
+
+    return getFinishedTemplateHtml(fragment);
+};
+
 async function updateUI() {
     let commands = await browser.commands.getAll();
 
@@ -290,6 +352,7 @@ async function updateUI() {
     }
 
     const data = await browser.storage.local.get();
+
     const replaceTextareaCursorEl = document.querySelector('#replaceTextareaCursor');
     const showRssiValue = document.querySelector('#showRssiValue');
 
