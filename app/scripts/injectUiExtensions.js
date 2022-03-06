@@ -181,8 +181,6 @@ export const injectUiExtensions = () => {
         (event) => {
             const action = _.get(event, 'data.action', '');
 
-            // console.log(action, _.get(event, 'data.payload'));
-
             switch (action) {
                 case CONSTANTS.TOGGLE_UI_EXTENSIONS_EVENT:
                     window.postMessage({action: CONSTANTS.TOGGLE_UI_EXTENSIONS_RECEIVED_EVENT}, '*');

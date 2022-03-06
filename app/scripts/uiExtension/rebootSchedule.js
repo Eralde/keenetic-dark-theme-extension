@@ -16,11 +16,6 @@ const REBOOT_SECTION_CLASS = 'system__reboot-section';
 const REBOOT_SECTION_SELECTOR = `.${REBOOT_SECTION_CLASS}`;
 
 const addRebootScheduleSelectbox = () => {
-    console.log({
-        REBOOT_SECTION_TEMPLATE_PATH,
-        rebootScheduleTemplate,
-    });
-
     injectStringIntoTemplate(
         REBOOT_SECTION_TEMPLATE_PATH,
         rebootScheduleTemplate,

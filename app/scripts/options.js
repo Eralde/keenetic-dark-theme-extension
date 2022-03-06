@@ -139,11 +139,6 @@ const processSwitchportTemplateData = async () => {
         const systemTemplate = generateFullSystemTemplate(systemTemplateOriginal.template, selectedProps);
         const cableDiagnosticsTemplate = generateFullCableDiagnosticsTemplate(cableDiagnosticsOriginal.template, selectedProps);
 
-        console.log({
-            cableDiagnosticsOriginal,
-            cableDiagnosticsTemplate,
-        });
-
         const templatePropsData = {
             defaultProps: getDefaultTemplateProps(),
             selectedProps,
