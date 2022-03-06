@@ -156,7 +156,7 @@ export const getNgL10n = (id, args = {}) => {
 };
 
 export const onLanguageChange = (callback) => {
-    getAngularService('$rootScope')
+    return getAngularService('$rootScope')
         .$on('$translateChangeSuccess', () => setTimeout(callback));
 };
 

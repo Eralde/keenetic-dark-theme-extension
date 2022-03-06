@@ -65,5 +65,11 @@
   },
   "HECErrorsInterleaved": {
     "message": "HEC hataları"
+  },
+  "rebootScheduleLabel": {
+    "message": "Yeniden başlatma programı"
+  },
+  "rebootScheduleNoScheduleOption": {
+    "message": "Belirtilmemiş"
   }
 }

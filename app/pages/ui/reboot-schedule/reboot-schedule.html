@@ -1,0 +1,18 @@
+<div
+    class="system__reboot-schedule-section"
+    ng-form="vm.rebootScheduleForm"
+>
+    <!-- `vm` is a reference to the RebootController -->
+
+    <br/>
+    <br/>
+
+    <ndm-schedule-select
+        is-disabled="vm.isLocked"
+        label="{{vm.l10n.rebootScheduleLabel}}"
+        no-schedule-label="{{vm.l10n.rebootScheduleNoScheduleOption}}"
+        name="rebootSchedule"
+        model="vm.rebootSchedule"
+    >
+    </ndm-schedule-select>
+</div>

@@ -40,6 +40,7 @@ import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controll
 import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
 import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
 import {extendedCableDiagnosticsSwitchportsData} from "./uiExtension/extendCableDiagnosticsSwitchportData";
+import {rebootSchedule} from "./uiExtension/rebootSchedule";
 
 export const injectUiExtensions = () => {
     let $state;
@@ -167,6 +168,7 @@ export const injectUiExtensions = () => {
     wifiClientsFilters.onInit();
     routesToolbarExtension.onInit();
     addDeltaSandbox.onInit();
+    rebootSchedule.onInit();
 
     /** END of UI extensions initialization */
 
@@ -360,7 +362,13 @@ export const injectUiExtensions = () => {
             CONSTANTS.CONTROL_SYSTEM_STATE,
             addDeltaSandbox.onLoad,
             addDeltaSandbox.onDestroy,
-        )
+        );
+
+        /* 'Reboot schedule' selectbox */
+        ndmUtils.addUiExtension(
+            CONSTANTS.CONTROL_SYSTEM_STATE,
+            rebootSchedule.onLoad,
+        );
 
         /* switchports template overload (dashboard, 'General settings') */
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {

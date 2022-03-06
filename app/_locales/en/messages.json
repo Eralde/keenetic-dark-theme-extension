@@ -266,5 +266,11 @@
   },
   "otherConnections_pointToPoint_editor_field_ipsecIkev2_hint": {
     "message": "Use IKEv2 for lower latency and better stability. It is vital to set the same ID on both connecting sides. Note that not every tunnel implementation supports this mode."
+  },
+  "rebootScheduleLabel": {
+    "message": "Reboot schedule"
+  },
+  "rebootScheduleNoScheduleOption": {
+    "message": "Not set"
   }
 }
