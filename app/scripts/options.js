@@ -101,12 +101,8 @@ const processSwitchportTemplateData = async () => {
         group: SORTABLE_GROUP_NAME,
         animation: 150,
         dataIdAttr: DATA_PROP,
-        onChange: (evt) => {
-            setTimeout(() => {
-                const props = sortable2.toArray();
-
-                refreshPreview();
-            });
+        onChange: () => {
+            setTimeout(() => refreshPreview());
         },
     });
 
@@ -296,19 +292,11 @@ const generateFullCableDiagnosticsTemplate = (originalTemplate, propsList) => {
     const _origTemplate = addClassToTheRootSwitchportElement(originalTemplate, propsList);
 
     const fragment = createDocumentFragmentFromString(_origTemplate);
-    // const propsDiv = fragment.querySelector('.cable-diagnostics__port-state');
     const templateStr = getPropsTemplateChunk(propsList);
-
-    // if (!controlsDiv) {
-    //     logWarning('failed to parse original template [[generateFullSystemTemplate]]');
-    //
-    //     return beautifyHtml(originalTemplate);
-    // }
 
     const wrapper = document.createElement('DIV');
     const elToAttachTo = fragment.querySelector('.cable-diagnostics__port-state');
 
-    // wrapper.appendChild(wrapHtmlStringIntoDiv(elToAttachTo.innerHTML));
     wrapper.style.width = '100%';
 
     const innerWrapper = document.createElement('DIV');

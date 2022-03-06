@@ -1,10 +1,8 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
-import {routesToolsService} from './routes-tools.service';
+import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
-
-const ROOT_ELEMENT_SELECTOR = '.routes-import-popup';
 
 export function RoutesImportPopupController() {
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));
@@ -29,7 +27,7 @@ export function RoutesImportPopupController() {
     const routesService = getAngularService('routesService');
 
     const {ANY_INTERFACE_OPTION} = staticRoutesHelperService.ROUTES_CONST;
-    const {ROUTE_TYPE, DEFAULT_ROUTE} = routesService;
+    const {DEFAULT_ROUTE} = routesService;
 
     const $scope = element.scope();
 

@@ -58,12 +58,11 @@ export const DISABLED_ICONS = ICON_SIZES.reduce(
 // UI extension: device filters
 export const HIDE_CLASS = '__hidden';
 export const FILTERS_ARE_VISIBLE_CLASS = '__filters-are-visible';
-export const FLEX_ROW_CLASS = '__flex-row';
 export const NDM_LAYOUT_THEME_CLASS = 'ndm-layout--dark-theme';
 export const HIDDEN_TABLE_ROW_CLASS = 'hidden-table-row';
 
 export const DEVICE_SETTINGS_PROP = 'DEVICE_SETTINGS';
-
+export const NO_TAG = 'NO_TAG';
 export const LOCAL_STORAGE_KEY = 'flags';
 
 export const FLAGS = {
@@ -82,12 +81,6 @@ export const FLAG_DEFAULTS = {
     [FLAGS.SHOW_FILTERS]: false,
 };
 
-export const UNREG_DEVICES_FLAGS = [FLAGS.HIDE_UNREGISTERED_HOSTS];
-export const REG_DEVICES_FLAGS = [
-    FLAGS.HIDE_HOSTS_BLOCKED_BY_MAC,
-    FLAGS.HIDE_OFFLINE_HOSTS,
-];
-
 // END UI extension: device filters
 
 export const FW2X_BRANCHES = [
@@ -99,16 +92,14 @@ export const FW2X_BRANCHES = [
 export const OLD_FW3X_BRANCHES = [
     '1.7',
     '1.8',
-]
+];
 
 export const FW3X_WITHOUT_SWITCHPORT_OVERLOAD = [
     ...OLD_FW3X_BRANCHES,
     '3.1',
     '3.2',
     '3.3',
-]
-
-export const NO_TAG = 'NO_TAG';
+];
 
 export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 
@@ -130,7 +121,6 @@ export const LOG_LINK_TITLE = 'diagnostics.log.header-title';
 export const REBOOT_LINK_TITLE = 'system.reboot.button';
 
 // CSS classes
-export const FILTERS_TOGGLE_CLASS = 'show-filter-checkboxes';
 export const LOG_LINK_CLASS = 'log-link';
 export const REBOOT_LINK_CLASS = 'reboot-link';
 export const DSL_DIAGNOSTICS_LINK_CLASS = 'dsl-diagnostics-link';
@@ -148,7 +138,6 @@ export const POLICIES_STATE = 'controlPanel.policies';
 export const CONTROL_SYSTEM_STATE = 'controlPanel.system';
 export const DIAGNOSTICS_STATE = 'controlPanel.diagnostics';
 export const DIAGNOSTICS_LOG_STATE = 'controlPanel.diagnostics.log';
-export const OTHER_CONNECTIONS_STATE = 'controlPanel.otherConnections';
 export const WEBCLI_STATE = 'cli';
 export const LOGIN_STATE = 'login';
 

@@ -53,7 +53,7 @@ const addSaveLogButton = () => {
 
             const buttons = [...panelEl.querySelectorAll('button')];
 
-            if (buttons.length > 1) { // 'Save to computer' button already present in the web UID
+            if (buttons.length > 1) { // 'Save to computer' button already present in the web UI
                 return;
             }
 

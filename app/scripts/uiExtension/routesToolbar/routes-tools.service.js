@@ -5,6 +5,8 @@ import {getAngularService} from '../../lib/ndmUtils';
 import {logWarning} from '../../lib/log';
 import {IP_ROUTE, SHOW_INTERFACE, SHOW_RC_IP_ROUTE} from '../../lib/constants';
 
+export const ROOT_ELEMENT_SELECTOR = '.routes-import-popup';
+
 export const routesToolsService = (function() {
     const $q = getAngularService('$q');
     const utils = getAngularService('utils');

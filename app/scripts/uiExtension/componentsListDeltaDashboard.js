@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {DELTA_CHANNEL, isSuitableDevice} from './componentsListDelta';
-import {getDashboardController, getElementController, getElementScope} from '../lib/ndmUtils';
+import {getDashboardController, getElementScope} from '../lib/ndmUtils';
 import {getL10n} from '../lib/l10nUtils';
 import {createDiv} from '../lib/domUtils';
 

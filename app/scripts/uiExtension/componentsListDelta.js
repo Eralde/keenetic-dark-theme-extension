@@ -3,8 +3,9 @@ import {getAngularService, getElementController, getElementScope} from '../lib/n
 import {getL10n} from '../lib/l10nUtils';
 import {logWarning} from '../lib/log';
 
-const watchers = [];
 export const DELTA_CHANNEL = 'delta';
+
+const watchers = [];
 const DELTA_DEVICES = [
     'ku_rd',    // Ultra II
     'kng_re',   // Giga III

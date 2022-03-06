@@ -2,10 +2,8 @@ import * as _ from 'lodash';
 import {logWarning} from '../../lib/log';
 import {getL10n} from '../../lib/l10nUtils';
 import * as ndmUtils  from '../../lib/ndmUtils';
-import {routesToolsService} from './routes-tools.service';
+import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 import {onLanguageChange} from '../../lib/ndmUtils';
-
-const ROOT_ELEMENT_SELECTOR = '.routes-toolbar';
 
 export function RoutesToolbarController() {
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));

@@ -3,7 +3,7 @@ import {SHOW_INTERFACE_STAT} from './constants';
 import {formatPortDuplex, formatPortLinkSpeed} from './formatUtils';
 import {getAngularService, getPortInterfaceStatus} from './ndmUtils';
 
-const getAdditionalSwitchportProps = (port, interfaceStatus) => {
+const _getAdditionalSwitchportProps = (port, interfaceStatus) => {
     const portIconLabel = port.type === 'dsl'
         ? port.portId
         : port.port;
@@ -17,9 +17,9 @@ const getAdditionalSwitchportProps = (port, interfaceStatus) => {
     };
 }
 
-const extendGroupedSwitchportsListItem = (port, showInterfaceData) => {
+const _extendGroupedSwitchportsListItem = (port, showInterfaceData) => {
     const interfaceStatus = getPortInterfaceStatus(port, showInterfaceData);
-    const additionalProps = getAdditionalSwitchportProps(port, interfaceStatus);
+    const additionalProps = _getAdditionalSwitchportProps(port, interfaceStatus);
 
     return {
         ...port,
@@ -36,10 +36,10 @@ export const extendGroupedSwitchportsList = (
         const {interfaceId, port} = item;
 
         const interfaceStatus = getPortInterfaceStatus(item, showInterfaceData);
-        const additionalProps = getAdditionalSwitchportProps(item, interfaceStatus);
+        const additionalProps = _getAdditionalSwitchportProps(item, interfaceStatus);
 
         if (item.linkedPort) {
-            item.linkedPort = extendGroupedSwitchportsListItem(item.linkedPort, showInterfaceData);
+            item.linkedPort = _extendGroupedSwitchportsListItem(item.linkedPort, showInterfaceData);
 
             // workaround to show proper label inside the port icon & proper description below
             item.linkedPort.description = item.linkedPort.name
@@ -70,14 +70,14 @@ export const getGroupedSwitchportsListOverload = (getGroupedSwitchportsList) => 
 
         return returnValue.map(port => {
             if (port.linkedPort) {
-                port.linkedPort = extendGroupedSwitchportsListItem(port.linkedPort, showInterfaceData);
+                port.linkedPort = _extendGroupedSwitchportsListItem(port.linkedPort, showInterfaceData);
 
                 // workaround to show proper label inside the port icon & proper description below
                 port.linkedPort.description = port.linkedPort.name
                 port.linkedPort.name = port.linkedPort.portIconLabel;
             }
 
-            return extendGroupedSwitchportsListItem(port, showInterfaceData);
+            return _extendGroupedSwitchportsListItem(port, showInterfaceData);
         });
     };
 };
@@ -94,7 +94,7 @@ export const getPortStatQueryList = (portIdList) => {
     return portIdList.map(id => _.set({}, SHOW_INTERFACE_STAT, {name: id}));
 };
 
-const extendPortData = ({utils, port, portIdsList, statDataList}) => {
+const _extendPortData = ({utils, port, portIdsList, statDataList}) => {
     const {interfaceId} = port;
 
     const index = _.findIndex(portIdsList, item => item === interfaceId);
@@ -115,7 +115,7 @@ export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, 
 
     return switchportsList.map(port => {
         if (port.linkedPort) {
-            port.linkedPort = extendPortData({
+            port.linkedPort = _extendPortData({
                 utils,
                 portIdsList,
                 statDataList,
@@ -123,6 +123,6 @@ export const extendSwitchportsListWithStatData = (switchportsList, portIdsList, 
             });
         }
 
-        return extendPortData({utils, port, portIdsList, statDataList});
+        return _extendPortData({utils, port, portIdsList, statDataList});
     });
 }

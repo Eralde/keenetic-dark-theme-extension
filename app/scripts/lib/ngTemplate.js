@@ -16,26 +16,6 @@ import {getAngularService, getTemplate} from './ndmUtils';
 import {logWarning} from './log';
 
 /**
- * Replace  `label="<obj_name>.<some_prop>"`
- * with     `label="<obj_name>.portIconLabel || <obj_name>.port"`
- *
- * @param {string} templateStr
- * @returns {string}
- */
-export const overrideSwitchportTemplatePortLabel = (templateStr) => {
-    const match = templateStr.match(/label="(([^"]+?)\.([^"]+?))"/);
-
-    if (!match) {
-        return templateStr;
-    }
-
-    const wholeMatch = match[0];
-    const replacement = wholeMatch.replace(match[1], `${match[2]}.portIconLabel || ${match[2]}.port`);
-
-    return templateStr.replace(wholeMatch, replacement);
-};
-
-/**
  * @param {string} templateStr
  * @param {string} tagName
  * @param {string} classToToggle
@@ -179,6 +159,26 @@ export const getPropsTemplateChunk = (propsList) => {
         },
         '',
     );
+};
+
+/**
+ * Replace  `label="<obj_name>.<some_prop>"`
+ * with     `label="<obj_name>.portIconLabel || <obj_name>.port"`
+ *
+ * @param {string} templateStr
+ * @returns {string}
+ */
+export const overrideSwitchportTemplatePortLabel = (templateStr) => {
+    const match = templateStr.match(/label="(([^"]+?)\.([^"]+?))"/);
+
+    if (!match) {
+        return templateStr;
+    }
+
+    const wholeMatch = match[0];
+    const replacement = wholeMatch.replace(match[1], `${match[2]}.portIconLabel || ${match[2]}.port`);
+
+    return templateStr.replace(wholeMatch, replacement);
 };
 
 /**

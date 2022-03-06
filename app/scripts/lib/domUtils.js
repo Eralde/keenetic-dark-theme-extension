@@ -11,11 +11,8 @@ import {
 } from './l10nUtils';
 
 import {
-    FILTERS_ARE_VISIBLE_CLASS,
-    FLAGS,
-    HIDE_CLASS, LOG_LINK_CLASS,
+    LOG_LINK_CLASS,
     MOUSEOVER_INTERCEPTED_DATA_ATTR,
-    FILTERS_TOGGLE_CLASS,
 } from './constants';
 
 export const isFirefox = () => typeof InstallTrigger !== 'undefined'; // eslint-disable-line no-undef
@@ -96,29 +93,6 @@ export const toggleCssClass = (elementsList, className, addClass) => {
  * @param {String} className
  */
 export const addCssClass = (elementsList, className) => toggleCssClass(elementsList, className, true);
-
-/**
- *
- * @param {Element} headerToolbarEl
- * @param {String} className
- */
-export const addStylesToDevicesListTableHeader = (headerToolbarEl, className) => {
-    const transcludeContainer = headerToolbarEl.closest('[ng-transclude]');
-    const titleEl = headerToolbarEl.closest('.ndm-title');
-
-    if (transcludeContainer) {
-        transcludeContainer.classList.add('__inline-flex-row');
-        transcludeContainer.classList.add('devices-list-section-header');
-    }
-
-    if (titleEl) {
-        titleEl.classList.add(className);
-    }
-
-    return titleEl;
-};
-
-export const getPageHeaderEl = () => document.querySelector('.ndm-page-header .header');
 
 export const hideElement = (el) => {
     if (el) {
@@ -312,37 +286,6 @@ export const addFlagCheckbox = (flags, options) => {
     });
 
     return checkboxEl;
-};
-
-export const addFiltersToggleCheckbox = (
-    flags,
-    __VARS,
-    elToAttachTo,
-    elementsToToggle = [],
-    elementContainers = [],
-    onToggleCallback = _.noop,
-) => {
-    if (!elToAttachTo) {
-        return;
-    }
-    const flagName = FLAGS.SHOW_FILTERS;
-
-    return addFlagCheckbox(
-        flags,
-        {
-            parentEl: elToAttachTo,
-            flagName: flagName,
-            flagLabelL10nId: flagName,
-            cbk: (v) => {
-                flags.set(flagName, v);
-                toggleCssClass(elementsToToggle, HIDE_CLASS, !v);
-                elToAttachTo.classList[v ? 'add' : 'remove'](FILTERS_ARE_VISIBLE_CLASS);
-                toggleCssClass(elementContainers, FILTERS_ARE_VISIBLE_CLASS, v);
-                onToggleCallback(v);
-            },
-            className: FILTERS_TOGGLE_CLASS,
-        }
-    )
 };
 
 export const isPointInsideElement = (point, el) => {

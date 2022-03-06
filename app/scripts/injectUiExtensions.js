@@ -39,8 +39,8 @@ import {routesToolbarExtension} from './uiExtension/routesToolbar';
 import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controller';
 import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
 import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
-import {extendedCableDiagnosticsSwitchportsData} from "./uiExtension/extendCableDiagnosticsSwitchportData";
-import {rebootSchedule} from "./uiExtension/rebootSchedule";
+import {extendedCableDiagnosticsSwitchportsData} from './uiExtension/extendCableDiagnosticsSwitchportData';
+import {rebootSchedule} from './uiExtension/rebootSchedule';
 
 export const injectUiExtensions = () => {
     let $state;
