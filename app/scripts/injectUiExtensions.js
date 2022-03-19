@@ -368,7 +368,7 @@ export const injectUiExtensions = () => {
             rebootSchedule.onLoad,
         );
 
-        /* switchports template overload (dashboard, 'General settings') */
+        /* switchports template overload (dashboard, 'General settings', 'Cable diagnostics') */
         if (ndmUtils.isSwitchportOverloadSupported(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DASHBOARD_STATE,
