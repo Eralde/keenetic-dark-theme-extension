@@ -3,6 +3,9 @@ import {SHOW_INTERFACE_STAT} from './constants';
 import {formatPortDuplex, formatPortLinkSpeed} from './formatUtils';
 import {getAngularService, getPortInterfaceStatus} from './ndmUtils';
 
+const NDM = window.NDM;
+const components = _.get(NDM, 'profile.components', {});
+
 const _getAdditionalSwitchportProps = (port, interfaceStatus) => {
     const portIconLabel = port.type === 'dsl'
         ? port.portId
@@ -91,7 +94,17 @@ export const getPortIdList = () => {
 };
 
 export const getPortStatQueryList = (portIdList) => {
-    return portIdList.map(id => _.set({}, SHOW_INTERFACE_STAT, {name: id}));
+    return portIdList.map(id => {
+        if (!id) {
+            return {};
+        }
+
+        if (String(id).startsWith(NDM.DSL) && !_.has(components, 'dsl')) {
+            return {};
+        }
+
+        return _.set({}, SHOW_INTERFACE_STAT, {name: id});
+    });
 };
 
 const _extendPortData = ({utils, port, portIdsList, statDataList}) => {

@@ -4,10 +4,14 @@ import {
     getDashboardController,
     getElementController,
 } from '../lib/ndmUtils';
+
 import {
     extendSwitchportsListWithStatData,
-    getGroupedSwitchportsListOverload, getPortIdList,
+    getGroupedSwitchportsListOverload,
+    getPortIdList,
+    getPortStatQueryList,
 } from '../lib/switchportUtils';
+
 import {sharedData} from '../lib/state';
 import {
     __SHOW_INTERFACE_STAT_PROPS__,
@@ -17,6 +21,7 @@ import {
 
 const dashboardDataService = getAngularService('dashboardDataService');
 const utils = getAngularService('utils');
+const router = getAngularService('router');
 const switchportsService = getAngularService('switchportsService');
 
 const originalGetSwitchportsList = utils.getSwitchportsList;
@@ -30,10 +35,9 @@ const gatherStatForPorts = async () => {
     );
 
     const switchportsController = await getElementController('#card_switchports');
+    const portIds = getPortIdList();
 
     dashboardDataService.registerCallback([], () => {
-        const portIds = getPortIdList();
-
         // Overload to preserve existing stat data
         utils.getSwitchportsList = () => {
             const portsList = originalGetSwitchportsList();
@@ -69,8 +73,10 @@ const gatherStatForPorts = async () => {
         }
 
         setTimeout(() => {
-            dashboardDataService.getInterfaceStatistics(portIds).then((responseData) => {
-                const statArray = _.get(responseData[1], SHOW_INTERFACE_STAT, []);
+            const statQueries = getPortStatQueryList(portIds);
+
+            router.postToRciRoot(statQueries).then((responses) => {
+                const statArray = responses.map(item => _.get(item, SHOW_INTERFACE_STAT, {}));
 
                 switchportsController.switchports = extendSwitchportsListWithStatData(
                     _.map(switchportsController.switchports),
