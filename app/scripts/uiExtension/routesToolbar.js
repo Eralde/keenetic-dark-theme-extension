@@ -31,11 +31,11 @@ const injectRoutesToolbarSectionTemplate = () => {
     const importPopupFragment = createDocumentFragmentFromString(importPopupTemplate);
 
     buttonsRow.after(toolbarFragment);
-    buttonsRow.after(importPopupFragment);
 
     const ipLookupFragment = createDocumentFragmentFromString(ipLookupTemplate);
 
     routesTableWrapper.before(ipLookupFragment);
+    routesTableWrapper.after(importPopupFragment);
 
     const fullTemplate = getDocumentFragmentInnerHtml(fragment);
 
