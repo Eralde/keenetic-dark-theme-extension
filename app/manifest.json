@@ -53,7 +53,6 @@
   "permissions": [
     "activeTab",
     "storage",
-    "tabs",
     "<all_urls>"
   ],
   "__chrome__options_page": "pages/options.html",
