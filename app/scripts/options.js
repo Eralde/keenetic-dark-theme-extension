@@ -186,7 +186,7 @@ const processSwitchportTemplateData = async () => {
 };
 
 const getFinishedTemplateHtml = fp.compose(
-    beautifyHtml,
+    // beautifyHtml,
     overrideSwitchportTemplatePortLabel,
     getDocumentFragmentInnerHtml,
 );

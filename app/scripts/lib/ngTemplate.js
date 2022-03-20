@@ -207,11 +207,25 @@ export const getSwitchportsTemplateChunks = (fullTemplatePath) => {
         return false;
     }
 
-    const middleChunk = chunks[1];
+    const prefixEnd = '>';
+    const suffixStart = '<';
 
-    const template = middleChunk.substr(1, middleChunk.length - 3);
-    const prefix = `${chunks[0]}${NDM_SWITCHPORT_CONTAINER_TAG}>`;
-    const suffix = `</${NDM_SWITCHPORT_CONTAINER_TAG}${chunks[2]}`;
+    const _prefixEndIndex = wholeTemplate.indexOf(prefixEnd, chunks[0].length);
+    const _suffixStartIndex = wholeTemplate.lastIndexOf(`/${NDM_SWITCHPORT_CONTAINER_TAG}`);
+
+    if (_prefixEndIndex === -1 || _suffixStartIndex === -1) {
+        logWarning(`Failed to split template @ [${fullTemplatePath}]`);
+
+        return false;
+    }
+
+    const prefixEndIndex = _prefixEndIndex + prefixEnd.length;
+    const prefix = wholeTemplate.substring(0, prefixEndIndex);
+
+    const suffixStartIndex = _suffixStartIndex - suffixStart.length;
+
+    const template = wholeTemplate.substring(prefixEndIndex, suffixStartIndex);
+    const suffix = wholeTemplate.substring(suffixStartIndex);
 
     return {
         template,
