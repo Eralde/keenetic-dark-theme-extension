@@ -144,7 +144,6 @@ export function RoutesImportPopupController() {
             };
         });
 
-
         vm.routesList = routesList.map(route => {
             route.configuration.interface = route.configuration.interface || ANY_INTERFACE_OPTION.id;
 
@@ -180,7 +179,7 @@ export function RoutesImportPopupController() {
 
     callOnDestroy.push(unbinder);
 
-    vm.onReplacementSelected = (replacementId, selectboxName) => {
+    vm.onReplacementSelected = (replacementId, oldValue, selectboxName) => {
         const missingInterfaceIndex = _
             .chain(selectboxName)
             .split('__')
