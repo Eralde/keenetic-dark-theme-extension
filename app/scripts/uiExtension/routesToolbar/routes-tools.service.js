@@ -184,30 +184,6 @@ export const routesToolsService = (function() {
             .filter(option => !_.isUndefined(option.global));
     };
 
-    const prepareRouteForNdm = (route) => {
-        const routeObjForNdm = ['auto', 'gateway', 'interface', 'comment']
-            .filter(prop => route[prop])
-            .reduce((acc, prop) => ({...acc, [prop]: route[prop]}), {});
-
-        switch (route.type) {
-            case ROUTE_TYPE.DEFAULT_ROUTE:
-                routeObjForNdm['default'] = '';
-                delete routeObjForNdm.auto;
-                break;
-
-            case ROUTE_TYPE.TO_NETWORK:
-                routeObjForNdm.network = route.network;
-                routeObjForNdm.mask = route.mask;
-                break;
-
-            case ROUTE_TYPE.TO_HOST:
-                routeObjForNdm.host = route.host;
-                break;
-        }
-
-        return routeObjForNdm;
-    };
-
     const stripNdwData = (ndwTableRow) => {
         const propsToRemove = [
             '$$hashKey',
