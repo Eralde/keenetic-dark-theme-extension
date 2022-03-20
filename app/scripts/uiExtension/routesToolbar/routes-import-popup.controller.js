@@ -148,7 +148,7 @@ export function RoutesImportPopupController() {
         vm.routesList = routesList.map(route => {
             route.configuration.interface = route.configuration.interface || ANY_INTERFACE_OPTION.id;
 
-            const destination = routesToolsService.getRouteDestination(route.configuration);
+            const destination = routesToolsService.getRouteDestination(route.configuration, route.type);
 
             route.view = {
                 destination: destination === DEFAULT_ROUTE
