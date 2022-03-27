@@ -50,11 +50,7 @@
       "all_frames": false
     }
   ],
-  "__chrome__permissions": [
-    "activeTab",
-    "<all_urls>"
-  ],
-  "__firefox__permissions": [
+  "permissions": [
     "activeTab",
     "storage",
     "<all_urls>"
