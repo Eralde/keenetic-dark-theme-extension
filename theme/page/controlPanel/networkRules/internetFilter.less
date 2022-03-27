@@ -1,11 +1,15 @@
 @import (reference) "../../../__vars__";
 @import (reference) "../../../__mixins__";
 
+// target: #51b5d0 (@dt__cyan-blue-text)
+@trash-icon-filter: brightness(0.01) invert(67%) sepia(100%) saturate(409%) hue-rotate(159deg) brightness(88%) contrast(82%) brightness(1.2);
+
 .__mixin__toolbar-button(@size: @new-gap-md) {
-    filter: brightness(0.5);
+    filter: @trash-icon-filter;
+    opacity: 0.65;
 
     &:hover {
-        filter: brightness(1);
+        opacity: 1;
     }
 }
 
@@ -56,7 +60,7 @@
 
         .name-server__toolbar {
             background-color: @dt__grey5;
-            border-color: darken(@blue-main, 20%);
+            border-color: darken(@dt__blue-text, 5%);
 
             &__button {
                 .__mixin__toolbar-button();
