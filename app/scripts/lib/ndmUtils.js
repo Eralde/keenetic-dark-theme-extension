@@ -371,6 +371,10 @@ export const compareVersions = (ver1, ver2) => {
     return 0;
 }
 
+export const isCableDiagnosticsImplemented = (ndwVersion) => {
+    return compareVersions(ndwVersion, '3.7.25') !== -1;
+}
+
 export const isSwitchportOverloadSupported = (ndwVersion) => {
     if (!is3xVersion(ndwVersion)) {
         return false;

@@ -21,9 +21,9 @@ import {
     UI_EXTENSIONS_KEY,
 } from '../lib/constants';
 
-const cableDiagnostics = getAngularService('cableDiagnostics');
-
 const extendCableDiagnosticsSwitchportsData = async () => {
+    const cableDiagnostics = getAngularService('cableDiagnostics');
+
     await getNdmPageController();
 
     const cableDiagnosticsController = await getElementController('.cable-diagnostics');

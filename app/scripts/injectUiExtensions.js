@@ -8,7 +8,7 @@ import {interceptMouseover,} from './lib/domUtils';
 import {logWarning} from './lib/log';
 import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
 import {l10n} from './lib/l10n';
-import {onLanguageChange} from './lib/ndmUtils';
+import {isCableDiagnosticsImplemented, onLanguageChange} from './lib/ndmUtils';
 import {
     DEVICES_LIST_STATE,
     FLAGS_CHANGE_EVENT,
@@ -25,6 +25,7 @@ import {wifiClientsFilters} from './uiExtension/filterWifiClients';
 import {addVpnStatLinks} from './uiExtension/addVpnStatLinks';
 import {extendedDashboardSwitchportsData} from './uiExtension/gatherStatForPorts';
 import {extendedSystemSwitchportsData} from './uiExtension/extendSystemSwitchportData';
+import {extendedCableDiagnosticsSwitchportsData} from './uiExtension/extendCableDiagnosticsSwitchportData';
 import {overrideDeltaL10n} from './uiExtension/componentsListDeltaDashboard';
 import {addDeltaSandbox} from './uiExtension/componentsListDelta';
 import {extendedDslStat} from './uiExtension/extendDslStat';
@@ -39,7 +40,6 @@ import {routesToolbarExtension} from './uiExtension/routesToolbar';
 import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controller';
 import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
 import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
-import {extendedCableDiagnosticsSwitchportsData} from './uiExtension/extendCableDiagnosticsSwitchportData';
 import {rebootSchedule} from './uiExtension/rebootSchedule';
 
 export const injectUiExtensions = () => {
@@ -261,11 +261,13 @@ export const injectUiExtensions = () => {
                         CONSTANTS.SYSTEM_SWITCHPORTS_TEMPLATE_PATH,
                     );
 
-                    ndmUtils.extractAndReplaceSwitchportsTemplate(
-                        payload,
-                        'cableDiagnostics',
-                        CONSTANTS.CABLE_DIAGNOSTICS_TEMPLATE_PATH,
-                    );
+                    if (isCableDiagnosticsImplemented(ndwBranch)) {
+                        ndmUtils.extractAndReplaceSwitchportsTemplate(
+                            payload,
+                            'cableDiagnostics',
+                            CONSTANTS.CABLE_DIAGNOSTICS_TEMPLATE_PATH,
+                        );
+                    }
 
                     break;
             }
@@ -382,11 +384,13 @@ export const injectUiExtensions = () => {
                 extendedSystemSwitchportsData.onDestroy,
             );
 
-            ndmUtils.addUiExtension(
-                CONSTANTS.DIAGNOSTICS_STATE,
-                extendedCableDiagnosticsSwitchportsData.onLoad,
-                extendedCableDiagnosticsSwitchportsData.onDestroy,
-            );
+            if (isCableDiagnosticsImplemented(ndwBranch)) {
+                ndmUtils.addUiExtension(
+                    CONSTANTS.DIAGNOSTICS_STATE,
+                    extendedCableDiagnosticsSwitchportsData.onLoad,
+                    extendedCableDiagnosticsSwitchportsData.onDestroy,
+                );
+            }
         }
 
         /* Adds 'WoL' button next to an offline registered host name */
