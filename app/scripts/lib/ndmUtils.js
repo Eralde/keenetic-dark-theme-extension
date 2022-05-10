@@ -425,3 +425,22 @@ export const getDebouncedCallback = (callback, leading = true) => {
 export const subscribeOnRootScopeEvent = ($scope, event, callback) => {
     $scope.$on('$destroy', $rootScope.$on(event, callback));
 };
+
+export const downloadAsFile = (data, fileName, mimeType = 'text/plain') => {
+    const fileObj = new File([data], fileName, {type: mimeType});
+
+    const element = document.createElement('a');
+    const URL = window.URL || window.webkitURL;
+    const url = URL.createObjectURL(fileObj);
+
+    element.setAttribute('href', url);
+    element.setAttribute('download', fileObj.name);
+    element.setAttribute('rel', 'noopener');
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+};
