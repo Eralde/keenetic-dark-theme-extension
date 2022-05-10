@@ -14,7 +14,20 @@ export const routesToolsService = (function() {
     const ipV4Service = getAngularService('ipV4Service');
     const interfaces = getAngularService('interfaces');
     const routesService = getAngularService('routesService');
-    const {ROUTE_TYPE, DEFAULT_ROUTE} = routesService;
+
+    let ROUTE_TYPE, DEFAULT_ROUTE;
+
+    if (_.has(routesService, 'DEFAULT_ROUTE')) { // 3.x firmware
+        ROUTE_TYPE = routesService.ROUTE_TYPE;
+        DEFAULT_ROUTE = routesService.DEFAULT_ROUTE;
+    } else { // 2.x firmware
+        DEFAULT_ROUTE = 'default';
+        ROUTE_TYPE = {
+            DEFAULT_ROUTE: DEFAULT_ROUTE,
+            TO_NETWORK: 'network',
+            TO_HOST: 'host'
+        };
+    }
 
     const EVENTS = {
         OPEN_IMPORT_POPUP: 'ROUTES_TOOLBAR:OPEN_IMPORT_POPUP',

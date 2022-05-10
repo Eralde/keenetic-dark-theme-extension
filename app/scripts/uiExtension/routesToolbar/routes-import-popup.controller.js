@@ -26,8 +26,21 @@ export function RoutesImportPopupController() {
     const staticRoutesHelperService = getAngularService('staticRoutesHelperService');
     const routesService = getAngularService('routesService');
 
-    const {ANY_INTERFACE_OPTION} = staticRoutesHelperService.ROUTES_CONST;
-    const {DEFAULT_ROUTE} = routesService;
+    let ANY_INTERFACE_OPTION,
+        DEFAULT_ROUTE;
+
+    if (_.has(staticRoutesHelperService, 'ROUTES_CONST')) { // 3.x firmware
+        ANY_INTERFACE_OPTION = staticRoutesHelperService.ROUTES_CONST.ANY_INTERFACE_OPTION;
+        DEFAULT_ROUTE = routesService.DEFAULT_ROUTE;
+    } else { // 2.x firmware
+        ANY_INTERFACE_OPTION = _
+            .chain(staticRoutesHelperService)
+            .invoke('getAnyInterfaceOption')
+            .get('id', '')
+            .value();
+
+        DEFAULT_ROUTE = _.get(routesService, ['const', 'default-route']);
+    }
 
     const $scope = element.scope();
 
