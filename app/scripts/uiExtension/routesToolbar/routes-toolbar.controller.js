@@ -3,7 +3,7 @@ import {logWarning} from '../../lib/log';
 import {getL10n} from '../../lib/l10nUtils';
 import * as ndmUtils  from '../../lib/ndmUtils';
 import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
-import {onLanguageChange} from '../../lib/ndmUtils';
+import {downloadAsFile, onLanguageChange} from '../../lib/ndmUtils';
 
 export function RoutesToolbarController() {
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));
@@ -135,7 +135,7 @@ export function RoutesToolbarController() {
             const data = JSON.stringify(routeList, null, 2);
             const filename = routesToolsService.getExportFilename();
 
-            utils.downloadAsFile(data, filename, 'application/json');
+            downloadAsFile(data, filename, 'application/json');
         });
     };
 
