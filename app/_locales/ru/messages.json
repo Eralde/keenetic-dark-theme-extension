@@ -272,5 +272,11 @@
   },
   "rebootScheduleNoScheduleOption": {
     "message": "Не задано"
+  },
+  "tracerouteViaLabel": {
+    "message": "Через интерфейс"
+  },
+  "tracerouteViaAnyOption": {
+    "message": "Любой"
   }
 }

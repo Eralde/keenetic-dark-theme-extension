@@ -106,6 +106,7 @@ export const MOUSEOVER_INTERCEPTED_DATA_ATTR = 'mouseoverIntercepted';
 export const DASHBOARD_SWITCHPORTS_TEMPLATE_PATH = 'app/page/dashboard/card_switchports.html';
 export const SYSTEM_SWITCHPORTS_TEMPLATE_PATH = 'app/page/controlPanel/control/system/switchports/switchports.html';
 export const CABLE_DIAGNOSTICS_TEMPLATE_PATH = 'app/page/controlPanel/control/diagnostics/cable-diagnostics/cable-diagnostics.html';
+export const MAIN_DIAGNOSTICS_TAB_TEMPLATE_PATH = 'app/page/controlPanel/control/diagnostics/diagnostics.tab.main.html';
 export const OTHER_CONNECTIONS_TEMPLATE_PATH = 'app/page/controlPanel/myInternet/otherConnections/otherConnections.html';
 export const DEVICES_LIST_TEMPLATE_PATH = 'app/page/controlPanel/myNetwork/devicesList/devicesList.html';
 export const REBOOT_SECTION_TEMPLATE_PATH = 'app/page/controlPanel/control/system/reboot/reboot.html';

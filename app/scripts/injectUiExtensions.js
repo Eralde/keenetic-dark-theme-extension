@@ -42,6 +42,9 @@ import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolba
 import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
 import {rebootSchedule} from './uiExtension/rebootSchedule';
 
+import {tracerouteViaInterfaceExtension} from './uiExtension/tracerouteViaInterface';
+import {TracerouteViaController} from './uiExtension/tracerouteVia/traceroute-via.controller';
+
 export const injectUiExtensions = () => {
     let $state;
 
@@ -63,6 +66,7 @@ export const injectUiExtensions = () => {
     $rootScope.RoutesToolbarController = RoutesToolbarController;
     $rootScope.RoutesImportPopupController = RoutesImportPopupController;
     $rootScope.IpLookupController = IpLookupController;
+    $rootScope.TracerouteViaController = TracerouteViaController;
 
     $rootScope.kdte = {
         L10N: l10n,
@@ -155,11 +159,12 @@ export const injectUiExtensions = () => {
     const ndmVersion = _.get(window, 'NDM.version', '');
     const ndwBranch = ndmVersion.substr(0, 3);
 
-    if (
-        ndmUtils.is3xVersion(ndwBranch)
-        && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
-    ) {
-        pointToPointSection.onInit();
+    if (ndmUtils.is3xVersion(ndwBranch)) {
+        tracerouteViaInterfaceExtension.onInit();
+
+        if (ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])) {
+            pointToPointSection.onInit();
+        }
     }
 
     $rootScope.kdte.ndwBranch = ndwBranch;

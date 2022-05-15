@@ -71,5 +71,11 @@
   },
   "rebootScheduleNoScheduleOption": {
     "message": "Belirtilmemiş"
+  },
+  "tracerouteViaLabel": {
+    "message": "Arayüzü kullanma"
+  },
+  "tracerouteViaAnyOption": {
+    "message": "Herhangi bir arayüz"
   }
 }

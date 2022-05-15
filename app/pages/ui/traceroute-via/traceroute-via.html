@@ -1,0 +1,13 @@
+<div
+    class="traceroute-via"
+    ng-controller="$root.TracerouteViaController as vm"
+>
+    <ndm-selectbox2
+        ng-show="vm.pageController.tools.tool === 'traceroute'"
+        label="{{ vm.l10n.viaInterfaceLabel }}"
+        name="viaInterface"
+        value="vm.viaInterface"
+        options="vm.viaInterfaceOptions"
+    >
+    </ndm-selectbox2>
+</div>

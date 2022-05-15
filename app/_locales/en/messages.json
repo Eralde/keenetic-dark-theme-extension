@@ -272,5 +272,11 @@
   },
   "rebootScheduleNoScheduleOption": {
     "message": "Not set"
+  },
+  "tracerouteViaLabel": {
+    "message": "Via interface"
+  },
+  "tracerouteViaAnyOption": {
+    "message": "Any"
   }
 }
