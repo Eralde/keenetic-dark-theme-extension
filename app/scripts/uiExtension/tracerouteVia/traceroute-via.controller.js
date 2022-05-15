@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import {logWarning} from '../../lib/log';
 import {getAncestorScopeProperty, getAngularService, onLanguageChange} from '../../lib/ndmUtils';
 import {getL10n} from '../../lib/l10nUtils';
+import {SHOW_INTERFACE} from "../../lib/constants";
 
 const $timeout = getAngularService('$timeout');
 const router = getAngularService('router');
@@ -106,7 +107,11 @@ export function TracerouteViaController() {
     onLanguageChange(() => updateL10n());
 
     const updateShowInterfaceData = () => {
-        router.cached('show.interface').then((showInterfaceData) => {
+        const promise$ = _.has(router, 'cached')
+            ? router.cached(SHOW_INTERFACE)
+            : router.get(SHOW_INTERFACE.replace(/\./g,'/'));
+
+        promise$.then((showInterfaceData) => {
             vm.showInterfaceData = showInterfaceData;
 
             updateInterfaceOptions(vm.showInterfaceData);

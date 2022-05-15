@@ -159,12 +159,11 @@ export const injectUiExtensions = () => {
     const ndmVersion = _.get(window, 'NDM.version', '');
     const ndwBranch = ndmVersion.substr(0, 3);
 
-    if (ndmUtils.is3xVersion(ndwBranch)) {
-        tracerouteViaInterfaceExtension.onInit();
-
-        if (ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])) {
-            pointToPointSection.onInit();
-        }
+    if (
+        ndmUtils.is3xVersion(ndwBranch)
+        && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
+    ) {
+        pointToPointSection.onInit();
     }
 
     $rootScope.kdte.ndwBranch = ndwBranch;
@@ -175,6 +174,7 @@ export const injectUiExtensions = () => {
     routesToolbarExtension.onInit();
     addDeltaSandbox.onInit();
     rebootSchedule.onInit();
+    tracerouteViaInterfaceExtension.onInit(ndwBranch);
 
     /** END of UI extensions initialization */
 
