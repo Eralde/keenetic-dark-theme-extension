@@ -62,6 +62,9 @@
     <div
         ng-if="vm.subnetsList.length > 0"
         class="ip-lookup__toolbar"
+        ng-class="{
+          'ip-lookup__toolbar--2_x': vm.is2xFirmware
+        }"
     >
       <div class="ip-lookup__toolbar-label">
         {{ vm.l10n.nslookupCreateRouteLabel }}

@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import {getAngularService, is2xVersion} from '../../lib/ndmUtils';
 import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
+import * as ndmUtils from '../../lib/ndmUtils';
 
 export function RoutesImportPopupController() {
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));
@@ -20,11 +20,11 @@ export function RoutesImportPopupController() {
         RELOAD_ROUTES,
     } = routesToolsService.EVENTS;
 
-    const utils = getAngularService('utils');
-    const $rootScope = getAngularService('$rootScope');
-    const interfaces = getAngularService('interfaces');
-    const staticRoutesHelperService = getAngularService('staticRoutesHelperService');
-    const routesService = getAngularService('routesService');
+    const utils = ndmUtils.getAngularService('utils');
+    const $rootScope = ndmUtils.getAngularService('$rootScope');
+    const interfaces = ndmUtils.getAngularService('interfaces');
+    const staticRoutesHelperService = ndmUtils.getAngularService('staticRoutesHelperService');
+    const routesService = ndmUtils.getAngularService('routesService');
 
     let ANY_INTERFACE_OPTION,
         DEFAULT_ROUTE;
@@ -53,7 +53,7 @@ export function RoutesImportPopupController() {
     vm.interfaceReplacements = {};
     vm.interfaceIdToLabelMap = {};
 
-    vm.is2xFirmware = is2xVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
+    vm.is2xFirmware = ndmUtils.is2xVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
 
     vm.l10n = {};
 

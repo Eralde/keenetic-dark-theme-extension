@@ -1,8 +1,8 @@
+import * as _ from 'lodash';
 import * as ndmUtils from '../../lib/ndmUtils';
 import {routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
-import {onLanguageChange} from '../../lib/ndmUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.routes-ip-lookup';
 
@@ -19,6 +19,7 @@ export function IpLookupController() {
 
     const $scope = element.scope();
     const notification = ndmUtils.getAngularService('notification');
+    const $rootScope = ndmUtils.getAngularService('$rootScope');
 
     const pageController = ndmUtils.getAncestorScopeProperty($scope, 'SRC');
     const {routesTable} = pageController;
@@ -42,7 +43,7 @@ export function IpLookupController() {
     };
 
     updateL10n();
-    onLanguageChange(updateL10n);
+    ndmUtils.onLanguageChange(updateL10n);
 
     vm.domain = '';
     vm.isDomainValid = false;
@@ -51,6 +52,8 @@ export function IpLookupController() {
     vm.subnetsList = [];
     vm.isLookupResultEmpty = false;
     vm.isUiLocked = false;
+
+    vm.is2xFirmware = ndmUtils.is2xVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
 
     vm.lockUi = () => {
         vm.isUiLocked = true;
