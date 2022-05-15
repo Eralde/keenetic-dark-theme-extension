@@ -162,6 +162,7 @@ export const injectUiExtensions = () => {
         pointToPointSection.onInit();
     }
 
+    $rootScope.kdte.ndwBranch = ndwBranch;
     $rootScope.kdte.ifInputFilterComponentAvailable = ndmUtils.is3xVersion(ndwBranch);
 
     deviceListFilters.onInit();

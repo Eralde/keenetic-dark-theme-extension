@@ -5,7 +5,7 @@
     <ndm-popup
         is-visible="true"
         ng-if="vm.isVisible"
-        class="routes-import-popup__popup"
+        class="routes-import-popup__popup {{ vm.is2xFirmware ? 'routes-import-popup__popup--2_x' : '' }}"
         close="vm.close"
         header-title="{{ vm.l10n.popupHeader }}"
     >
@@ -97,6 +97,7 @@
         <ndm-control-footer
             prefix="routesImportPopup"
             is-visible="true"
+            is-popup="true"
             save="vm.importRoutes"
             cancel="vm.close"
             save-label="{{ vm.l10n.importBtnLabel }}"

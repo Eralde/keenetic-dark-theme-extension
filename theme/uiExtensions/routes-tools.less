@@ -28,7 +28,13 @@
 .ip-lookup {
     .__flex-row();
 
+    align-items: flex-start;
+
     &__label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        min-height: 40px;
         margin-right: @new-gap-sm;
     }
 
@@ -79,6 +85,17 @@
             &__label {
                 margin-right: @new-gap-sm;
             }
+        }
+    }
+
+
+    &__popup--2_x {
+        .form__cell {
+            height: auto !important;
+        }
+
+        .interface-replacement-row {
+            align-items: center;
         }
     }
 }

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {getAngularService} from '../../lib/ndmUtils';
+import {getAngularService, is2xVersion} from '../../lib/ndmUtils';
 import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
@@ -52,6 +52,8 @@ export function RoutesImportPopupController() {
     vm.deviceRoutesList = [];
     vm.interfaceReplacements = {};
     vm.interfaceIdToLabelMap = {};
+
+    vm.is2xFirmware = is2xVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
 
     vm.l10n = {};
 
