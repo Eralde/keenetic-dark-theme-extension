@@ -39,3 +39,59 @@
 .proxy-editor__loader {
     background-color: @dt__grey4;
 }
+
+.ip46-section {
+    .isp-list {
+        &__item {
+            background-color: @dt__grey4;
+
+            &--selected {
+                background-color: @dt__grey7;
+            }
+        }
+
+        &__header {
+            color: @dt__white-text;
+            background-color: @dt__grey6;
+            border-style: solid;
+            border-width: 1px 0 1px 1px;
+            border-color: @dt__grey9;
+        }
+
+        &__contents {
+            border-color: @dt__grey9;
+        }
+    }
+
+    .ipv4-provisioning__table-wrapper table {
+        .__mixin__no-box-shadow-table();
+    }
+
+    .ipv4-provisioning-table {
+        thead tr {
+            border-color: @dt__grey9;
+            border-left-width: 0;
+        }
+
+        tbody tr {
+            border-color: @dt__grey9;
+
+            &:hover {
+                background-color: @dt__grey7;
+            }
+        }
+
+        &--empty {
+            tbody tr:hover {
+                background-color: @dt__grey4;
+            }
+        }
+    }
+}
+
+.ip46-edit-connection,
+.ip46-add-connection {
+    &__modal-footer {
+        background-color: inherit;
+    }
+}
