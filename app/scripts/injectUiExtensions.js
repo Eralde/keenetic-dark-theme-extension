@@ -8,7 +8,7 @@ import {interceptMouseover,} from './lib/domUtils';
 import {logWarning} from './lib/log';
 import {getSwitchportsTemplateChunks} from './lib/ngTemplate';
 import {l10n} from './lib/l10n';
-import {isCableDiagnosticsImplemented, onLanguageChange} from './lib/ndmUtils';
+import {getAngularService, isCableDiagnosticsImplemented, onLanguageChange} from './lib/ndmUtils';
 import {
     DEVICES_LIST_STATE,
     FLAGS_CHANGE_EVENT,
@@ -44,6 +44,7 @@ import {rebootSchedule} from './uiExtension/rebootSchedule';
 
 import {tracerouteViaInterfaceExtension} from './uiExtension/tracerouteViaInterface';
 import {TracerouteViaController} from './uiExtension/tracerouteVia/traceroute-via.controller';
+import {addKvasUiPage} from "./uiExtension/kvasUi";
 
 export const injectUiExtensions = () => {
     let $state;
@@ -58,6 +59,8 @@ export const injectUiExtensions = () => {
     const $rootScope = ndmUtils.getAngularService('$rootScope');
     const $transitions = ndmUtils.getAngularService('$transitions');
     const utils = ndmUtils.getAngularService('utils');
+
+    const $stateRegistry = ndmUtils.getAngularService('$stateRegistry');
 
     // We assign additional controllers directly to the $rootScope,
     // otherwise they will not be accessible inside additional templates
@@ -275,6 +278,14 @@ export const injectUiExtensions = () => {
                         );
                     }
 
+                    const addKvasUiPage = _.get(
+                        payload,
+                        CONSTANTS.ADD_KVAS_UI_PAGE,
+                        CONSTANTS.STORAGE_DEFAULTS[CONSTANTS.ADD_KVAS_UI_PAGE],
+                    );
+
+                    sharedData.set(CONSTANTS.ADD_KVAS_UI_PAGE, addKvasUiPage);
+
                     break;
             }
         },
@@ -420,6 +431,15 @@ export const injectUiExtensions = () => {
         );
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');
+
+        if (sharedData.get(CONSTANTS.ADD_KVAS_UI_PAGE)) {
+            addKvasUiPage.onAuth();
+
+            // const CONSTANT = getAngularService('CONSTANT');
+            //
+            // $rootScope.$broadcast(CONSTANT.events.REFRESH_MENU);
+            // setTimeout(() => $state.go('controlPanel.kvas'), 1000);
+        }
     });
 };
 

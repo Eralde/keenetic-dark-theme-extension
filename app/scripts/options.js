@@ -10,6 +10,7 @@ import {
     DASHBOARD_SWITCHPORT_TEMPLATE_ORIGINAL_KEY,
     REPLACE_TEXTAREA_CURSOR_STORAGE_KEY,
     SHOW_RSSI_VALUE,
+    ADD_KVAS_UI_PAGE,
     STORAGE_DEFAULTS,
     SWITCHPORT_TEMPLATE_DATA_KEY,
     SWITCHPORT_TEMPLATE_PROP,
@@ -338,6 +339,7 @@ async function updateUI() {
 
     const replaceTextareaCursorEl = document.querySelector('#replaceTextareaCursor');
     const showRssiValue = document.querySelector('#showRssiValue');
+    const addKvasUiPage = document.querySelector('#addKvasUiPage');
 
     replaceTextareaCursorEl.checked = _.get(
         data,
@@ -350,6 +352,12 @@ async function updateUI() {
         SHOW_RSSI_VALUE,
         STORAGE_DEFAULTS[SHOW_RSSI_VALUE],
     );
+
+    addKvasUiPage.checked = _.get(
+        data,
+        ADD_KVAS_UI_PAGE,
+        STORAGE_DEFAULTS[ADD_KVAS_UI_PAGE],
+    );
 }
 
 async function updateReplaceTextareaCursorValue(event) {
@@ -358,6 +366,10 @@ async function updateReplaceTextareaCursorValue(event) {
 
 async function updateShowRssiValue(event) {
     await browser.storage.local.set({[SHOW_RSSI_VALUE]: event.target.checked});
+}
+
+async function updateAddKvasUiPage(event) {
+    await browser.storage.local.set({[ADD_KVAS_UI_PAGE]: event.target.checked});
 }
 
 async function updateShortcut() {
@@ -439,6 +451,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelector('#replaceTextareaCursor').addEventListener('change', updateReplaceTextareaCursorValue);
     document.querySelector('#showRssiValue').addEventListener('change', updateShowRssiValue);
+    document.querySelector('#addKvasUiPage').addEventListener('change', updateAddKvasUiPage);
 
     document.querySelector('#clearStorage').addEventListener('click', clearStorage);
 });
