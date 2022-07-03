@@ -1,0 +1,36 @@
+@import (reference) "../../../__mixins__";
+@import (reference) "../../../__vars__";
+
+.page-wifi-analyzer__cell--unknown-value,
+.wifi-utilization__cell--unknown-value {
+    background-color: @dt__grey6;
+}
+
+.page-wifi-analyzer__content {
+    border-color: @dt__grey8;
+}
+
+.wifi-utilization__legend-item,
+.ndm-wifi-clients-tooltip__count-title {
+    color: @dt__white-text;
+}
+
+.ndm-wifi-clients-tooltip__count {
+    .body-text();
+}
+
+.ndm-wifi-utilization-hint,
+.ndm-wifi-analyzer-hint {
+    .__mixin__main-text-container();
+}
+
+.ndm-wifi-clients-tooltip__tooltip {
+    .ndm-tooltip__content {
+        .__mixin__main-text-container();
+    }
+}
+
+div.wifi-utilization__cell--loading,
+div.page-wifi-analyzer__channel-row--loading {
+    background: @dt__grey8 !important;
+}
