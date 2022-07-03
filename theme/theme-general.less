@@ -87,22 +87,15 @@ hr.hr-light-blue {
     background-color: @dt__grey9;
 }
 
-.accordion-link,
 .external-link,
 .ref-link,
 .action-link,
 .text-link {
-    color: lighten(@dt__blue-text, 10%) !important;
-
-    &:focus {
-        .__mixin__box-shadow-on-focus();
-    }
+    .__mixin__link();
 }
 
-.accordion-link:after {
-    background: linear-gradient(to right, @dt__blue-text 0, @dt__blue-text 60%, transparent 60%);
-    background-size: 10px 1px;
-    background-repeat: repeat-x;
+.accordion-link {
+    .__mixin__accordion-link();
 }
 
 .icon.icon--indicator-offline {

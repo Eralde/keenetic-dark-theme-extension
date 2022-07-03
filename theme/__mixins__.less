@@ -170,3 +170,21 @@
     flex-direction: @direction;
     align-items: @align-items;
 }
+
+.__mixin__link() {
+    color: lighten(@dt__blue-text, 10%) !important;
+
+    &:focus {
+        .__mixin__box-shadow-on-focus();
+    }
+}
+
+.__mixin__accordion-link() {
+    .__mixin__link();
+
+    &:after {
+        background: linear-gradient(to right, @dt__blue-text 0, @dt__blue-text 60%, transparent 60%);
+        background-size: 10px 1px;
+        background-repeat: repeat-x;
+    }
+}
