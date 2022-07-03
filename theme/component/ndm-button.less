@@ -2,11 +2,19 @@
 @import (reference) "../__ndwVars__";
 @import (reference) "../__mixins__";
 
+@button-border-color: darken(@blue-main, 10%);
+
+.btn {
+    border-color: @button-border-color;
+}
+
 .ndm-button, // buttons
 .button,
 .btn.btn--primary:disabled:not(.btn--loading),
 button {
     .__mixin__main-text-container;
+
+    border-color: @button-border-color;
 
     &:hover {
         border-color: @dt__cyan-blue-text;
