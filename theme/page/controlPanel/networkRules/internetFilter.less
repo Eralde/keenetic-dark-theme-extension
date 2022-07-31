@@ -33,6 +33,7 @@
             }
         }
 
+        .ndm-profile-editor-form,
         .ndm-name-editor-form,
         .unsaved-new-dns-profile {
             background-color: @dt__grey6;
@@ -48,13 +49,21 @@
             &__toolbar__button {
                 .__mixin__toolbar-button();
             }
+
+            .dns-profile__transit-requests-status {
+                color: @dt__gray-text;
+            }
         }
 
         .ndm-name-server-card {
             background-color: @dt__grey5;
+        }
 
-            &--FROM_ISP {
-                background-color: darken(mix(@dt__grey5, @yellow-light, 75%), 10%);
+        .ndm-isp-name-servers-card {
+            background-color: darken(mix(@dt__grey5, @yellow-light, 75%), 10%);
+
+            &--disabled {
+                background-color: darken(mix(@dt__grey5, @yellow-light, 75%), 20%);
             }
         }
 
