@@ -302,5 +302,5 @@ export const SHOW_IP_HOTSPOT = 'show.ip.hotspot';
 export const IP_ROUTE = 'ip.route';
 export const SHOW_RC_IP_ROUTE = 'show.rc.ip.route';
 
-export const SYSTEM_REBOOT_SCHEDULE = 'system.reboot.schedule';
+export const SYSTEM_REBOOT = 'system.reboot';
 export const SHOW_RC_SYSTEM_REBOOT = 'show.rc.system.reboot';
