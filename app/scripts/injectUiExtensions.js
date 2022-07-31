@@ -41,7 +41,7 @@ import {IpLookupController} from './uiExtension/routesToolbar/ip-lookup.controll
 import {RoutesToolbarController} from './uiExtension/routesToolbar/routes-toolbar.controller';
 import {RoutesImportPopupController} from './uiExtension/routesToolbar/routes-import-popup.controller';
 import {rebootSchedule} from './uiExtension/rebootSchedule';
-
+import {dfsChannelsDetails} from './uiExtension/dfsChannelsDetails';
 import {tracerouteViaInterfaceExtension} from './uiExtension/tracerouteViaInterface';
 import {TracerouteViaController} from './uiExtension/tracerouteVia/traceroute-via.controller';
 
@@ -417,6 +417,13 @@ export const injectUiExtensions = () => {
             CONSTANTS.DASHBOARD_STATE,
             overrideDeltaL10n.onLoad,
             overrideDeltaL10n.onDestroy,
+        );
+
+        /* Make Wi-Fi channels selectbox details transparent for non-DFS channels */
+        ndmUtils.addUiExtension(
+            CONSTANTS.WIFI_SETTINGS_STATE,
+            dfsChannelsDetails.onLoad,
+            dfsChannelsDetails.onDestroy,
         );
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');

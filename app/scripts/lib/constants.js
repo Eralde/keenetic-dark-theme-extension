@@ -139,6 +139,7 @@ export const POLICIES_STATE = 'controlPanel.policies';
 export const CONTROL_SYSTEM_STATE = 'controlPanel.system';
 export const DIAGNOSTICS_STATE = 'controlPanel.diagnostics';
 export const DIAGNOSTICS_LOG_STATE = 'controlPanel.diagnostics.log';
+export const WIFI_SETTINGS_STATE = 'controlPanel.segments.WiFi';
 export const WEBCLI_STATE = 'cli';
 export const LOGIN_STATE = 'login';
 
