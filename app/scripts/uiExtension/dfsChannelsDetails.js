@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {getElementController, getElementScope} from '../lib/ndmUtils';
+import {NDM_LAYOUT_THEME_CLASS} from '../lib/constants';
 
 const WIFI_SETTINGS_SELECTOR = '[ng-controller="WifiSettingsController as WSC"]';
 const WIFI_SETTINGS_POPUP_SELECTOR = '.segment-advanced-wifi-settings-popup';
@@ -9,6 +10,15 @@ const watchers = {
     channelSelectboxVisibility: null,
     channelSelectboxDetails: null,
 };
+
+const isDarkThemeEnabled = () => {
+    const ndmLayout = document.querySelector('.ndm-layout');
+    const classList = ndmLayout
+        ? ndmLayout.getAttribute('class')
+        : '';
+
+    return classList.includes(NDM_LAYOUT_THEME_CLASS)
+}
 
 const revertChangesToChannelSelectbox = () => {
     _.forEach(watchers, (value, key) => {
@@ -40,6 +50,12 @@ const overrideChannelSelectbox = async () => {
         }
 
         const debouncedDetailsCallback = _.debounce((value) => {
+            if (!isDarkThemeEnabled()) {
+                channelSelectboxDetailsElement.style['background-color'] = '';
+
+                return;
+            }
+
             channelSelectboxDetailsElement.style['background-color'] = value
                 ? '#606060'
                 : 'transparent';
