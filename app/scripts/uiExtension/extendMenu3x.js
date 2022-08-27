@@ -30,8 +30,12 @@ import {
 } from '../lib/domUtils';
 
 import {
-    sharedData
+    sharedData,
 } from '../lib/state';
+
+import {
+    getL10n,
+} from '../lib/l10nUtils';
 
 /*
  * This UI extension adds some items to the web UI side menu.
@@ -58,7 +62,7 @@ const clearExtendMenuTimeout = () => {
 };
 
 const getDslDiagnosticsLinkTitle = () => {
-    return `${utils.getTranslation('menu.diagnostics')} -> ${utils.getTranslation('diagnostics.tabs.dsl')}`;
+    return getL10n('DSLDiagnosticsMenuItem');
 }
 
 export const extendMenu3x = () => {

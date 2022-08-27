@@ -66,6 +66,9 @@
   "HECErrorsInterleaved": {
     "message": "Ошибки HEC"
   },
+  "DSLDiagnosticsMenuItem": {
+    "message": "Статистика DSL"
+  },
   "RoutesToolbarExportSelectedBtnLabel": {
     "message": "Экспортировать выбранные"
   },
