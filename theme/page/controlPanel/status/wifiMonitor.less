@@ -6,6 +6,12 @@
     background-color: @dt__grey6;
 }
 
+.wifi-utilization {
+    .external-link--standalone::after {
+        filter: brightness(1.5);
+    }
+}
+
 .page-wifi-analyzer__content {
     border-color: @dt__grey8;
 }
@@ -24,6 +30,7 @@
     .__mixin__main-text-container();
 }
 
+.ndm-wifi-utilization-table-tooltip,
 .ndm-wifi-clients-tooltip__tooltip {
     .ndm-tooltip__content {
         .__mixin__main-text-container();
@@ -31,6 +38,10 @@
 }
 
 .wifi-utilization__time-label {
+    color: @dt__white-text;
+}
+
+.wifi-utilization__description {
     color: @dt__white-text;
 }
 
