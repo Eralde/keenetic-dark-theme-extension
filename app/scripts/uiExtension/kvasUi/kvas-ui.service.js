@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
+import {RESPONSE_STATUS} from "./kvas-ui.constants";
 
 const KVAS_BACKEND_SETTINGS = 'KDTE_KVAS_BACKEND_SETTINGS';
 const KVAS_BACKEND_DEFAULTS = {
@@ -56,14 +57,14 @@ export const kvasUiService = (function() {
         localStorage.setItem(KVAS_BACKEND_SETTINGS, JSON.stringify(updatedData));
     };
 
-    const getBackendConnector = ({address, login, password}) => {
+    const getBackendConnector = ({address, username, password}) => {
         const headers = {
             'Content-Type': 'application/json',
             'mode': 'no-cors',
         };
 
-        if (login && password) {
-            const credentials = btoa(`${login}:${password}`);
+        if (username && password) {
+            const credentials = btoa(`${username}:${password}`);
 
             headers['Authorization'] = `Basic ${credentials}`;
         }
@@ -76,7 +77,13 @@ export const kvasUiService = (function() {
                 : {headers, method};
 
             return fetch(`${address}/${resource}`, options)
-                .then(response => response.json())
+                .then(response => {
+                    if (response.code === 401) {
+                        throw new Error(RESPONSE_STATUS.AUTH_FAILED);
+                    }
+
+                    return response.json();
+                });
         }
 
         return {

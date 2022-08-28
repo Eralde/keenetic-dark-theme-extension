@@ -1,0 +1,3 @@
+export const RESPONSE_STATUS = {
+    AUTH_FAILED: 'AUTH_FAILED',
+};

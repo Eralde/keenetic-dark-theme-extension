@@ -8,48 +8,76 @@
         <br/>
         <br/>
 
+        {{ vm.settings | json }}
+
         <form name="vm.settingsForm">
             <ndm-input
                 name="kvasBackendAddress"
-                model="vm.settings.address"
+                label="{{ vm.l10n.backend.address }}"
+                model="vm.backendConnection.address"
                 validation="address"
                 max-length="256"
             >
             </ndm-input>
 
             <ndm-input
-                name="kvasBackendLogin"
-                model="vm.settings.login"
+                name="kvasBackendUsername"
+                label="{{ vm.l10n.backend.username }}"
+                model="vm.backendConnection.username"
                 validation="login"
             >
             </ndm-input>
 
             <ndm-input
                 name="kvasBackendPassword"
-                model="vm.settings.password"
+                label="{{ vm.l10n.backend.password }}"
+                model="vm.backendConnection.password"
+                password="true"
                 validation="password"
             >
             </ndm-input>
 
             <ndm-button
                 on-click="vm.testBackendConnection"
-                label="{{vm.l10n.testBackendConnectionBtn}}"
+                label="{{ vm.l10n.backend.testConnectionBtn }}"
             >
             </ndm-button>
         </form>
     </div>
 
-    <div class="unblock-list">
-        <div
-            ng-repeat="item in vm.list"
-            class="unblock-list__item"
-        >
-            {{ item }}
-        </div>
-    </div>
+    <br/>
 
     <pre>
         {{ vm.latestResponse | json }}
     </pre>
+
+    <br/>
+    <br/>
+
+    <div class="page-kvas-ui__unblock-list unblock-list">
+        <div class="unblock-list__toolbar">
+            <ndm-button
+                on-click="vm.refreshUnblockList"
+                label="{{vm.l10n.unblockList.refresh }}"
+            >
+            </ndm-button>
+
+            <ndm-button
+                on-click="vm.addHostToUnblock"
+                label="{{vm.l10n.unblockList.addHost }}"
+            >
+            </ndm-button>
+        </div>
+
+
+        <div class="unblock-list">
+            <div
+                ng-repeat="item in vm.list"
+                class="unblock-list__item"
+            >
+                {{ item }}
+            </div>
+        </div>
+    </div>
 
 </ndm-page>

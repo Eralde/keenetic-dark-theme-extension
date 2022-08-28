@@ -442,10 +442,10 @@ export const injectUiExtensions = () => {
         if (sharedData.get(CONSTANTS.ADD_KVAS_UI_PAGE)) {
             addKvasUiPage.onAuth();
 
-            // const CONSTANT = getAngularService('CONSTANT');
-            //
-            // $rootScope.$broadcast(CONSTANT.events.REFRESH_MENU);
-            // setTimeout(() => $state.go('controlPanel.kvas'), 1000);
+            const CONSTANT = getAngularService('CONSTANT');
+
+            $rootScope.$broadcast(CONSTANT.events.REFRESH_MENU);
+            setTimeout(() => $state.go('controlPanel.kvas'), 1000);
         }
     });
 };
