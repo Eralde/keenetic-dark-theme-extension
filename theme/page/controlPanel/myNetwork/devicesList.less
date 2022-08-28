@@ -5,6 +5,7 @@
     .table-devices-list {
         .__mixin__no-box-shadow-table();
 
+        td.table__col--5 div.traffic-priority,
         .via-mws-msg {
             color: @dt__grey9;
         }
@@ -17,5 +18,11 @@
 
     .__hint-text {
         color: @dt__grey9;
+    }
+
+    &__device-popup {
+        &__loader {
+            background-color: @dt__grey4;
+        }
     }
 }

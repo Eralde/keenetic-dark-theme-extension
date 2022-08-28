@@ -139,6 +139,7 @@ export const POLICIES_STATE = 'controlPanel.policies';
 export const CONTROL_SYSTEM_STATE = 'controlPanel.system';
 export const DIAGNOSTICS_STATE = 'controlPanel.diagnostics';
 export const DIAGNOSTICS_LOG_STATE = 'controlPanel.diagnostics.log';
+export const WIFI_SETTINGS_STATE = 'controlPanel.segments.WiFi';
 export const WEBCLI_STATE = 'cli';
 export const LOGIN_STATE = 'login';
 
@@ -304,5 +305,5 @@ export const SHOW_IP_HOTSPOT = 'show.ip.hotspot';
 export const IP_ROUTE = 'ip.route';
 export const SHOW_RC_IP_ROUTE = 'show.rc.ip.route';
 
-export const SYSTEM_REBOOT_SCHEDULE = 'system.reboot.schedule';
+export const SYSTEM_REBOOT = 'system.reboot';
 export const SHOW_RC_SYSTEM_REBOOT = 'show.rc.system.reboot';

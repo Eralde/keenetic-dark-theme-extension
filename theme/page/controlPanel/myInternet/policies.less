@@ -49,8 +49,12 @@
         color: @dt__white-text !important;
         background: @dt__grey5 !important;
 
+        &--multipath-mode {
+            color: @dt__gray-text;
+        }
+
         &--selected {
-            background-color: @dt__grey7 !important;
+            background-color: @dt__grey6 !important;
         }
 
         &--droppable {
@@ -62,10 +66,15 @@
         }
     }
 
+    .policies-list__rename-policy-icon,
+    .policies-list__delete-policy-icon {
+        .__mixin__toolbar-button();
+    }
+
     .policy-name-editor {
         padding-right: 5px;
         left: 0;
-        background: @dt__grey5 !important;
+        background: @dt__grey6 !important;
     }
 
     .policy-editor-controls__btn-label {
@@ -96,6 +105,11 @@
 
         th.table__col-1 {
             z-index: 1 !important;
+        }
+
+        .icon.icon--txbytes-arrow,
+        .icon.icon--rxbytes-arrow {
+            .__mixin__convert-color-to-dt__white-text();
         }
     }
 
@@ -168,5 +182,11 @@
         .sb-toggle:focus {
             .__mixin__box-shadow-on-focus();
         }
+    }
+}
+
+.policies-rate-limit-modal {
+    &__modal-footer {
+        background-color: inherit;
     }
 }

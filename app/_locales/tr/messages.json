@@ -66,6 +66,9 @@
   "HECErrorsInterleaved": {
     "message": "HEC hataları"
   },
+  "DSLDiagnosticsMenuItem": {
+    "message": "DSL İstatistikleri"
+  },
   "rebootScheduleLabel": {
     "message": "Yeniden başlatma programı"
   },
