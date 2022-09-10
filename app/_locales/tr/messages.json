@@ -80,5 +80,8 @@
   },
   "tracerouteViaAnyOption": {
     "message": "Herhangi bir arayüz"
+  },
+  "deviceListsPrivateMac": {
+    "message": "Bu cihaz Özel Wi-Fi MAC (random MAC) kullanıyor"
   }
 }

@@ -1,0 +1,25 @@
+@import (reference) "../__mixins__";
+@import (reference) "../__ndwVars__";
+
+.page-devices-list {
+    .table-ip .table__note {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .private-mac-mark {
+        @size: 12px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 3px;
+        color: @white;
+        font-size: 11px;
+        background-color: @blue-background;
+        border-radius: @size / 2;
+        width: @size;
+        height: @size;
+    }
+}
