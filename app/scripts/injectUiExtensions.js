@@ -182,7 +182,7 @@ export const injectUiExtensions = () => {
 
     /** END of UI extensions initialization */
 
-    let __TAG = '';
+    $rootScope.kdte.servicetag = '';
 
     let unbinder = null;
 
@@ -293,8 +293,8 @@ export const injectUiExtensions = () => {
     );
 
     const initFlags = () => {
-        if (__TAG !== CONSTANTS.NO_TAG) {
-            flags.init(__TAG);
+        if ($rootScope.kdte.servicetag !== CONSTANTS.NO_TAG) {
+            flags.init($rootScope.kdte.servicetag);
 
             if (unbinder) {
                 unbinder();
@@ -302,7 +302,7 @@ export const injectUiExtensions = () => {
         } else if (!unbinder) {
             unbinder = $transitions.onSuccess({}, () => {
                 ndmUtils.getServiceTag().then(tag => {
-                    __TAG = tag;
+                    $rootScope.kdte.servicetag = tag;
 
                     initFlags();
                 });
@@ -311,7 +311,7 @@ export const injectUiExtensions = () => {
     }
 
     ndmUtils.waitUntilAuthenticated().then(() => ndmUtils.ensureServiceTag()).then((tag) => {
-        __TAG = tag;
+        $rootScope.kdte.servicetag = tag;
         initFlags();
 
         $rootScope.kdte.flags = flags.getAll();
