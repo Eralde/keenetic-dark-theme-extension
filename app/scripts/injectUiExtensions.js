@@ -30,6 +30,7 @@ import {overrideDeltaL10n} from './uiExtension/componentsListDeltaDashboard';
 import {addDeltaSandbox} from './uiExtension/componentsListDelta';
 import {extendedDslStat} from './uiExtension/extendDslStat';
 import {additionalWolButton} from './uiExtension/additionalWolButton';
+import {markPrivateMacs} from './uiExtension/markPrivateMacs';
 import {rssiValueInConnectionInfo} from './uiExtension/rssiValueInConnectionInfo';
 
 import {pointToPointSection} from './uiExtension/pointToPointTunnelsSection';
@@ -435,6 +436,12 @@ export const injectUiExtensions = () => {
             CONSTANTS.WIFI_SETTINGS_STATE,
             dfsChannelsDetails.onLoad,
             dfsChannelsDetails.onDestroy,
+        );
+
+        /* Mark private MACs */
+        ndmUtils.addUiExtension(
+            CONSTANTS.DEVICES_LIST_STATE,
+            markPrivateMacs.onLoad,
         );
 
         window.postMessage({action: CONSTANTS.INJECTED_JS_INITIALIZED, payload: true}, '*');

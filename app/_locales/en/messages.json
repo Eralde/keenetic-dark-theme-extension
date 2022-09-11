@@ -281,5 +281,8 @@
   },
   "tracerouteViaAnyOption": {
     "message": "Any"
+  },
+  "deviceListsPrivateMac": {
+    "message": "This device uses a private Wi-Fi MAC address"
   }
 }
