@@ -1,7 +1,7 @@
 import * as ndmUtils from '../lib/ndmUtils';
 import kvasUiPageTemplate from '../../pages/ui/kvas-ui/kvas-ui.html';
 import {getAngularService} from '../lib/ndmUtils';
-import {PointToPointController} from './kvasUi/kvas-ui.controller';
+import {KvasUiController} from './kvasUi/kvas-ui.controller';
 
 const menuService = getAngularService('menuService');
 const $stateRegistry = ndmUtils.getAngularService('$stateRegistry');
@@ -19,7 +19,7 @@ const addKvasUiPageState = () => {
             templateUrl: 'app/page/controlPanel/controlPanel.html',
             'cp-main': {
                 template: kvasUiPageTemplate,
-                controller: PointToPointController,
+                controller: KvasUiController,
                 controllerAs: 'vm',
             },
         },

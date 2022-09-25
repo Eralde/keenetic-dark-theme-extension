@@ -45,7 +45,7 @@ import {rebootSchedule} from './uiExtension/rebootSchedule';
 import {dfsChannelsDetails} from './uiExtension/dfsChannelsDetails';
 import {tracerouteViaInterfaceExtension} from './uiExtension/tracerouteViaInterface';
 import {TracerouteViaController} from './uiExtension/tracerouteVia/traceroute-via.controller';
-import {addKvasUiPage} from "./uiExtension/kvasUi";
+import {addKvasUiPage} from './uiExtension/kvasUi';
 
 export const injectUiExtensions = () => {
     let $state;

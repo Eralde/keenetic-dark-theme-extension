@@ -4,10 +4,11 @@ import {kvasUiService} from './kvas-ui.service';
 import {KVAS_UI_L10N, UI_ERROR} from './kvas-ui.constants';
 
 // Do not reference any services as the 'controller' parameters -- this will result in an injector error
-export function PointToPointController() {
+export function KvasUiController() {
     const vm = this;
 
     const $q = getAngularService('$q');
+    const utils = getAngularService('utils');
     const notification = getAngularService('notification');
 
     vm.latestResponse = {};
@@ -67,7 +68,7 @@ export function PointToPointController() {
                         self.isConfigured = false;
                     },
                 );
-        }
+        },
     };
 
     vm.unblockList = {
@@ -80,8 +81,6 @@ export function PointToPointController() {
             return kvasUiService.getUnblockList(vm.connector)
                 .then((response) => {
                     vm.latestResponse = response;
-
-                    console.log(response);
 
                     vm.list = _.get(response, 'payload.list', []);
                 });
@@ -104,6 +103,8 @@ export function PointToPointController() {
 
             vm.unblockList.list = vm.unblockList.list
                 .filter((item, _index) => index !== _index);
+
+            utils.forceScopeDigest($scope);
         },
     };
 
