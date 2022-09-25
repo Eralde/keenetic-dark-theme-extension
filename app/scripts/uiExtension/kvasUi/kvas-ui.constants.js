@@ -1,5 +1,12 @@
 export const RESPONSE_STATUS = {
     AUTH_FAILED: 'AUTH_FAILED',
+    MALFORMED_RESPONSE: 'MALFORMED_RESPONSE',
+    REQUEST_FAILED: 'REQUEST_FAILED',
+};
+
+export const UNBLOCK_LIST_ACTION = {
+    ADD: 'ADD',
+    REMOVE: 'REMOVE',
 };
 
 export const UI_ERROR = {

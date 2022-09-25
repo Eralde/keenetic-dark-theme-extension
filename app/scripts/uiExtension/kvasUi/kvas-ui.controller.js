@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import {forceScopeDigest, getAngularService, getNdmPageScope} from '../../lib/ndmUtils';
 import {kvasUiService} from './kvas-ui.service';
 import {KVAS_UI_L10N, UI_ERROR} from './kvas-ui.constants';
+import {RequestError} from "./kvas-ui.errors";
 
 // Do not reference any services as the 'controller' parameters-- this will result in an injector error
 export function KvasUiController() {
@@ -96,7 +97,10 @@ export function KvasUiController() {
                     return;
                 }
 
-                vm.unblockList.list.push('');
+                vm.unblockList.list = [
+                    '',
+                    ...vm.unblockList.list,
+                ];
             },
 
             removeHost: (index) => {
@@ -113,7 +117,32 @@ export function KvasUiController() {
             },
 
             save: () => {
-                console.log('saveUnblockList');
+                const self = vm.unblockList;
+
+                return vm.ui.lock()
+                    .then(() => {
+                        return kvasUiService.setUnblockList(
+                            vm.connector,
+                            self.list,
+                            self.savedList,
+                        );
+                    })
+                    .then(
+                        () => self.setPristine(),
+                        (error) => {
+                            console.log(
+                                error.response,
+                                error.response.error,
+                            );
+
+                            if (error instanceof RequestError) {
+                                notification.error(error.response.error);
+                            } else {
+                                notification.error(error);
+                            }
+                        },
+                    )
+                    .finally(() => vm.ui.unlock());
             },
 
             reset: () => {
@@ -182,6 +211,8 @@ export function KvasUiController() {
         init();
 
         $scope.$watch('vm.unblockList.list', (newValue) => {
+            console.log(newValue);
+
             if (!_.isArray(newValue)) {
                 return;
             }
@@ -190,6 +221,8 @@ export function KvasUiController() {
                 new Set(vm.unblockList.list),
                 new Set(vm.unblockList.savedList),
             );
+
+            console.log(vm.unblockList.isModified);
 
             vm.footer.updateFlags();
         });

@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
-import {RESPONSE_STATUS} from './kvas-ui.constants';
 import {NO_TAG} from '../../lib/constants';
+import {RESPONSE_STATUS, UNBLOCK_LIST_ACTION} from './kvas-ui.constants';
+import {RequestError} from './kvas-ui.errors';
 
 const KVAS_BACKEND_SETTINGS = 'KDTE_KVAS_BACKEND_SETTINGS';
 const KVAS_BACKEND_DEFAULTS = {
@@ -80,13 +81,24 @@ export const kvasUiService = (function() {
                 : {headers, method};
 
             return fetch(`${address}/${resource}`, options)
-                .then(response => {
+                .then(async response => {
                     if (response.code === 401) {
                         throw new Error(RESPONSE_STATUS.AUTH_FAILED);
                     }
 
                     return response.json();
-                });
+                })
+                .then((data) => {
+                    if (!_.has(data, 'success')) {
+                        throw new Error(RESPONSE_STATUS.MALFORMED_RESPONSE);
+                    }
+
+                    if (!data.success) {
+                        throw new RequestError(RESPONSE_STATUS.REQUEST_FAILED, data);
+                    }
+
+                    return data;
+                })
         }
 
         return {
@@ -97,7 +109,20 @@ export const kvasUiService = (function() {
     const testConnector = (connector) => connector.query('');
 
     const getUnblockList = (connector) => connector.query('unblock-list');
-    const addDomainToUnblockList = (connector, domain) => connector.query('unblock-list', 'POST', {domain});
+    const setUnblockList = (connector, newList, oldList) => {
+        const toAdd = _.difference(newList, oldList);
+        const toRemove = _.difference(oldList, newList);
+
+        return connector.query(
+            'unblock-list',
+            'POST',
+            {urls: [
+                    ...toAdd.map(url => ({url, action: UNBLOCK_LIST_ACTION.ADD})),
+                    ...toRemove.map(url => ({url, action: UNBLOCK_LIST_ACTION.REMOVE})),
+                ],
+            },
+        );
+    };
 
     return {
         readBackendSettings,
@@ -105,7 +130,8 @@ export const kvasUiService = (function() {
         getBackendConnector,
 
         testConnector,
+
         getUnblockList,
-        addDomainToUnblockList,
+        setUnblockList,
     };
 })();
