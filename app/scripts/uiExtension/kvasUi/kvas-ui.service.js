@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
-import {RESPONSE_STATUS} from "./kvas-ui.constants";
+import {RESPONSE_STATUS} from './kvas-ui.constants';
+import {NO_TAG} from '../../lib/constants';
 
 const KVAS_BACKEND_SETTINGS = 'KDTE_KVAS_BACKEND_SETTINGS';
 const KVAS_BACKEND_DEFAULTS = {
@@ -9,27 +10,29 @@ const KVAS_BACKEND_DEFAULTS = {
     password: '',
 };
 
-export const kvasUiService = (function() {
+const getServicetag = () => {
+    const $rootScope = getAngularService('$rootScope');
+    const $q = getAngularService('$q');
+    const servicetag = _.get($rootScope, 'kdte.servicetag');
     const router = getAngularService('router');
+    
+    if (servicetag && servicetag !== NO_TAG) {
+        return $q.when(servicetag);
+    }
 
-    // const credentials = btoa('foo:bar');
-    // const headers = {
-    //     'Authorization' : `Basic ${credentials}`,
-    //     'Content-Type': 'application/json',
-    // };
-    //
-    // const BASE_URL = `http://${window.location.hostname}:89`;
-    // const KVAS_BACKEND_DEFAULTS = {
-    //     address: '',
-    //     login: '',
-    //     password: '',
-    // };
+    return router.get('show/identification').then(showIdentification => {
+        return _.get(showIdentification, 'servicetag', '');
+    });
+};
 
-    let servicetag = '';
+export const kvasUiService = (function() {
+    const state = {
+        servicetag: '',
+    };
 
     const readBackendSettings = () => {
-        return router.get('show/identification').then(showIdentification => {
-            servicetag = _.get(showIdentification, 'servicetag', '');
+        return getServicetag().then(servicetag => {
+            state.servicetag = servicetag;
 
             const storedData = localStorage.getItem(KVAS_BACKEND_SETTINGS);
             const defaults = _.cloneDeep(KVAS_BACKEND_DEFAULTS);
@@ -50,7 +53,7 @@ export const kvasUiService = (function() {
 
         const updatedData = _.set(
             storedJson,
-            [servicetag],
+            [state.servicetag],
             settings,
         );
 

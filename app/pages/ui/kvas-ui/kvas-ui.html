@@ -4,17 +4,19 @@
     progress="vm.progress"
     description=" "
 >
-    <div class="backend-settings">
-        <br/>
-        <br/>
-
-        {{ vm.settings | json }}
-
-        <form name="vm.settingsForm">
+    <ndm-details
+        label-visible="{{ vm.l10n.backendSettings.hide }}"
+        label-hidden="{{ vm.l10n.backendSettings.show }}"
+        toggle-var="vm.ui.isBackendSettingsBlockExpanded"
+    >
+        <form
+            class="backend-settings"
+            name="vm.settingsForm"
+        >
             <ndm-input
                 name="kvasBackendAddress"
                 label="{{ vm.l10n.backend.address }}"
-                model="vm.backendConnection.address"
+                model="vm.backendConnection.data.address"
                 validation="address"
                 max-length="256"
             >
@@ -23,7 +25,7 @@
             <ndm-input
                 name="kvasBackendUsername"
                 label="{{ vm.l10n.backend.username }}"
-                model="vm.backendConnection.username"
+                model="vm.backendConnection.data.username"
                 validation="login"
             >
             </ndm-input>
@@ -31,19 +33,20 @@
             <ndm-input
                 name="kvasBackendPassword"
                 label="{{ vm.l10n.backend.password }}"
-                model="vm.backendConnection.password"
+                model="vm.backendConnection.data.password"
                 password="true"
                 validation="password"
             >
             </ndm-input>
 
             <ndm-button
+                is-disabled="!vm.backendConnection.data.address"
                 on-click="vm.testBackendConnection"
                 label="{{ vm.l10n.backend.testConnectionBtn }}"
             >
             </ndm-button>
         </form>
-    </div>
+    </ndm-details>
 
     <br/>
 

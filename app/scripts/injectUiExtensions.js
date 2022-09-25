@@ -182,7 +182,7 @@ export const injectUiExtensions = () => {
 
     /** END of UI extensions initialization */
 
-    $rootScope.kdte.servicetag = '';
+    $rootScope.kdte.servicetag = CONSTANTS.NO_TAG;
 
     let unbinder = null;
 

@@ -6,10 +6,15 @@ import {kvasUiService} from './kvas-ui.service';
 export function PointToPointController() {
     const vm = this;
 
+    const $q = getAngularService('$q');
     const notification = getAngularService('notification');
 
     vm.latestResponse = {};
     vm.connector = null;
+
+    vm.ui = {
+        isBackendSettingsBlockExpanded: false,
+    };
 
     vm.l10n = {
         backend: {
@@ -22,36 +27,51 @@ export function PointToPointController() {
             refresh: 'Refresh unblock list',
             addHost: 'Add host',
         },
-        addressIsEmpty: 'Address is empty',
+        notification: {
+            addressIsEmpty: 'Address is empty',
+            successfullyConnected: 'Successfully connected to the backend',
+            failedToConnectToBackend: 'Failed to connect to the backend',
+        },
+        backendSettings: {
+            hide: 'Hide backend connection settings',
+            show: 'Show backend connection settings',
+        }
     };
 
     vm.backendConnection = {
-        address: '',
-        login: '',
-        password: '',
+        data: {
+            address: '',
+            login: '',
+            password: '',
+        },
+
+        isConfigured: false,
 
         test: () => {
             const self = vm.backendConnection;
 
-            console.log(1);
+            if (self.data.address === '') {
+                notification.info(vm.l10n.notification.addressIsEmpty);
 
-            if (self.address === '') {
-                notification.info(vm.l10n.addressIsEmpty);
-
-                return;
+                return $q.reject('No address');
             }
 
-            console.log(_.cloneDeep(self));
+            vm.connector = kvasUiService.getBackendConnector(self.data);
 
-            vm.connector = kvasUiService.getBackendConnector(self);
-
-            kvasUiService.testConnector(vm.connector)
+            return kvasUiService.testConnector(vm.connector)
                 .then(
-                    (...args) => {
-                        console.log('success', args);
-                        kvasUiService.storeBackendSettings(self);
+                    () => {
+                        notification.success(vm.l10n.notification.successfullyConnected);
+                        kvasUiService.storeBackendSettings(self.data);
+
+                        self.isConfigured = true;
                     },
-                    (...args) => console.log('failure', args),
+                    (...args) => {
+                        notification.info(vm.l10n.notification.failedToConnectToBackend);
+                        console.warn('testConnector: failure', args)
+
+                        self.isConfigured = false;
+                    },
                 );
         }
     };
@@ -73,15 +93,27 @@ export function PointToPointController() {
     const init = () => {
         return kvasUiService.readBackendSettings()
             .then(backendConnectionSettings => {
-                vm.backendConnection = backendConnectionSettings;
+                vm.backendConnection.data = backendConnectionSettings;
 
-                if (vm.backendConnection.address) {
-                    vm.connector = kvasUiService.getBackendConnector(vm.backendConnection);
+                if (!vm.backendConnection.data.address) {
+                    vm.ui.isBackendSettingsBlockExpanded = true;
+                    vm.progress = 100;
 
-                    readConfiguration();
+                    return;
                 }
 
-                vm.progress = 100;
+                vm.connector = kvasUiService.getBackendConnector(vm.backendConnection.data);
+
+                vm.backendConnection.test()
+                    .then(
+                        () => readConfiguration(),
+                        () => {
+                            vm.ui.isBackendSettingsBlockExpanded = true;
+                        },
+                    )
+                    .finally(() => {
+                        vm.progress = 100;
+                    });
             });
     }
 
