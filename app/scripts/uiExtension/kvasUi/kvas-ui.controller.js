@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {getAngularService} from '../../lib/ndmUtils';
 import {kvasUiService} from './kvas-ui.service';
+import {KVAS_UI_L10N, UI_ERROR} from './kvas-ui.constants';
 
 // Do not reference any services as the 'controller' parameters -- this will result in an injector error
 export function PointToPointController() {
@@ -11,31 +12,24 @@ export function PointToPointController() {
 
     vm.latestResponse = {};
     vm.connector = null;
+    vm.l10n = KVAS_UI_L10N;
 
     vm.ui = {
         isBackendSettingsBlockExpanded: false,
-    };
+        isDebugBlockExpanded: false,
+        isLocked: false,
 
-    vm.l10n = {
-        backend: {
-            address: 'Backend address',
-            username: 'Username',
-            password: 'Password',
-            testConnectionBtn: 'Test backend connection',
+        lock() {
+            vm.ui.isLocked = true;
+
+            return $q.when(vm.ui.isLocked);
         },
-        unblockList: {
-            refresh: 'Refresh unblock list',
-            addHost: 'Add host',
+
+        unlock() {
+            vm.ui.isLocked = false;
+
+            return $q.when(vm.ui.isLocked);
         },
-        notification: {
-            addressIsEmpty: 'Address is empty',
-            successfullyConnected: 'Successfully connected to the backend',
-            failedToConnectToBackend: 'Failed to connect to the backend',
-        },
-        backendSettings: {
-            hide: 'Hide backend connection settings',
-            show: 'Show backend connection settings',
-        }
     };
 
     vm.backendConnection = {
@@ -53,7 +47,7 @@ export function PointToPointController() {
             if (self.data.address === '') {
                 notification.info(vm.l10n.notification.addressIsEmpty);
 
-                return $q.reject('No address');
+                return $q.reject(UI_ERROR.NO_BACKEND_ADDRESS);
             }
 
             vm.connector = kvasUiService.getBackendConnector(self.data);
@@ -79,6 +73,10 @@ export function PointToPointController() {
     vm.unblockList = {
         list: [],
         refresh: () => {
+            if (vm.ui.isLocked) {
+                return $q.reject(UI_ERROR.UI_IS_LOCKED);
+            }
+
             return kvasUiService.getUnblockList(vm.connector)
                 .then((response) => {
                     vm.latestResponse = response;
@@ -87,7 +85,26 @@ export function PointToPointController() {
 
                     vm.list = _.get(response, 'payload.list', []);
                 });
-        }
+        },
+
+        addHost: () => {
+            if (vm.ui.isLocked) {
+                return;
+            }
+
+            vm.unblockList.list.push('');
+        },
+
+        removeHost: (index) => {
+            console.log(index, vm.ui.isLocked);
+
+            if (vm.ui.isLocked) {
+                return;
+            }
+
+            vm.unblockList.list = vm.unblockList.list
+                .filter((item, _index) => index !== _index);
+        },
     };
 
     const init = () => {
@@ -99,30 +116,28 @@ export function PointToPointController() {
                     vm.ui.isBackendSettingsBlockExpanded = true;
                     vm.progress = 100;
 
-                    return;
+                    return $q.reject(UI_ERROR.NO_BACKEND_ADDRESS);
                 }
 
                 vm.connector = kvasUiService.getBackendConnector(vm.backendConnection.data);
 
-                vm.backendConnection.test()
-                    .then(
-                        () => readConfiguration(),
-                        () => {
-                            vm.ui.isBackendSettingsBlockExpanded = true;
-                        },
-                    )
-                    .finally(() => {
-                        vm.progress = 100;
-                    });
+                return vm.backendConnection.test();
+            })
+            .then(
+                () => vm.unblockList.refresh(),
+                () => {
+                    vm.ui.isBackendSettingsBlockExpanded = true;
+                },
+            )
+            .finally(() => {
+                vm.progress = 100;
             });
     }
-
-    const readConfiguration = () => {
-        return vm.unblockList.refresh();
-    };
 
     init();
 
     vm.testBackendConnection = vm.backendConnection.test;
     vm.refreshUnblockList = vm.unblockList.refresh;
+    vm.addHostToUnblockList = vm.unblockList.addHost;
+    vm.removeHostFromUnblockList = vm.unblockList.removeHost;
 }

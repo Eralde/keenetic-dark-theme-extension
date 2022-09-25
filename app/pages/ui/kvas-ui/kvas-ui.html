@@ -50,9 +50,15 @@
 
     <br/>
 
-    <pre>
-        {{ vm.latestResponse | json }}
-    </pre>
+    <ndm-details
+        label-visible="Hide latest response"
+        label-hidden="Show latest response"
+        toggle-var="vm.ui.isDebugBlockExpanded"
+    >
+        <pre>
+            {{ vm.latestResponse | json }}
+        </pre>
+    </ndm-details>
 
     <br/>
     <br/>
@@ -61,13 +67,15 @@
         <div class="unblock-list__toolbar">
             <ndm-button
                 on-click="vm.refreshUnblockList"
-                label="{{vm.l10n.unblockList.refresh }}"
+                is-disabled="vm.ui.isLocked"
+                label="{{ vm.l10n.unblockList.refresh }}"
             >
             </ndm-button>
 
             <ndm-button
-                on-click="vm.addHostToUnblock"
-                label="{{vm.l10n.unblockList.addHost }}"
+                on-click="vm.addHostToUnblockList"
+                is-disabled="vm.ui.isLocked"
+                label="{{ vm.l10n.unblockList.addHost }}"
             >
             </ndm-button>
         </div>
@@ -76,9 +84,24 @@
         <div class="unblock-list">
             <div
                 ng-repeat="item in vm.list"
-                class="unblock-list__item"
+                class="unblock-list__item list-item"
             >
-                {{ item }}
+                <ndm-input
+                    class="list-item__input"
+                    name="unblockListItem{{$index}}"
+                    disabled="vm.ui.isLocked"
+                    model="item"
+                >
+                </ndm-input>
+
+                <div class="list-item__toolbar">
+                    <ndm-button
+                        ng-click="vm.removeHostFromUnblockList($index)"
+                        is-disabled="vm.ui.isLocked"
+                        label="{{ vm.l10n.unblockList.removeHost }}"
+                    >
+                    </ndm-button>
+                </div>
             </div>
         </div>
     </div>

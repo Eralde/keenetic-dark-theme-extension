@@ -1,6 +1,14 @@
+@import "../__mixins__";
+@import "../__vars__";
+@import "../__ndwVars__";
+
 .page-kvas-ui {
     .backend-settings {
-        display: flex;
-        flex-wrap: wrap;
+    }
+
+    .unblock-list {
+        .list-item {
+            .__mixin__flex-row();
+        }
     }
 }
