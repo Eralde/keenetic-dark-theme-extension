@@ -80,10 +80,14 @@
             </ndm-button>
         </div>
 
+        <br/>
 
-        <div class="unblock-list">
+        <div
+            ng-form="vm.unblockListForm"
+            class="unblock-list"
+        >
             <div
-                ng-repeat="item in vm.list"
+                ng-repeat="item in vm.unblockList.list track by $index"
                 class="unblock-list__item list-item"
             >
                 <ndm-input
@@ -104,6 +108,28 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    {{ vm.footer | json }}
+
+    <div
+        ng-if="vm.footer.isVisible"
+        class="page-kvas-ui__footer"
+    >
+        <ndm-button
+            on-click="vm.footer.save"
+            btn-class="btn--primary"
+            is-disabled="vm.ui.isLocked || vm.footer.isLocked"
+            label="save"
+        >
+        </ndm-button>
+
+        <ndm-button
+            on-click="vm.footer.reset"
+            is-disabled="vm.ui.isLocked || vm.footer.isLocked"
+            label="cancel"
+        >
+        </ndm-button>
     </div>
 
 </ndm-page>

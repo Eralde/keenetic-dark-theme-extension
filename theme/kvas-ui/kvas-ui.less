@@ -3,6 +3,15 @@
 @import "../__ndwVars__";
 
 .page-kvas-ui {
+    &__footer {
+        position: absolute;
+        width: calc(~"100% - 28px"); // @base-content-width;
+        bottom: 0;
+        padding: 8px 0;
+        background-color: @white;
+        z-index: @z-index__normal--control;
+    }
+
     .backend-settings {
     }
 
