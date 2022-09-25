@@ -3,36 +3,36 @@ import {forceScopeDigest, getAngularService, getNdmPageScope} from '../../lib/nd
 import {kvasUiService} from './kvas-ui.service';
 import {KVAS_UI_L10N, UI_ERROR} from './kvas-ui.constants';
 
-// Do not reference any services as the 'controller' parameters -- this will result in an injector error
+// Do not reference any services as the 'controller' parameters-- this will result in an injector error
 export function KvasUiController() {
     const vm = this;
 
-    getNdmPageScope().then($scope => {
-        const $q = getAngularService('$q');
-        const notification = getAngularService('notification');
+    const $q = getAngularService('$q');
+    const notification = getAngularService('notification');
 
-        vm.latestResponse = {};
-        vm.connector = null;
-        vm.l10n = KVAS_UI_L10N;
+    vm.latestResponse = {};
+    vm.connector = null;
+    vm.l10n = _.cloneDeep(KVAS_UI_L10N);
 
-        vm.ui = {
-            isBackendSettingsBlockExpanded: false,
-            isDebugBlockExpanded: false,
-            isLocked: false,
+    vm.ui = {
+        isBackendSettingsBlockExpanded: false,
+        isDebugBlockExpanded: false,
+        isLocked: false,
 
-            lock() {
-                vm.ui.isLocked = true;
+        lock() {
+            vm.ui.isLocked = true;
 
-                return $q.when(vm.ui.isLocked);
-            },
+            return $q.when(vm.ui.isLocked);
+        },
 
-            unlock() {
-                vm.ui.isLocked = false;
+        unlock() {
+            vm.ui.isLocked = false;
 
-                return $q.when(vm.ui.isLocked);
-            },
-        };
+            return $q.when(vm.ui.isLocked);
+        },
+    };
 
+    getNdmPageScope().then(async ($scope) => {
         vm.backendConnection = {
             data: {
                 address: '',
@@ -100,8 +100,6 @@ export function KvasUiController() {
             },
 
             removeHost: (index) => {
-                console.log(index, vm.ui.isLocked);
-
                 if (vm.ui.isLocked) {
                     return;
                 }
@@ -110,8 +108,6 @@ export function KvasUiController() {
                     vm.unblockList.list,
                     (item, _index) => index !== _index,
                 );
-
-                console.log(_.cloneDeep(vm.unblockList.list));
 
                 forceScopeDigest($scope);
             },
@@ -160,9 +156,6 @@ export function KvasUiController() {
                     vm.backendConnection.data = backendConnectionSettings;
 
                     if (!vm.backendConnection.data.address) {
-                        vm.ui.isBackendSettingsBlockExpanded = true;
-                        vm.progress = 100;
-
                         return $q.reject(UI_ERROR.NO_BACKEND_ADDRESS);
                     }
 

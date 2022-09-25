@@ -4,10 +4,11 @@
     progress="vm.progress"
     description=" "
 >
+    <br/>
     <ndm-details
         label-visible="{{ vm.l10n.backendSettings.hide }}"
         label-hidden="{{ vm.l10n.backendSettings.show }}"
-        toggle-var="vm.ui.isBackendSettingsBlockExpanded"
+        toggle-var="vm.foo"
     >
         <form
             class="backend-settings"
@@ -51,8 +52,8 @@
     <br/>
 
     <ndm-details
-        label-visible="Hide latest response"
-        label-hidden="Show latest response"
+        label-visible="{{ 'Show latest response' }}"
+        label-hidden="{{ 'Hide latest response' }}"
         toggle-var="vm.ui.isDebugBlockExpanded"
     >
         <pre>
@@ -109,8 +110,6 @@
             </div>
         </div>
     </div>
-
-    {{ vm.footer | json }}
 
     <div
         ng-if="vm.footer.isVisible"
