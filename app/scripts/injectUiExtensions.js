@@ -46,6 +46,9 @@ import {dfsChannelsDetails} from './uiExtension/dfsChannelsDetails';
 import {tracerouteViaInterfaceExtension} from './uiExtension/tracerouteViaInterface';
 import {TracerouteViaController} from './uiExtension/tracerouteVia/traceroute-via.controller';
 
+import {portForwardingToolbarExtension} from './uiExtension/portForwardingToolbar';
+import {PortForwardingToolbarController} from './uiExtension/portForwardingToolbar/port-forwarding-toolbar.controller';
+
 export const injectUiExtensions = () => {
     let $state;
 
@@ -68,6 +71,7 @@ export const injectUiExtensions = () => {
     $rootScope.RoutesImportPopupController = RoutesImportPopupController;
     $rootScope.IpLookupController = IpLookupController;
     $rootScope.TracerouteViaController = TracerouteViaController;
+    $rootScope.PortForwardingToolbarController = PortForwardingToolbarController;
 
     $rootScope.kdte = {
         L10N: l10n,
@@ -173,6 +177,7 @@ export const injectUiExtensions = () => {
     deviceListFilters.onInit();
     wifiClientsFilters.onInit();
     routesToolbarExtension.onInit();
+    portForwardingToolbarExtension.onInit();
     addDeltaSandbox.onInit();
     rebootSchedule.onInit();
     tracerouteViaInterfaceExtension.onInit(ndwBranch);

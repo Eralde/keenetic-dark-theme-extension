@@ -1,0 +1,22 @@
+@import "../__mixins__";
+@import "../__vars__";
+@import "../__ndwVars__";
+
+.port-forwarding-toolbar {
+    &__row {
+        .__mixin__flex-row(center);
+
+        margin-top: @new-gap-sm;
+        align-items: center;
+
+        ndm-button, .btn--file-upload {
+            &:not(:first-child) {
+                margin: 0 0 0 @new-unit;
+            }
+        }
+
+        .ndm-toggle.form__row.form__row--toggle {
+            margin-top: -7px;
+        }
+    }
+}

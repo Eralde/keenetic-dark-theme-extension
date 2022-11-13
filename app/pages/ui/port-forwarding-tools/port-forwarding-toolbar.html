@@ -1,0 +1,51 @@
+<div
+    class="port-forwarding-toolbar"
+    ng-controller="$root.PortForwardingToolbarController as $ctrl"
+>
+    <div class="port-forwarding-toolbar__row">
+        <ndm-button
+            class="buttons-row__item"
+            on-click="$ctrl.exportSelectedRules"
+            is-disabled="vm.list.selectedRulesCount === 0"
+            label="{{$ctrl.l10n.exportSelectedBtnLabel}}"
+        >
+        </ndm-button>
+
+        <ndm-button
+            class="buttons-row__item"
+            btn-class="btn--warning"
+            on-click="$ctrl.deleteSelectedRules"
+            is-disabled="vm.list.selectedRulesCount === 0"
+            label="{{$ctrl.l10n.deleteSelectedBtnLabel}}"
+        >
+        </ndm-button>
+
+        <ndm-input-file
+            class="btn--file-upload"
+            upload-file="$ctrl.importFileObject"
+            on-upload-file="$ctrl.importRules"
+            btn-title="{{$ctrl.l10n.importBtnLabel}}"
+            btn-title-if-file-selected="{{$ctrl.l10n.importBtnLabel}}"
+        >
+        </ndm-input-file>
+    </div>
+
+    <div class="port-forwarding-toolbar__row">
+        <ndm-schedule-select
+            is-disabled="vm.list.selectedRulesCount === 0"
+            label="{{$ctrl.l10n.assignScheduleSelectboxLabel}}"
+            name="selectedRulesSchedule"
+            model="$ctrl.selectedRulesSchedule"
+            no-selected-thumb="true"
+        >
+        </ndm-schedule-select>
+
+        <ndm-toggle
+            disabled="vm.list.selectedRulesCount === 0"
+            model="$ctrl.selectedRulesToggleValue"
+            call-on-change="$ctrl.toggleSelectedRules"
+        >
+
+        </ndm-toggle>
+    </div>
+</div>

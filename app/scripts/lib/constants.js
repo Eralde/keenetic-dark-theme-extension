@@ -112,6 +112,7 @@ export const DEVICES_LIST_TEMPLATE_PATH = 'app/page/controlPanel/myNetwork/devic
 export const REBOOT_SECTION_TEMPLATE_PATH = 'app/page/controlPanel/control/system/reboot/reboot.html';
 export const NDM_PAGE_HEADER_TEMPLATE_PATH = 'app/components/ndm-page-header/ndm-page-header.html';
 export const STATIC_ROUTES_TEMPLATE_PATH = 'app/page/controlPanel/networkRules/staticRoutes/staticRoutes.html';
+export const PORT_FORWARDING_TEMPLATE_PATH = 'app/page/controlPanel/networkRules/portForwarding/portForwarding.html';
 export const NDM_TEXTAREA_TEMPLATE_PATH = 'app/components/ndm-textarea/ndm-textarea.html';
 
 export const DSL_STATS_FILENAME = 'proc:/driver/ensoc_dsl/dsl_stats';

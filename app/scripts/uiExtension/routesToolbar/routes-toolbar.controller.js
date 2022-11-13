@@ -42,14 +42,14 @@ export function RoutesToolbarController() {
 
     const callOnDestroy = [];
 
-    routesTable.selectedRowsCount = 0;
+    routesTable.selectedRulesCount = 0;
     routesTable.deselectAll = () => {
         routesTable.data.forEach(row => {
             row.isSelected = false;
         });
 
         routesTable.columns.isSelected.checkbox.model = false;
-        routesTable.selectedRowsCount = 0;
+        routesTable.selectedRulesCount = 0;
     };
 
     routesTable.selectAll = () => {
@@ -58,7 +58,7 @@ export function RoutesToolbarController() {
         });
 
         routesTable.columns.isSelected.checkbox.model = true;
-        routesTable.selectedRowsCount = routesTable.data.length;
+        routesTable.selectedRulesCount = routesTable.data.length;
     };
 
     $scope.$watch('SRC.routesTable.data', (newValue) => {
@@ -73,15 +73,15 @@ export function RoutesToolbarController() {
 
             row.isSelected = false;
             row.onCheckboxToggle = (oldVal) => {
-                const isEveryRowSelected = routesTable.selectedRowsCount === routesTable.data.length;
+                const isEveryRowSelected = routesTable.selectedRulesCount === routesTable.data.length;
 
-                routesTable.selectedRowsCount += oldVal ? -1 : 1;
+                routesTable.selectedRulesCount += oldVal ? -1 : 1;
                 routesTable.columns.isSelected.checkbox.model = isEveryRowSelected;
             };
         });
 
-        routesTable.selectedRowsCount = newValue.filter(item => item.isSelected).length;
-        routesTable.columns.isSelected.checkbox.model = routesTable.selectedRowsCount === newValue.length;
+        routesTable.selectedRulesCount = newValue.filter(item => item.isSelected).length;
+        routesTable.columns.isSelected.checkbox.model = routesTable.selectedRulesCount === newValue.length;
     });
 
     routesTable.columns = {
@@ -120,8 +120,8 @@ export function RoutesToolbarController() {
 
     vm.exportSelectedRoutes = () => {
         return routesToolsService.getShowInterfaceData().then(showInterfaceData => {
-            const selectedRows = routesTable.data.filter(item => item.isSelected);
-            const rawRciData = selectedRows.map(routesToolsService.stripNdwData);
+            const selectedRules = routesTable.data.filter(item => item.isSelected);
+            const rawRciData = selectedRules.map(routesToolsService.stripNdwData);
             const interfaceIdToLabelMap = interfaces.getInterfaceIdToLabelMap(showInterfaceData);
 
             const routeList = rawRciData.map(route => {
@@ -142,8 +142,8 @@ export function RoutesToolbarController() {
     vm.deleteSelectedRoutes = () => {
         return modal.confirm()
             .then(() => {
-                const selectedRows = routesTable.data.filter(item => item.isSelected);
-                const rawRciData = selectedRows.map(routesToolsService.stripNdwData);
+                const selectedRules = routesTable.data.filter(item => item.isSelected);
+                const rawRciData = selectedRules.map(routesToolsService.stripNdwData);
 
                 return routesToolsService.deleteRoutes(rawRciData);
             })
