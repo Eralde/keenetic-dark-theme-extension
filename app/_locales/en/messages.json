@@ -283,6 +283,6 @@
     "message": "Any"
   },
   "deviceListsPrivateMac": {
-    "message": "This device uses a private Wi-Fi MAC address"
+    "message": "This device uses a private MAC address"
   }
 }
