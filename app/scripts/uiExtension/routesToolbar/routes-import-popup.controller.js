@@ -53,7 +53,7 @@ export function RoutesImportPopupController() {
     vm.interfaceReplacements = {};
     vm.interfaceIdToLabelMap = {};
 
-    vm.is2xFirmware = ndmUtils.is2xVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
+    vm.is2xFirmware = ndmUtils.isLegacyVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
 
     vm.l10n = {};
 

@@ -14,7 +14,7 @@ import {
 } from './lib/domUtils';
 
 import {
-    is3xVersion,
+    isModernVersion,
 } from './lib/ndmUtils';
 
 const processToggle = (
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 (response) => {
                     const version = _.get(response, 'response', '');
 
-                    if (!is3xVersion(version)) {
+                    if (!isModernVersion(version)) {
                         console.log('old version', response);
                         hideElement(toggleWrapper);
                     }

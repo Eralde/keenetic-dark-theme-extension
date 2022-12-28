@@ -339,10 +339,11 @@ export const getNdmPageScope = () => {
     return getElementScope(NDM_PAGE_SELECTOR);
 };
 
-export const is2xVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));
-export const is3xVersion = (ndwVersion) => {
+export const isLegacyVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));
+export const isModernVersion = (ndwVersion) => {
     return OLD_FW3X_BRANCHES.some(branch => ndwVersion.startsWith(branch))
-        || ndwVersion.startsWith('3.');
+        || ndwVersion.startsWith('3.')
+        || ndwVersion.startsWith('4.');
 }
 
 export const compareVersions = (ver1, ver2) => {
@@ -376,7 +377,7 @@ export const isCableDiagnosticsImplemented = (ndwVersion) => {
 }
 
 export const isSwitchportOverloadSupported = (ndwVersion) => {
-    if (!is3xVersion(ndwVersion)) {
+    if (!isModernVersion(ndwVersion)) {
         return false;
     }
 

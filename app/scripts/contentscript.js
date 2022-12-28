@@ -3,8 +3,8 @@ import * as CONSTANTS from './lib/constants';
 
 import {
     compareVersions,
-    is2xVersion,
-    is3xVersion,
+    isLegacyVersion,
+    isModernVersion,
 } from './lib/ndmUtils';
 
 const stylesObjectToArray = (stylesObject) => {
@@ -264,9 +264,9 @@ const processNdmVerMessage = (event) => {
 
     if (version.startsWith('0')) {
         stylesToInject = stylesObjectToArray(CONSTANTS.LEGACY_STYLES);
-    } else if (is3xVersion(version)) {
+    } else if (isModernVersion(version)) {
         stylesToInject = stylesObjectToArray(CONSTANTS.STYLES_3X);
-    } else if (is2xVersion(version)) {
+    } else if (isLegacyVersion(version)) {
         stylesToInject = stylesObjectToArray(CONSTANTS.STYLES_2X);
     } else {
         console.warn(`Unsupported ndw version: ${version}`);
