@@ -1,16 +1,5 @@
 import * as _ from 'lodash';
 import dateFormat from 'dateformat';
-
-import {
-    FW2X_BRANCHES,
-    FW3X_WITHOUT_SWITCHPORT_OVERLOAD,
-    LOGIN_STATE,
-    NDM_PAGE_SELECTOR,
-    NDM_TEXTAREA_TEMPLATE_PATH,
-    NO_TAG,
-    OLD_FW3X_BRANCHES,
-} from './constants.js';
-
 import {sharedData} from './state';
 import * as CONSTANTS from './constants';
 
@@ -58,7 +47,7 @@ export const waitUntilAuthenticated = () => {
     });
 
     const addOnSuccessHook = () => {
-        unbinder = _.invoke($transitions, 'onSuccess', {from: LOGIN_STATE}, () => {
+        unbinder = _.invoke($transitions, 'onSuccess', {from: CONSTANTS.LOGIN_STATE}, () => {
             if (!authOk) {
                 recheckAuth();
             }
@@ -74,10 +63,10 @@ export const waitUntilAuthenticated = () => {
 
         const stateName = $state.current.name;
 
-        if (!stateName || stateName === LOGIN_STATE) {
+        if (!stateName || stateName === CONSTANTS.LOGIN_STATE) {
             addOnSuccessHook();
         } else {
-            const logoutHook = _.invoke($transitions, 'onSuccess', {to: LOGIN_STATE}, () => {
+            const logoutHook = _.invoke($transitions, 'onSuccess', {to: CONSTANTS.LOGIN_STATE}, () => {
                 logoutHook();
                 addOnSuccessHook();
             });
@@ -85,7 +74,7 @@ export const waitUntilAuthenticated = () => {
     });
 
     return deferred.promise;
-}
+};
 
 export const callOnPageLoad = (callback) => {
     const $rootScope = getAngularService('$rootScope');
@@ -111,13 +100,13 @@ export const isAuthenticated = () => {
         );
 
     return deferred.promise;
-}
+};
 
 export const getServiceTag = (timeout = DEFAULT_GET_SERVICE_TAG_TIMEOUT) => {
     const deferred = $q.defer();
 
     setTimeout(() => {
-        deferred.resolve(NO_TAG);
+        deferred.resolve(CONSTANTS.NO_TAG);
     }, timeout);
 
     router
@@ -125,7 +114,7 @@ export const getServiceTag = (timeout = DEFAULT_GET_SERVICE_TAG_TIMEOUT) => {
             url: 'show/identification',
             noRetry: true
         })
-        .then(idData => deferred.resolve(_.get(idData, 'servicetag', NO_TAG)));
+        .then(idData => deferred.resolve(_.get(idData, 'servicetag', CONSTANTS.NO_TAG)));
 
     return deferred.promise;
 };
@@ -137,7 +126,7 @@ export const ensureServiceTag = () => {
 
     const queryServiceTag = () => {
         getServiceTag(timeout).then(data => {
-            if (data === NO_TAG) {
+            if (data === CONSTANTS.NO_TAG) {
                 timeout += 1000;
 
                 queryServiceTag();
@@ -150,7 +139,7 @@ export const ensureServiceTag = () => {
     queryServiceTag();
 
     return deferred.promise;
-}
+};
 
 export const getNgL10n = (id, args = {}) => {
     return getAngularService('$translate').instant(id, args);
@@ -251,7 +240,7 @@ export const extractAndReplaceSwitchportsTemplate = (payload, templateDataProper
     const _template = _.get(payload, [CONSTANTS.SWITCHPORT_TEMPLATE_DATA_KEY, templateDataProperty]);
 
     replaceSwitchportsTemplate(_template, templatePath);
-}
+};
 
 export const replaceSwitchportsTemplate = (templateData, path) => {
     if (!templateData) {
@@ -262,7 +251,7 @@ export const replaceSwitchportsTemplate = (templateData, path) => {
     const $templateCache = getAngularService('$templateCache');
 
     $templateCache.put(path, prefix + template + suffix);
-}
+};
 
 export const toggleNdmTextareaClass = ({className, state, insertAfterClass}) => {
     const SHARED_DATA_KEY = 'toggleNdmTextareaClassFailed';
@@ -272,7 +261,7 @@ export const toggleNdmTextareaClass = ({className, state, insertAfterClass}) => 
     }
 
     const $templateCache = getAngularService('$templateCache');
-    const template = getTemplate(NDM_TEXTAREA_TEMPLATE_PATH);
+    const template = getTemplate(CONSTANTS.NDM_TEXTAREA_TEMPLATE_PATH);
 
     if (!_.isString(template)) {
         console.warn('Keenetic Dark Theme Extension: failed to get ndm-textarea component template');
@@ -285,8 +274,8 @@ export const toggleNdmTextareaClass = ({className, state, insertAfterClass}) => 
         ? template.replace(className, '')
         : template.replace(`class="${insertAfterClass}"`, `class="${insertAfterClass} ${className}"`);
 
-    $templateCache.put(NDM_TEXTAREA_TEMPLATE_PATH, updatedTemplate);
-}
+    $templateCache.put(CONSTANTS.NDM_TEXTAREA_TEMPLATE_PATH, updatedTemplate);
+};
 
 const _getElementController = (selector, deferred) => {
     const element = angular.element(document.querySelector(selector));
@@ -297,7 +286,7 @@ const _getElementController = (selector, deferred) => {
     } else {
         setTimeout(() => _getElementController(selector, deferred), 300);
     }
-}
+};
 
 const _getElementScope = (selector, deferred) => {
     const element = angular.element(document.querySelector(selector));
@@ -308,7 +297,7 @@ const _getElementScope = (selector, deferred) => {
     } else {
         setTimeout(() => _getElementScope(selector, deferred), 300);
     }
-}
+};
 
 export const getElementController = (selector, _deferred = null) => {
     const $q = getAngularService('$q');
@@ -317,7 +306,7 @@ export const getElementController = (selector, _deferred = null) => {
     _getElementController(selector, deferred);
 
     return deferred.promise;
-}
+};
 
 export const getElementScope = (selector, _deferred = null) => {
     const $q = getAngularService('$q');
@@ -326,26 +315,29 @@ export const getElementScope = (selector, _deferred = null) => {
     _getElementScope(selector, deferred);
 
     return deferred.promise;
-}
+};
 
 export const getDashboardController = () => {
     return getElementController('.d-dashboard');
 };
 
 export const getNdmPageController = () => {
-    return getElementController(NDM_PAGE_SELECTOR);
+    return getElementController(CONSTANTS.NDM_PAGE_SELECTOR);
 };
 
 export const getNdmPageScope = () => {
-    return getElementScope(NDM_PAGE_SELECTOR);
+    return getElementScope(CONSTANTS.NDM_PAGE_SELECTOR);
 };
 
-export const isLegacyVersion = (ndwVersion) => FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));
+export const isLegacyVersion = (ndwVersion) => {
+    return CONSTANTS.FW2X_BRANCHES.some(branch => ndwVersion.startsWith(branch));
+};
+
 export const isModernVersion = (ndwVersion) => {
-    return OLD_FW3X_BRANCHES.some(branch => ndwVersion.startsWith(branch))
+    return CONSTANTS.OLD_FW3X_BRANCHES.some(branch => ndwVersion.startsWith(branch))
         || ndwVersion.startsWith('3.')
         || ndwVersion.startsWith('4.');
-}
+};
 
 export const compareVersions = (ver1, ver2) => {
     const toNumbersList = (str) => {
@@ -371,18 +363,18 @@ export const compareVersions = (ver1, ver2) => {
     }
 
     return 0;
-}
+};
 
 export const isCableDiagnosticsImplemented = (ndwVersion) => {
     return compareVersions(ndwVersion, '3.7.25') !== -1;
-}
+};
 
 export const isSwitchportOverloadSupported = (ndwVersion) => {
     if (!isModernVersion(ndwVersion)) {
         return false;
     }
 
-    const is3xBranchWithoutOverload = FW3X_WITHOUT_SWITCHPORT_OVERLOAD.some(branch => {
+    const is3xBranchWithoutOverload = CONSTANTS.FW3X_WITHOUT_SWITCHPORT_OVERLOAD.some(branch => {
         const branchChunks = branch.split('.');
         const versionChunks = ndwVersion.split('.');
 
@@ -390,14 +382,14 @@ export const isSwitchportOverloadSupported = (ndwVersion) => {
     });
 
     return !is3xBranchWithoutOverload;
-}
+};
 
 export const getPortInterfaceStatus = (port, showInterfaceData) => {
     return _.find(
         showInterfaceData,
         item => item.id === port.interfaceId || item['interface-name'] === port.port,
     );
-}
+};
 
 export const getAncestorScopeProperty = ($scope, propName) => {
     let _$scope = $scope;
@@ -411,7 +403,7 @@ export const getAncestorScopeProperty = ($scope, propName) => {
     }
 
     return null;
-}
+};
 
 export const getDebouncedCallback = (callback, leading = true) => {
     return _.debounce(
