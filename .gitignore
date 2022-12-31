@@ -5,3 +5,4 @@ packages/
 dist/
 .web-extension-id
 .python-version
+.idea

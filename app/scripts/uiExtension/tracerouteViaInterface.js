@@ -1,10 +1,10 @@
 import {injectStringIntoTemplate} from '../lib/ngTemplate';
 import {MAIN_DIAGNOSTICS_TAB_TEMPLATE_PATH} from '../lib/constants';
 import tracerouteViaTemplate from '../../pages/ui/traceroute-via/traceroute-via.html';
-import {is2xVersion} from "../lib/ndmUtils";
+import {isLegacyVersion} from "../lib/ndmUtils";
 
 const injectViaInterfaceSelectbox = (ndwBranch) => {
-    const is2xFirmware = is2xVersion(ndwBranch);
+    const is2xFirmware = isLegacyVersion(ndwBranch);
 
     injectStringIntoTemplate(
         MAIN_DIAGNOSTICS_TAB_TEMPLATE_PATH,

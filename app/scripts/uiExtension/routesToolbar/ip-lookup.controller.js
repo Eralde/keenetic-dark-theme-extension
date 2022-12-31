@@ -53,7 +53,7 @@ export function IpLookupController() {
     vm.isLookupResultEmpty = false;
     vm.isUiLocked = false;
 
-    vm.is2xFirmware = ndmUtils.is2xVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
+    vm.is2xFirmware = ndmUtils.isLegacyVersion(_.get($rootScope, 'kdte.ndwBranch', ''));
 
     vm.lockUi = () => {
         vm.isUiLocked = true;

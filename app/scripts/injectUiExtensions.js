@@ -165,14 +165,14 @@ export const injectUiExtensions = () => {
     const ndwBranch = ndmVersion.substr(0, 3);
 
     if (
-        ndmUtils.is3xVersion(ndwBranch)
+        ndmUtils.isModernVersion(ndwBranch)
         && ndmUtils.isAnyComponentInstalled(['eoip', 'ipip', 'gre'])
     ) {
         pointToPointSection.onInit();
     }
 
     $rootScope.kdte.ndwBranch = ndwBranch;
-    $rootScope.kdte.ifInputFilterComponentAvailable = ndmUtils.is3xVersion(ndwBranch);
+    $rootScope.kdte.ifInputFilterComponentAvailable = ndmUtils.isModernVersion(ndwBranch);
 
     deviceListFilters.onInit();
     wifiClientsFilters.onInit();
@@ -250,7 +250,7 @@ export const injectUiExtensions = () => {
                         state: replaceTextareaCursorValue,
                     });
 
-                    if (ndmUtils.is2xVersion(ndwBranch)) {
+                    if (ndmUtils.isLegacyVersion(ndwBranch)) {
                         return;
                     }
 
@@ -317,11 +317,11 @@ export const injectUiExtensions = () => {
 
         let extendMenuFunction = _.noop;
 
-        if (ndmUtils.is2xVersion(ndwBranch)) {
+        if (ndmUtils.isLegacyVersion(ndwBranch)) {
             extendMenuFunction = extendMenu2x;
             interceptMouseover('ndm-help');
 
-        } else if (ndmUtils.is3xVersion(ndwBranch)) {
+        } else if (ndmUtils.isModernVersion(ndwBranch)) {
             extendMenuFunction = extendMenu3x;
         }
 
@@ -361,7 +361,7 @@ export const injectUiExtensions = () => {
         );
 
         /* Additional data in the DSL connection statistics ('Diagnostics' -> 'DSL') */
-        if (ndmUtils.is3xVersion(ndwBranch)) {
+        if (ndmUtils.isModernVersion(ndwBranch)) {
             ndmUtils.addUiExtension(
                 CONSTANTS.DIAGNOSTICS_STATE,
                 extendedDslStat.onLoad,
