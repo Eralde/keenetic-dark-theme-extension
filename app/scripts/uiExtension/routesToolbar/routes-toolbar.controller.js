@@ -43,14 +43,14 @@ export function RoutesToolbarController() {
 
     const callOnDestroy = [];
 
-    routesTable.selectedRulesCount = 0;
+    routesTable.selectedRowsCount = 0;
     routesTable.deselectAll = () => {
         routesTable.data.forEach(row => {
             row.isSelected = false;
         });
 
         routesTable.columns.isSelected.checkbox.model = false;
-        routesTable.selectedRulesCount = 0;
+        routesTable.selectedRowsCount = 0;
     };
 
     routesTable.selectAll = () => {
@@ -59,7 +59,7 @@ export function RoutesToolbarController() {
         });
 
         routesTable.columns.isSelected.checkbox.model = true;
-        routesTable.selectedRulesCount = routesTable.data.length;
+        routesTable.selectedRowsCount = routesTable.data.length;
     };
 
     $scope.$watch('SRC.routesTable.data', (newValue) => {
@@ -74,15 +74,15 @@ export function RoutesToolbarController() {
 
             row.isSelected = false;
             row.onCheckboxToggle = (oldVal) => {
-                const isEveryRowSelected = routesTable.selectedRulesCount === routesTable.data.length;
+                const isEveryRowSelected = routesTable.selectedRowsCount === routesTable.data.length;
 
-                routesTable.selectedRulesCount += oldVal ? -1 : 1;
+                routesTable.selectedRowsCount += oldVal ? -1 : 1;
                 routesTable.columns.isSelected.checkbox.model = isEveryRowSelected;
             };
         });
 
-        routesTable.selectedRulesCount = newValue.filter(item => item.isSelected).length;
-        routesTable.columns.isSelected.checkbox.model = routesTable.selectedRulesCount === newValue.length;
+        routesTable.selectedRowsCount = newValue.filter(item => item.isSelected).length;
+        routesTable.columns.isSelected.checkbox.model = routesTable.selectedRowsCount === newValue.length;
     });
 
     routesTable.columns = {
