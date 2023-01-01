@@ -3,6 +3,7 @@ import {getAngularService, onLanguageChange} from '../../lib/ndmUtils';
 import {getL10n} from '../../lib/l10nUtils';
 import {formatBytesColumn, formatIpData, formatUptime} from '../../lib/formatUtils';
 import {logWarning} from '../../lib/log';
+import {EVENTS} from '../../lib/constants';
 import {pointToPointService} from './point-to-point.service';
 
 const ROOT_ELEMENT_SELECTOR = '.point-to-point-section';
@@ -123,7 +124,7 @@ export function PointToPointController() {
     });
 
     vm.editTunnel = (row) => {
-        $scope.$broadcast(pointToPointService.EVENTS.OPEN_EDITOR, row);
+        $scope.$broadcast(EVENTS.POINT_TO_POINT__OPEN_EDITOR, row);
     };
 
     const getOnToggleCallback = (row) => {

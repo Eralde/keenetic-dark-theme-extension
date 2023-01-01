@@ -80,10 +80,6 @@ export const pointToPointService = (function() {
         MANUAL: 'manual',
     };
 
-    const EVENTS = {
-        OPEN_EDITOR: 'POINT_TO_POINT_OPEN_EDITOR',
-    };
-
     const isPointToPoint = ({type}) => TUNNEL_TYPES_LIST.includes(type);
     const isPort = ({type}) => type === 'Port';
     const isWifiMaster = ({id}) => [NDM.MASTER, NDM.MASTER_5G].includes(id);
@@ -606,7 +602,6 @@ export const pointToPointService = (function() {
     };
 
     return {
-        EVENTS,
         TUNNEL_TYPE,
         IS_IPSEC_AVAILABLE,
         LOCAL_SOURCE,

@@ -264,7 +264,7 @@ export function PointToPointEditorController() {
         return vm.openEditor(model);
     };
 
-    $scope.$on(pointToPointService.EVENTS.OPEN_EDITOR, ($event, row) => {
+    $scope.$on(pointToPointService.EVENTS.POINT_TO_POINT__OPEN_EDITOR, ($event, row) => {
         getDataFromParentController(row.id);
 
         const model = pointToPointService.getTunnelModel({

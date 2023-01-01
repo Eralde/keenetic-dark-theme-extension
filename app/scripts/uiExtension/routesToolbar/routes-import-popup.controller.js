@@ -1,8 +1,9 @@
 import * as _ from 'lodash';
-import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
 import * as ndmUtils from '../../lib/ndmUtils';
+import {EVENTS} from '../../lib/constants';
+import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 
 export function RoutesImportPopupController() {
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));
@@ -16,9 +17,9 @@ export function RoutesImportPopupController() {
     const vm = this;
 
     const {
-        OPEN_IMPORT_POPUP,
-        RELOAD_ROUTES,
-    } = routesToolsService.EVENTS;
+        ROUTES__OPEN_IMPORT_POPUP,
+        ROUTES__RELOAD_LIST,
+    } = EVENTS;
 
     const utils = ndmUtils.getAngularService('utils');
     const $rootScope = ndmUtils.getAngularService('$rootScope');
@@ -123,7 +124,7 @@ export function RoutesImportPopupController() {
         };
     }
 
-    const unbinder = $rootScope.$on(OPEN_IMPORT_POPUP, async ($event, routesList) => {
+    const unbinder = $rootScope.$on(ROUTES__OPEN_IMPORT_POPUP, async ($event, routesList) => {
         updateL10n();
 
         const {showInterfaceData, showRcIpRoute} = await routesToolsService.getRoutesAndInterfaces();
@@ -232,7 +233,7 @@ export function RoutesImportPopupController() {
         const routeConfigurations = vm.routesList.map(item => item.configuration);
 
         return routesToolsService.saveRoutes(routeConfigurations)
-            .then(() => $rootScope.$broadcast(RELOAD_ROUTES))
+            .then(() => $rootScope.$broadcast(ROUTES__RELOAD_LIST))
             .finally(() => vm.close());
     };
 

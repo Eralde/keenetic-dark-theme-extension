@@ -18,7 +18,7 @@ import {
  */
 
 const CONSTANT = getAngularService('CONSTANT');
-const EVENTS = _.get(CONSTANT, 'events', {});
+const NDW_EVENTS = _.get(CONSTANT, 'events', {});
 
 const router = getAngularService('router');
 
@@ -39,7 +39,7 @@ const addSaveLogButton = () => {
         });
     });
 
-    const unbinder = $rootScope.$on(EVENTS.POPUP_OPENED, () => {
+    const unbinder = $rootScope.$on(NDW_EVENTS.POPUP_OPENED, () => {
         unbinder();
 
         $timeout(() => {

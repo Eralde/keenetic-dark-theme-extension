@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import dateFormat from 'dateformat';
 import doh from '../../../3rdparty/doh.min';
 import {getAngularService} from '../../lib/ndmUtils';
 import {logWarning} from '../../lib/log';
@@ -28,12 +27,6 @@ export const routesToolsService = (function() {
             TO_HOST: 'host'
         };
     }
-
-    const EVENTS = {
-        OPEN_IMPORT_POPUP: 'ROUTES_TOOLBAR:OPEN_IMPORT_POPUP',
-        CLOSE_IMPORT_POPUP: 'ROUTES_TOOLBAR:CLOSE_IMPORT_POPUP',
-        RELOAD_ROUTES: 'ROUTES_TOOLBAR:RELOAD_ROUTES',
-    };
 
     const CORS_PROXY_URL = 'https://ts-cors-proxy.eralde.workers.dev';
     const CLOUDFLARE_DOH_URL = 'https://cloudflare-dns.com/dns-query';
@@ -411,8 +404,6 @@ export const routesToolsService = (function() {
     };
 
     return {
-        EVENTS,
-
         getRouteType,
         getRouteDestination,
 

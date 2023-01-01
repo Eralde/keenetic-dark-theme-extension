@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import {logWarning} from '../../lib/log';
 import {getL10n} from '../../lib/l10nUtils';
 import * as ndmUtils  from '../../lib/ndmUtils';
+import {EVENTS} from '../../lib/constants';
 import {downloadAsFile, onLanguageChange, getExportFilename, readTextFile} from '../../lib/ndmUtils';
 import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 
@@ -25,9 +26,9 @@ export function RoutesToolbarController() {
     };
 
     const {
-        OPEN_IMPORT_POPUP,
-        RELOAD_ROUTES,
-    } = routesToolsService.EVENTS;
+        ROUTES__OPEN_IMPORT_POPUP,
+        ROUTES__RELOAD_LIST,
+    } = EVENTS;
 
     const $scope = element.scope();
     const $rootScope = ndmUtils.getAngularService('$rootScope');
@@ -190,13 +191,13 @@ export function RoutesToolbarController() {
         }
 
         $rootScope.$broadcast(
-            OPEN_IMPORT_POPUP,
+            ROUTES__OPEN_IMPORT_POPUP,
             routesList,
         );
     };
 
     callOnDestroy.push(
-        $rootScope.$on(RELOAD_ROUTES, () => routesTable.loadRoutes()),
+        $rootScope.$on(ROUTES__RELOAD_LIST, () => routesTable.loadRoutes()),
     );
 
     $scope.$on('$destroy', () => {
