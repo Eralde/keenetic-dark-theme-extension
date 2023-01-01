@@ -162,6 +162,7 @@ export function RoutesImportPopupController() {
 
         vm.routesList = routesList.map(route => {
             route.configuration.interface = route.configuration.interface || ANY_INTERFACE_OPTION.id;
+            route.originalInterfaceId = route.interfaceId;
 
             const destination = routesToolsService.getRouteDestination(route.configuration, route.type);
 
@@ -207,12 +208,12 @@ export function RoutesImportPopupController() {
         vm.interfaceReplacements[missingInterfaceId] = replacementId;
 
         vm.routesList = vm.routesList.map(route => {
-            if (!route.interfaceId) {
+            if (!route.originalInterfaceId) {
                 return route;
             }
 
-            if (vm.interfaceReplacements[route.interfaceId]) {
-                const interfaceId = vm.interfaceReplacements[route.interfaceId];
+            if (vm.interfaceReplacements[route.originalInterfaceId]) {
+                const interfaceId = vm.interfaceReplacements[route.originalInterfaceId];
 
                 route.configuration.interface = interfaceId;
                 route.interfaceId = interfaceId;
