@@ -3,8 +3,9 @@ import {logWarning} from '../../lib/log';
 import {getL10n} from '../../lib/l10nUtils';
 import * as ndmUtils  from '../../lib/ndmUtils';
 import {EVENTS} from '../../lib/constants';
-import {downloadAsFile, onLanguageChange, getExportFilename, readTextFile} from '../../lib/ndmUtils';
+import {onLanguageChange} from '../../lib/ndmUtils';
 import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
+import {downloadAsFile, getExportFilename, readTextFile} from '../../lib/fileUtils';
 
 export function RoutesToolbarController() {
     const element = angular.element(document.querySelector(ROOT_ELEMENT_SELECTOR));
