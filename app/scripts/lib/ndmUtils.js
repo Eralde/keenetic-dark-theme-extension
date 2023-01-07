@@ -422,13 +422,76 @@ export const subscribeOnRootScopeEvent = ($scope, event, callback) => {
     $scope.$on('$destroy', $rootScope.$on(event, callback));
 };
 
-export const getInterfaceStatusData = () => {
-    const queries = utils.toRciQueryList([
-        SHOW_INTERFACE,
-    ]);
+/**
+ * Executes a list of commands in the `ndm`.
+ * Each list item is either:
+ * - a string (will be treated as a query object generator: 'show.interface' --> {show: {interface: {}}})
+ * - or an object
+ *
+ * For an object item there is a list of interchangeable properties:
+ * - `path` (will be treated as a query object generator, see above)
+ * - `query` (query object in case we need to pass some specific data, e.g. interface name)
+ * - `getter` (required to extract data from the response, can be omitted if `path` is specified)
+ * - `mutator` (optional transformation function to treat edge cases, e.g. convert `{}` to an empty array)
+ *
+ * @param {Array<string|{path?: string; query?: object; getter?: string; mutator: Function}>} commands
+ * @returns {Promise<object[]>}
+ */
+export const sendListOfCommands = (commands) => {
+    const commandList = _.isArray(commands) ? commands : [commands];
+    const commandObjectList = commandList.map((item) => {
+        // 'show.interface' --> {show: {interface: {}}})
+        if (_.isString(item)) {
+            return {
+                getter: item,
+                query: _.set({}, item, {}),
+            };
+        }
 
-    return router.postToRciRoot(queries).then(response => {
-        return _.get(response, `[0].${SHOW_INTERFACE}`, {});
+        if (!_.isObject(item) || _.isArray(item)) {
+            console.warn(`Invalid item in the query list: "${JSON.stringify(item)}": object expected`);
+
+            return {query: {}, getter: ''};
+        }
+
+        // No way to extract data
+        if (!_.has(item, 'getter') && !_.has(item, 'path')) {
+            console.warn(`Invalid query object: "${JSON.stringify(item)}": no getter`);
+
+            return {query: {}, getter: ''};
+        }
+
+        // Invalid query object/no path to generate query object
+        if (!_.isObject(item.query) && !_.isString(item.path)) {
+            console.warn(`Invalid query object: "${JSON.stringify(item)}": no query/no path`);
+
+            return {query: {}, getter: ''};
+        }
+
+        const query = item.query || _.set({}, item.path, {});
+        const getter = item.getter || item.path;
+
+        return {
+            ..._.cloneDeep(item),
+            query,
+            getter,
+        };
     });
+
+    return router.postToRciRoot(commandObjectList.map(item => item.query))
+        .then((responses) => {
+            return commandObjectList.map((item, index) => {
+                const suffix = item.getter ? `.${item.getter}` : '';
+                const value = _.get(responses, `[${index}]${suffix}`);
+
+                const mutator = item.mutator || _.identity;
+
+                return mutator(value);
+            });
+        });
+}
+
+export const getInterfaceStatusData = () => {
+    return sendListOfCommands([SHOW_INTERFACE]).then((responses) => responses[0]);
 };
 
