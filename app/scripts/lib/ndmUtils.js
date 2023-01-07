@@ -22,7 +22,7 @@ const $http = getAngularService('$http');
 const $state = getAngularService('$state');
 
 const router = getAngularService('router');
-const utils = getAngularService('router');
+const utils = getAngularService('utils');
 
 export const waitUntilAuthenticated = () => {
     const deferred = $q.defer();
