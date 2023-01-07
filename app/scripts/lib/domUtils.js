@@ -231,63 +231,6 @@ const DEFAULT_ADD_FLAG_CHECKBOX_OPTIONS = {
     className: '',
 };
 
-export const addFlagCheckbox = (flags, options) => {
-    const _opts = {...DEFAULT_ADD_FLAG_CHECKBOX_OPTIONS, ...options};
-
-    const {
-        parentEl,
-        flagName,
-        flagLabelL10nId,
-        cbk,
-        className,
-    } = _opts;
-
-    const checkboxName = `flag_${flagName}_value`;
-    const flagLabel = getL10n(flagLabelL10nId);
-
-    const keyboard = getAngularService('keyboard');
-
-    const checkboxStr = getCheckboxHtmlStr({
-        name: checkboxName,
-        label: flagLabel,
-        className: className
-    });
-
-    const checkbox = createElement(checkboxStr, 'filter-toggle-container');
-    parentEl.prepend(checkbox);
-
-    const checkboxEl = document.querySelector(`[name="${checkboxName}"]`);
-    checkboxEl.checked = flags.get(flagName);
-
-    const updateFlag = (value) => {
-        flags.set(flagName, !!value);
-        cbk(flags.get(flagName));
-    }
-
-    const onCheckboxLabelClick = () => {
-        checkboxEl.checked = !checkboxEl.checked;
-
-        setTimeout(() => updateFlag(checkboxEl.checked));
-    }
-
-    const onKeydown = (e) => {
-        if (keyboard.isSpace(e)) {
-            setTimeout(() => updateFlag(!checkboxEl.checked));
-        }
-    }
-
-    const labelEl = document.querySelector(`[for="${checkboxName}"]`);
-
-    labelEl.addEventListener('click', onCheckboxLabelClick);
-    checkboxEl.addEventListener('keydown', onKeydown, {capture: true});
-
-    onLanguageChange(() => {
-        checkbox.querySelector('.form__cell--input-label span').innerHTML = getL10n(flagLabelL10nId);
-    });
-
-    return checkboxEl;
-};
-
 export const isPointInsideElement = (point, el) => {
     const {x, y} = point;
     const rect = el.getBoundingClientRect();
