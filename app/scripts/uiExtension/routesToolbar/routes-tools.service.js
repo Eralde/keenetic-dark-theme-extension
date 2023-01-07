@@ -123,19 +123,6 @@ export const routesToolsService = (function() {
     };
 
     /**
-     * @returns {Promise<object>}
-     */
-    const getShowInterfaceData = () => {
-        const queries = utils.toRciQueryList([
-            SHOW_INTERFACE,
-        ]);
-
-        return router.postToRciRoot(queries).then(response => {
-            return _.get(response, `[0].${SHOW_INTERFACE}`, {});
-        });
-    };
-
-    /**
      * @param {object} showInterfaceData
      * @returns {Array<{id: string, label: string, ...args: any}>}
      */
@@ -408,7 +395,6 @@ export const routesToolsService = (function() {
         getRouteDestination,
 
         getRoutesAndInterfaces,
-        getShowInterfaceData,
         getSuitableInterfaceOptions,
 
         stripNdwData,

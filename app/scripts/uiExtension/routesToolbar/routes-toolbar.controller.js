@@ -3,7 +3,7 @@ import {logWarning} from '../../lib/log';
 import {getL10n} from '../../lib/l10nUtils';
 import * as ndmUtils  from '../../lib/ndmUtils';
 import {EVENTS} from '../../lib/constants';
-import {onLanguageChange} from '../../lib/ndmUtils';
+import {getInterfaceStatusData, onLanguageChange} from '../../lib/ndmUtils';
 import {ROOT_ELEMENT_SELECTOR, routesToolsService} from './routes-tools.service';
 import {downloadAsFile, getExportFilename, readTextFile} from '../../lib/fileUtils';
 
@@ -121,7 +121,7 @@ export function RoutesToolbarController() {
     onLanguageChange(updateL10n);
 
     vm.exportSelectedRoutes = () => {
-        return routesToolsService.getShowInterfaceData().then(showInterfaceData => {
+        return getInterfaceStatusData().then(showInterfaceData => {
             const selectedRules = routesTable.data.filter(item => item.isSelected);
             const rawRciData = selectedRules.map(routesToolsService.stripNdwData);
             const interfaceIdToLabelMap = interfaces.getInterfaceIdToLabelMap(showInterfaceData);

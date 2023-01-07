@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {sharedData} from './state';
 import * as CONSTANTS from './constants';
+import {SHOW_INTERFACE} from './constants';
 
 const DEFAULT_GET_SERVICE_TAG_TIMEOUT = 5000;
 
@@ -19,7 +20,9 @@ const $q = getAngularService('$q');
 const $transitions = getAngularService('$transitions');
 const $http = getAngularService('$http');
 const $state = getAngularService('$state');
+
 const router = getAngularService('router');
+const utils = getAngularService('router');
 
 export const waitUntilAuthenticated = () => {
     const deferred = $q.defer();
@@ -417,5 +420,15 @@ export const getDebouncedCallback = (callback, leading = true) => {
 
 export const subscribeOnRootScopeEvent = ($scope, event, callback) => {
     $scope.$on('$destroy', $rootScope.$on(event, callback));
+};
+
+export const getInterfaceStatusData = () => {
+    const queries = utils.toRciQueryList([
+        SHOW_INTERFACE,
+    ]);
+
+    return router.postToRciRoot(queries).then(response => {
+        return _.get(response, `[0].${SHOW_INTERFACE}`, {});
+    });
 };
 

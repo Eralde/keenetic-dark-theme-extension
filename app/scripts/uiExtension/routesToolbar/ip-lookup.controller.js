@@ -3,6 +3,7 @@ import * as ndmUtils from '../../lib/ndmUtils';
 import {routesToolsService} from './routes-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {logWarning} from '../../lib/log';
+import {getInterfaceStatusData} from '../../lib/ndmUtils';
 
 const ROOT_ELEMENT_SELECTOR = '.routes-ip-lookup';
 
@@ -129,7 +130,7 @@ export function IpLookupController() {
             .finally(() => vm.unlockUi());
     };
 
-    routesToolsService.getShowInterfaceData().then(showInterfaceData => {
+    getInterfaceStatusData().then(showInterfaceData => {
         vm.interfaceOptions = routesToolsService.getSuitableInterfaceOptions(showInterfaceData);
     });
 }
