@@ -5,6 +5,8 @@ import {NDM_PAGE_SELECTOR} from '../../lib/constants';
 import {portForwardingToolsService, TOOLBAR_ROOT_ELEMENT_SELECTOR} from './port-forwarding-tools.service';
 import {getL10n} from '../../lib/l10nUtils';
 import {onLanguageChange} from '../../lib/ndmUtils';
+import {routesToolsService} from '../routesToolbar/routes-tools.service';
+import {downloadAsFile, getExportFilename} from '../../lib/fileUtils';
 
 export function PortForwardingToolbarController() {
     const element = angular.element(document.querySelector(TOOLBAR_ROOT_ELEMENT_SELECTOR));
@@ -23,14 +25,21 @@ export function PortForwardingToolbarController() {
             deleteSelectedBtnLabel: getL10n('RoutesToolbarDeleteSelectedBtnLabel'),
             importBtnLabel: 'Import',
             assignScheduleSelectboxLabel: 'Assign schedule',
+            collapseToolbar: 'Collapse',
+            expandToolbar: 'Expand',
+            toggleSelectedOn: 'Toggle selected rules on',
+            toggleSelectedOff: 'Toggle selected rules off',
         };
     };
+
+    vm.isExpanded = true;
 
     vm.selectedRulesSchedule = '';
     vm.selectedRulesToggleValue = false;
 
-    const notification = ndmUtils.getAngularService('notification');
     const $rootScope = ndmUtils.getAngularService('$rootScope');
+    const interfaces = ndmUtils.getAngularService('interfaces');
+    const notification = ndmUtils.getAngularService('notification');
 
     const $scope = angular.element(document.querySelector(NDM_PAGE_SELECTOR)).scope();
     const pageController = $scope.vm;
@@ -133,6 +142,43 @@ export function PortForwardingToolbarController() {
 
                 vm.selectedRulesToggleValue = value;
             });
+    };
+
+    vm.exportSelectedRules = () => {
+        return routesToolsService.getShowInterfaceData().then(showInterfaceData => {
+            const interfaceIdToLabelMap = interfaces.getInterfaceIdToLabelMap(showInterfaceData);
+
+            const selectedRules = rulesTable.items
+                .filter(item => rulesTable.selectedRulesMap[item.index])
+                .map(item => {
+                    const {raw} = item;
+
+                    // Compatibility with pre-3.9 firmware which can return interface `rename`
+                    // in the `interface` field of an `ip static` record
+                    const showInterfaceItem = _.find(
+                        showInterfaceData,
+                        item => item.id === raw.interface || item['interface-name'] === raw.interface,
+                    );
+
+                    const id = _.get(showInterfaceItem, 'id', raw.interface);
+                    const label = interfaceIdToLabelMap[id] || id;
+
+                    return {
+                        ...raw,
+                        'interface': id,
+                        'interfaceLabel': label,
+                    };
+                });
+
+            const data = JSON.stringify(selectedRules, null, 2);
+            const filename = getExportFilename('ip-static');
+
+            downloadAsFile(data, filename, 'application/json');
+        });
+    }
+
+    vm.importSelectedRules = () => {
+
     };
 
     $scope.$watch('vm.list.items', (newValue) => {

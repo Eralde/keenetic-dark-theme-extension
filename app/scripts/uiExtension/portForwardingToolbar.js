@@ -4,6 +4,7 @@ import {PORT_FORWARDING_TEMPLATE_PATH} from '../lib/constants';
 import {logWarning} from '../lib/log';
 import {createDocumentFragmentFromString, getDocumentFragmentInnerHtml} from '../lib/domUtils';
 import toolbarTemplate from '../../pages/ui/port-forwarding-tools/port-forwarding-toolbar.html';
+import importPopupTemplate from '../../pages/ui/port-forwarding-tools/port-forwarding-import-popup.html';
 
 const injectPortForwardingToolbarTemplate = () => {
     const $templateCache = getAngularService('$templateCache');
@@ -18,7 +19,9 @@ const injectPortForwardingToolbarTemplate = () => {
     const fragment = createDocumentFragmentFromString(portForwardingTemplate);
     const forwardingTable = fragment.querySelector('.action-link');
     const toolbarFragment = createDocumentFragmentFromString(toolbarTemplate);
+    const importPopupFragment = createDocumentFragmentFromString(importPopupTemplate);
 
+    forwardingTable.before(importPopupFragment);
     forwardingTable.after(toolbarFragment);
 
     const fullTemplate = getDocumentFragmentInnerHtml(fragment);

@@ -48,6 +48,7 @@ import {TracerouteViaController} from './uiExtension/tracerouteVia/traceroute-vi
 
 import {portForwardingToolbarExtension} from './uiExtension/portForwardingToolbar';
 import {PortForwardingToolbarController} from './uiExtension/portForwardingToolbar/port-forwarding-toolbar.controller';
+import {PortForwardingImportPopupController} from './uiExtension/portForwardingToolbar/port-forwardin-import-popup.controller';
 
 export const injectUiExtensions = () => {
     let $state;
@@ -72,6 +73,7 @@ export const injectUiExtensions = () => {
     $rootScope.IpLookupController = IpLookupController;
     $rootScope.TracerouteViaController = TracerouteViaController;
     $rootScope.PortForwardingToolbarController = PortForwardingToolbarController;
+    $rootScope.PortForwardingImportPopupController = PortForwardingImportPopupController;
 
     $rootScope.kdte = {
         L10N: l10n,
