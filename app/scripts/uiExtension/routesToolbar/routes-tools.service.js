@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import doh from '../../../3rdparty/doh.min';
-import {getAngularService} from '../../lib/ndmUtils';
+import {getAngularService, sendListOfCommands} from '../../lib/ndmUtils';
 import {logWarning} from '../../lib/log';
 import {IP_ROUTE, SHOW_INTERFACE, SHOW_RC_IP_ROUTE} from '../../lib/constants';
 
@@ -104,19 +104,14 @@ export const routesToolsService = (function() {
      * @returns {Promise<{showRcIpRoute: object[], showInterfaceData: object}>}
      */
     const getRoutesAndInterfaces = () => {
-        const queries = utils.toRciQueryList([
-            SHOW_RC_IP_ROUTE,
+        const queries = [
+            {path: SHOW_RC_IP_ROUTE, mutator: _.toArray},
             SHOW_INTERFACE,
-        ]);
+        ];
 
-        return router.postToRciRoot(queries).then(responses => {
-            const showRcIpRoute = _
-                .chain(responses)
-                .get(`[0].${SHOW_RC_IP_ROUTE}`, {})
-                .toArray()
-                .value();
-
-            const showInterfaceData = _.get(responses, `[1].${SHOW_INTERFACE}`, {});
+        return sendListOfCommands(queries).then(responses => {
+            const showRcIpRoute = responses[0];
+            const showInterfaceData = responses[1];
 
             return {showRcIpRoute, showInterfaceData};
         });
