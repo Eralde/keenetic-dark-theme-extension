@@ -29,7 +29,12 @@
 }
 
 .switchport-select-option {
+    &--selected {
+        background-color: @dt__grey8;
+    }
+
     &--selected:hover,
+    &--selected:hover a,
     &--focus {
         background-color: @dt__grey9;
     }
