@@ -11,6 +11,13 @@ const DELTA_DEVICES = [
     'kng_re',   // Giga III
     'ki_rb',    // Extra II
     'ki_ra',    // Air
+    'KN-1110',  // Keenetic Start
+    'KN-1210',  // Keenetic 4G
+    'KN-1310',  // Keenetic Lite
+    'KN-1410',  // Keenetic Omni
+    'KN-1510',  // Keenetic City
+    'KN-1610',  // Keenetic Air
+    'KN-1710',  // Keenetic Extra
 ];
 
 export const isSuitableDevice = () => {
