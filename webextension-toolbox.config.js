@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 
 module.exports = {
     webpack: (config, {dev, vendor}) => {
@@ -57,16 +57,10 @@ module.exports = {
             ],
         });
 
-        config.plugins.push(
-            new OptimizeCssAssetsPlugin({
-                cssProcessor: require('cssnano'),
-                cssProcessorPluginOptions: {
-                    preset: ['default', {discardComments: {removeAll: true}}],
-                },
-                canPrint: true
-            })
-        );
+        config.optimization.minimizer = [
+            new CssMinimizerPlugin(),
+        ];
 
-        return config
+        return config;
     },
 };
