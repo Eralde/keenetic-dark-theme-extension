@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "npm-run-all build-css build-l10n \"toolbox-dev -- {1}\" --",
     "build": "npm-run-all build-css build-l10n \"toolbox-build -- {1}\" --",
-    "toolbox-dev": "webextension-toolbox dev",
-    "toolbox-build": "webextension-toolbox build",
+    "toolbox-dev": "webextension-toolbox dev -c webextension-toolbox.config.js",
+    "toolbox-build": "webextension-toolbox build -c webextension-toolbox.config.js",
     "build-css": "node build-css.js",
     "build-l10n": "node build-l10n.js"
   },
@@ -14,7 +14,13 @@
   "license": "WTFPL",
   "devDependencies": {
     "@babel/preset-env": "^7.7.7",
+    "@webextension-toolbox/webextension-toolbox": "^7.1.1",
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^9.1.3",
+    "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^3.4.0",
+    "css-minimizer-webpack-plugin": "^6.0.0",
     "cssnano": "^4.1.10",
     "html-loader": "^1.0.0",
     "less": "^3.11.1",
@@ -25,13 +31,12 @@
     "sass": "^1.34.1",
     "sass-loader": "^10.1.1",
     "style-loader": "^1.1.1",
-    "webextension-toolbox": "latest",
+    "webextension-polyfill": "^0.10.0",
     "webpack": "^5.38.1",
     "yargs": "^17.0.1"
   },
   "dependencies": {
     "@simonwep/pickr": "^1.6.0",
-    "css-minimizer-webpack-plugin": "^6.0.0",
     "dateformat": "^4.5.1",
     "js-beautify": "^1.13.0",
     "lodash": "^4.17.15",

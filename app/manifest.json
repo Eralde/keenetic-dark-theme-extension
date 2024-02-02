@@ -11,6 +11,7 @@
   },
   "background": {
     "scripts": [
+      "browser-polyfill.js",
       "scripts/background.js"
     ]
   },
@@ -44,6 +45,7 @@
         "https://*/*"
       ],
       "js": [
+        "browser-polyfill.js",
         "scripts/contentscript.js"
       ],
       "run_at": "document_end",

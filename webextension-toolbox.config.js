@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 
 module.exports = {
@@ -44,6 +45,14 @@ module.exports = {
                 },
             },
         });
+
+        config.plugins.push(
+            new CopyWebpackPlugin({
+                patterns: [{
+                    from: __dirname + '/node_modules/webextension-polyfill/dist/browser-polyfill.js',
+                }],
+            })
+        );
 
         config.module.rules.push({
             test: /\.css$/,
